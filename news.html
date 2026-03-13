@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamLedger | Newsletter</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <div class="nav__container">
+      <a href="index.html">
+        <img src="assets/logo.png" alt="StreamLedger" class="nav__logo">
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Início</a></li>
+          <li><a href="about.html">Sobre</a></li>
+          <li><a href="research.html">Pesquisa</a></li>
+          <li><a href="news.html" class="nav__link--active">Newsletter</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page--centered">
+    <div class="page__container">
+      <section class="newsletter">
+        <div class="newsletter__inner">
+
+          <div class="newsletter__form-side">
+            <h1>Seja um Ledger</h1>
+            <p class="newsletter__subtitle">Tenha acesso a atualizações em primeira mão</p>
+
+            <form action="success.html" method="get" class="newsletter__form">
+
+              <div class="form__group">
+                <label class="form__label" for="nome">Nome completo</label>
+                <div class="form__field-wrap">
+                  <span class="form__field-icon" aria-hidden="true">
+                    <img src="assets/user.svg" alt="" width="20" height="20">
+                  </span>
+                  <input
+                    class="form__input"
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Digite seu nome"
+                    required
+                    minlength="2"
+                  >
+                </div>
+              </div>
+
+              <div class="form__group">
+                <label class="form__label" for="email">E-mail</label>
+                <div class="form__field-wrap">
+                  <span class="form__field-icon" aria-hidden="true">
+                    <img src="assets/mail.svg" alt="" width="20" height="20">
+                  </span>
+                  <input
+                    class="form__input"
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Digite seu e-mail"
+                    required
+                  >
+                </div>
+              </div>
+
+              <button type="submit" class="form__submit">Concluir</button>
+
+            </form>
+          </div>
+
+          <div class="newsletter__media">
+            <img src="assets/hero-dashboard.svg" alt="Dashboard StreamLedger">
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer__inner">
+      <img src="assets/logo.png" alt="StreamLedger" class="footer__logo">
+      <div class="footer__text">
+        <strong>StreamLedger © 2026</strong><br>
+        Desenvolvido por Bruna Sousa &bull; Gabriel Kott &bull; Caio Leme &bull; Gabriele Lopes &bull; Davi Simione
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

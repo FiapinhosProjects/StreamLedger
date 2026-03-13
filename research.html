@@ -5,31 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StreamLedger | Pesquisa</title>
   <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <header>
-    <div class="nav-container">
+    <div class="nav__container">
       <a href="index.html">
-        <img src="img/logo.png" alt="StreamLedger" class="logo-img">
+        <img src="assets/logo.png" alt="StreamLedger" class="nav__logo">
       </a>
       <nav>
         <ul>
           <li><a href="index.html">Início</a></li>
-          <li><a href="sobre.html">Sobre</a></li>
-          <li><a href="pesquisa.html" class="active">Pesquisa</a></li>
-          <li><a href="avalie.html">Avalie-nos</a></li>
+          <li><a href="about.html">Sobre</a></li>
+          <li><a href="research.html" class="nav__link--active">Pesquisa</a></li>
+          <li><a href="news.html">Newsletter</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main>
-    <div class="container">
+    <div class="page__container">
 
       <!-- O crescimento dos Streamers Gamers -->
-      <section class="pesquisa-hero">
+      <section class="research-hero">
         <h1>O crescimento dos<br>Streamers Gamers</h1>
+       <div class="research-hero__content">
         <p>
           Nos últimos anos, o mercado de games e criação de conteúdo digital tem apresentado
           um crescimento significativo. Plataformas de streaming se tornaram espaços importantes
@@ -49,10 +51,11 @@
           redor do mundo. A tabela a seguir apresenta algumas dessas plataformas e seus principais
           modelos de monetização.
         </p>
+       </div>
       </section>
 
       <!-- Tabela -->
-      <div class="table-wrap">
+      <div class="table-wrapper">
         <table>
           <thead>
             <tr>
@@ -64,75 +67,78 @@
           <tbody>
             <tr>
               <td>
-                <span class="platform-icon">
-                  <span class="icon-badge" style="background:#6441a5; color:#fff;">T</span>
+                <span class="table__platform">
+                  <span class="table__badge" style="background:#6441a5; color:#fff;">T</span>
                   Twitch
                 </span>
               </td>
               <td>Inscrições, doações, anúncios</td>
-              <td><span class="badge-pop pop-high">Muito alta</span></td>
+              <td><span class="badge badge--high">Muito alta</span></td>
             </tr>
             <tr>
               <td>
-                <span class="platform-icon">
-                  <span class="icon-badge" style="background:#ff0000; color:#fff;">▶</span>
+                <span class="table__platform">
+                  <span class="table__badge" style="background:#ff0000; color:#fff;">▶</span>
                   YouTube Gaming
                 </span>
               </td>
               <td>Anúncios, super chats</td>
-              <td><span class="badge-pop pop-high">Alta</span></td>
+              <td><span class="badge badge--high">Alta</span></td>
             </tr>
             <tr>
               <td>
-                <span class="platform-icon">
-                  <span class="icon-badge" style="background:#2d9c2d; color:#fff;">K</span>
+                <span class="table__platform">
+                  <span class="table__badge" style="background:#2d9c2d; color:#fff;">K</span>
                   Kick
                 </span>
               </td>
               <td>Doações, parcerias</td>
-              <td><span class="badge-pop pop-medium">Crescendo</span></td>
+              <td><span class="badge badge--medium">Crescendo</span></td>
             </tr>
             <tr>
               <td>
-                <span class="platform-icon">
-                  <span class="icon-badge" style="background:#111; color:#fff;">♪</span>
+                <span class="table__platform">
+                  <span class="table__badge" style="background:#111; color:#fff;">♪</span>
                   TikTok Live
                 </span>
               </td>
               <td>Presentes virtuais</td>
-              <td><span class="badge-pop pop-high">Alta</span></td>
+              <td><span class="badge badge--high">Alta</span></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <hr class="divider">
+      <hr class="section-divider">
 
       <!-- Pesquisa de Aplicação -->
-      <section class="pesquisa-aplicacao">
+      <section class="research-section">
         <h2>Pesquisa de Aplicação</h2>
 
-        <div class="pesquisa-cols">
-          <p>
-            O mercado de games vem crescendo de forma consistente e se consolidando como um dos
-            principais segmentos da economia digital. Segundo a Newzoo, o mercado global de jogos
-            deve alcançar cerca de US$ 188,8 bilhões em 2025, com aproximadamente 3,6 bilhões de
-            jogadores no mundo. Esses números mostram não apenas a força do setor, mas também o
-            tamanho da comunidade conectada ao universo gamer, que assim como os números, tendem
-            a crescer cada vez mais.
-          </p>
-          <div class="col-img">
-            <img src="img/grafico-mercado.svg" alt="Gráfico de crescimento do mercado de games">
+        <div class="research-section__cols">
+          <div class="research-section__text">
+            <p>
+              O mercado de games vem crescendo de forma consistente e se consolidando como um dos
+              principais segmentos da economia digital. Segundo a Newzoo, o mercado global de jogos
+              deve alcançar cerca de US$ 188,8 bilhões em 2025, com aproximadamente 3,6 bilhões de
+              jogadores no mundo. Esses números mostram não apenas a força do setor, mas também o
+              tamanho da comunidade conectada ao universo gamer, que assim como os números, tendem
+              a crescer cada vez mais.
+            </p>
+            <p>
+              Dentro desse cenário, o streaming de jogos se tornou uma parte importante da experiência
+              de muitos jogadores e criadores de conteúdo. Plataformas como Twitch, YouTube Gaming,
+              Kick e TikTok Live permitem que streamers criem comunidades, compartilhem conteúdo ao
+              vivo e, em muitos casos, transformem essa atividade em fonte de renda.
+            </p>
+          </div>
+          <div class="research-section__media">
+            <img src="assets/grafico-mercado.svg" alt="Gráfico de crescimento do mercado de games">
           </div>
         </div>
 
-        <div class="pesquisa-full">
-          <p>
-            Dentro desse cenário, o streaming de jogos se tornou uma parte importante da experiência
-            de muitos jogadores e criadores de conteúdo. Plataformas como Twitch, YouTube Gaming,
-            Kick e TikTok Live permitem que streamers criem comunidades, compartilhem conteúdo ao
-            vivo e, em muitos casos, transformem essa atividade em fonte de renda.
-          </p>
+        <div class="research-section__full">
+          
           <p>
             Além do alcance e da visibilidade, essas plataformas oferecem diferentes formas de
             monetização. Na Twitch, por exemplo, criadores podem ganhar com recursos como inscrições
@@ -159,9 +165,9 @@
         </div>
 
         <!-- Vídeo streamer -->
-        <div class="photo-block">
+        <div class="media-block">
           <video
-            src="img/streamer.mp4"
+            src="assets/streamer.mp4"
             autoplay
             muted
             loop
@@ -176,9 +182,9 @@
   </main>
 
   <footer>
-    <div class="footer-inner">
-      <img src="img/logo.png" alt="StreamLedger" class="footer-logo-img">
-      <div class="footer-text">
+    <div class="footer__inner">
+      <img src="assets/logo.png" alt="StreamLedger" class="footer__logo">
+      <div class="footer__text">
         <strong>StreamLedger © 2026</strong><br>
         Desenvolvido por Bruna Sousa &bull; Gabriel Kott &bull; Caio Leme &bull; Gabriele Lopes &bull; Davi Simione
       </div>
