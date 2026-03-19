@@ -782,7 +782,7 @@ footer {
 
 .scanlines::before {
   content: '';
-  position: fixed;
+  position: relative;
   inset: 0;
   background: repeating-linear-gradient(
     0deg,
