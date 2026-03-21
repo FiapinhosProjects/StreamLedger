@@ -60,13 +60,11 @@ main {
   scrollbar-color: var(--neon) var(--bg);
 }
 
-/* páginas com conteúdo centralizado verticalmente (avalie) */
 main.page--centered {
   display: flex;
   flex-direction: column;
 }
 
-/* ── Header: mobile first ─────────────────────────────────── */
 .nav__container {
   max-width: 1280px;
   margin: 0 auto;
@@ -288,7 +286,6 @@ nav ul li a.nav__link--active::after {
   height: auto;
 }
 
-/* two-col: image as background, full height of parent */
 .two-col .two-col__media {
   height: 100%;
   min-height: 0;
@@ -714,7 +711,6 @@ tbody td {
   color: var(--neon);
 }
 
-/* ── Footer: mobile first ─────────────────────────────────── */
 footer {
   background: var(--bg-header);
   border-top: 1px solid rgba(93,255,155,0.1);
@@ -784,10 +780,9 @@ footer {
   margin: 0;
 }
 
-/* ── Scanlines overlay ───────────────────────────────────── */
 .scanlines::before {
   content: '';
-  position: fixed;
+  position: relative;
   inset: 0;
   background: repeating-linear-gradient(
     0deg,
@@ -800,7 +795,6 @@ footer {
   z-index: 9999;
 }
 
-/* ── Hero extras (cadastro) ──────────────────────────────── */
 .hero { position: relative; overflow: hidden; }
 
 .hero h1 {
@@ -843,7 +837,6 @@ footer {
   text-align: center;
 }
 
-/* ── Section labels ──────────────────────────────────────── */
 .section-tag {
   font-family: var(--font-title);
   font-size: 13px;
@@ -856,7 +849,6 @@ footer {
 
 .section-title span { color: var(--neon); }
 
-/* ── Form panel & layout ─────────────────────────────────── */
 .form-panel {
   background: var(--card);
   border: 1px solid var(--border);
@@ -870,7 +862,6 @@ footer {
   gap: 16px;
 }
 
-/* ── Form elements ───────────────────────────────────────── */
 .form-select {
   width: 100%;
   background: transparent;
@@ -963,7 +954,6 @@ footer {
   box-shadow: 0 4px 16px rgba(93,255,155,0.25);
 }
 
-/* ── Info cards ──────────────────────────────────────────── */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -980,7 +970,6 @@ footer {
   margin-bottom: 4px;
 }
 
-/* ── Styled list ─────────────────────────────────────────── */
 .styled-list { list-style: none; padding: 0; }
 
 .styled-list li {
@@ -998,7 +987,6 @@ footer {
   font-size: 11px;
 }
 
-/* ── Footer extended (cadastro) ──────────────────────────── */
 .footer-links {
   display: flex;
   gap: 20px;
