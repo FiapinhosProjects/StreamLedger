@@ -10,7 +10,7 @@ A aplicação permite registrar receitas, controlar despesas e compreender melho
 
 O universo do streaming cresce a cada ano, com milhares de pessoas compartilhando conteúdo e construindo comunidades em plataformas digitais.
 
-Entretanto, muitos criadores enfrentam dificuldades quando precisam lidar com:
+Entretanto, muitos criadores enfrentam dificuldades quando precisam lidar com: 
 
 - controle financeiro  
 - organização de receitas  
