@@ -1,160 +1,112 @@
-# StreamLedger
+# FIAP - Faculdade de Informática e Administração Paulista
 
-**StreamLedger** é uma plataforma criada para ajudar **streamers iniciantes e pequenos criadores de conteúdo** a organizarem suas finanças de forma simples e visual.
+
+<p align="center">
+<a href= "https://www.fiap.com.br/"><img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
+</p>
+
+<br>
+
+# Stream Ledger - Dashboard Financeiro 
+
+## Fiapinhos
+
+## 👨‍🎓 Integrantes: 
+- <a href="https://www.linkedin.com/in/brunasousasantos/">Bruna Sousa </a>
+- <a href="https://www.linkedin.com/in/davi-simione-01127830b/">Davi Simione</a>
+- <a href="https://www.linkedin.com/in/caiobertaglia/">Caio Leme</a> 
+- <a href="https://www.linkedin.com/in/gabriel-kott-3494342ab/">Gabriel Kott</a> 
+- <a href="https://www.linkedin.com/in/gabrielelopes1925/">Gabriele Lopes</a>
+
+## 👩‍🏫 Professores:
+### Tutor(a) 
+- <a href="https://www.linkedin.com/in/profgonzalez/">Lucas Gonzalez</a>
+
+
+## 📜 Descrição
+
+StreamLedger é uma plataforma criada para ajudar streamers iniciantes e pequenos criadores de conteúdo a organizarem suas finanças de forma simples e visual.
 
 A aplicação permite registrar receitas, controlar despesas e compreender melhor o fluxo financeiro do canal, ajudando criadores a tomarem decisões mais estratégicas sobre seu crescimento.
 
----
+O universo do streaming cresce a cada ano, com milhares de pessoas compartilhando conteúdo e construindo comunidades em plataformas digitais. Entretanto, muitos criadores enfrentam dificuldades quando precisam lidar com:
 
-# Sobre o Projeto
+- controle financeiro
+- organização de receitas
+- gestão de despesas
+- planejamento de investimentos
 
-O universo do streaming cresce a cada ano, com milhares de pessoas compartilhando conteúdo e construindo comunidades em plataformas digitais.
-
-Entretanto, muitos criadores enfrentam dificuldades quando precisam lidar com: 
-
-- controle financeiro  
-- organização de receitas  
-- gestão de despesas  
-- planejamento de investimentos  
-
-O **StreamLedger** surge como uma solução para transformar dados financeiros em **informações claras e acessíveis**, permitindo que streamers acompanhem sua evolução financeira.
+O StreamLedger surge como uma solução para transformar dados financeiros em informações claras e acessíveis, permitindo que streamers acompanhem sua evolução financeira.
 
 ---
 
-# Nossa Motivação
+## 🚀 Solução
 
-O crescimento das plataformas de streaming abriu novas oportunidades para criadores de conteúdo. Porém, muitos iniciantes não possuem experiência em gestão financeira.
+O StreamLedger foi desenvolvido como uma plataforma de gestão financeira voltada para streamers, reunindo em um único ambiente as principais informações sobre o canal.
 
-Entre os principais desafios enfrentados pelos criadores estão:
+### A plataforma oferece
 
-- falta de organização financeira  
-- dificuldade em acompanhar receitas e despesas  
-- desconhecimento sobre taxas das plataformas  
-- falta de planejamento para crescimento do canal  
-
-Sem uma ferramenta adequada, muitos streamers acabam registrando suas finanças de forma desorganizada, dificultando a compreensão de seus ganhos reais.
-
-Foi pensando nesse cenário que surgiu o **StreamLedger**, com o objetivo de ajudar criadores a gerenciar melhor suas atividades financeiras.
-
----
-
-# Solução
-
-O **StreamLedger** foi desenvolvido como uma plataforma de **gestão financeira voltada para streamers**, reunindo em um único ambiente as principais informações sobre o canal.
-
-A plataforma oferece:
-
-- registro de receitas provenientes de plataformas de streaming  
-- controle de despesas relacionadas ao canal  
-- visão geral do fluxo financeiro  
-- organização das movimentações financeiras  
-- informações sobre plataformas de streaming  
+- Registro de receitas provenientes de plataformas de streaming
+- Controle de despesas relacionadas ao canal
+- Visão geral do fluxo financeiro
+- Organização das movimentações financeiras
+- Informações sobre plataformas de streaming
 
 Com isso, criadores de conteúdo podem entender melhor sua situação financeira e planejar o crescimento do canal.
 
 ---
 
-# Crescimento dos Streamers Gamers
+## ✨ Funcionalidades (exemplo)
 
-Nos últimos anos, o mercado de criação de conteúdo digital apresentou um crescimento significativo.
-
-Plataformas como:
-
-- Twitch  
-- YouTube    
-
-passaram a oferecer oportunidades reais de monetização para criadores.
-
-Esse crescimento ocorre principalmente devido a:
-
-- expansão do mercado de games  
-- maior acesso à internet de alta velocidade  
-- aumento do consumo de entretenimento online  
-- fortalecimento das comunidades digitais  
-
-Com mais pessoas entrando no universo do streaming, ferramentas de gestão financeira tornam-se cada vez mais necessárias.
+- Dashboard com métricas principais (faturamento, custos, lucro)
+- Lista de movimentações (receitas e despesas)
+- Formulário para cadastrar transações
+- Gráficos e comparativos (próximo passo)
 
 ---
 
-# Pesquisa da Aplicação
+## 🎨 Design
 
-Durante o desenvolvimento do projeto foi realizada uma pesquisa sobre o comportamento financeiro de streamers iniciantes.
+Principais decisões de design:
 
-Os resultados indicaram que muitos criadores:
-
-- utilizam apenas anotações simples ou planilhas  
-- não acompanham corretamente seus ganhos  
-- desconhecem taxas das plataformas  
-- não possuem planejamento financeiro  
-
-Esses dados reforçam a importância de criar uma ferramenta simples e acessível voltada especificamente para esse público.
+- Interface em Dark Mode com predominância de tons neon verdes
+- Layout moderno, inspirado no universo gamer
+- Componentes responsivos e foco em legibilidade
 
 ---
 
-# Estrutura da Aplicação
+## 🧭 Estrutura da aplicação
 
-A aplicação foi dividida em quatro páginas principais:
+A aplicação possui páginas principais:
 
-### Home
-Apresenta a plataforma e explica o objetivo do StreamLedger.
-
-### Sobre
-Mostra a motivação do projeto e o problema enfrentado pelos criadores de conteúdo.
-
-### Pesquisa
-Apresenta dados sobre o crescimento do mercado de streaming e pesquisas relacionadas à aplicação.
-
-### Aplicação
-Página com formulário onde o usuário pode se cadastrar para receber atualizações sobre a plataforma.
+- `index.html` — Home / Apresentação
+- `about.html` — Sobre o projeto
+- `research.html` — Pesquisa e dados
+- `news.html` — Newsletter / cadastro
+- `test.html` — Protótipo do dashboard (demo)
 
 ---
 
-# Design da Interface
+## 🛠 Como executar
 
-O design da aplicação foi inspirado no universo gamer.
+1. Clone o repositório:
 
-Principais características:
+```bash
+git clone https://github.com/GabrielKott/streamledger.git
+cd streamledger
+```
 
-- interface **Dark Mode**
-- cores **neon em tons de verde**
-- layout moderno e tecnológico
-- navegação simples e intuitiva
+2. Abra `index.html` em um navegador (projeto está em HTML/CSS puro):
 
-O objetivo é criar uma experiência visual alinhada com o público gamer.
+```bash
+open index.html    # macOS
+xdg-open index.html # Linux
+start index.html   # Windows (PowerShell)
+```
 
----
+> Observação: o projeto não requer um servidor para visualização básica; para features avançadas recomendo servir com um servidor estático (ex: `npx serve`).
 
-# Tecnologias Utilizadas
 
-O projeto foi desenvolvido utilizando tecnologias de desenvolvimento web:
-
-- **HTML5**
-- **CSS3**
-- **Figma** (prototipação da interface)
-
----
-
-# Melhorias Futuras
-
-Possíveis evoluções da plataforma incluem:
-
-- integração com plataformas de streaming  
-- dashboard com gráficos financeiros  
-- sistema de login de usuários  
-- armazenamento de dados em banco de dados  
-- versão mobile da aplicação  
-
----
-
-# Equipe do Projeto
-
-Projeto desenvolvido por:
-
-- **Bruna Sousa**
-- **Gabriel Kott**
-- **Caio Leme**
-- **Gabriele Lopes**
-- **Davi Simione**
 ---
 
 © 2026 StreamLedger
