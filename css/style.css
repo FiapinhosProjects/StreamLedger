@@ -23,6 +23,111 @@ html {
   min-width: var(--min-viewport);
 }
 
+/* -------------------------------------------------- */
+/* Styles moved from /test.html (page-specific dashboard) */
+/* Kept here so global stylesheet controls appearance */
+
+/* pequenas extensões específicas para a página de dashboard */
+.dashboard { display:flex; min-height: calc(100vh - 0px); }
+.sidebar { width:220px; background:var(--bg-header); border-right:1px solid rgba(93,255,155,0.06); padding:24px; display:flex; flex-direction:column; gap:18px; }
+.sidebar .nav__logo { height:36px; }
+.nav-vertical ul{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; }
+.nav-vertical a{ display:flex; align-items:center; gap:12px; color:var(--text-dim); padding:10px; border-radius:8px; width:100%; transition:background .15s, color .15s, transform .12s; }
+.nav-vertical a:hover{ background: rgba(93,255,155,0.03); color:var(--neon); transform: translateX(6px); }
+.nav-vertical img.icon{ width:20px; height:20px; }
+
+.main-dashboard { flex:1; padding:28px 36px; overflow:auto; }
+.topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:20px; }
+.greeting { display:flex; align-items:center; gap:14px; }
+.greeting img { width:44px; height:44px; border-radius:8px; }
+.greeting h2 { color:var(--neon); margin:0; font-size:20px; }
+.greeting p { margin:0; color:var(--text-dim); font-size:13px; }
+
+
+.metrics { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:20px; }
+.metric-card { background:var(--card); border:1px solid var(--border); padding:22px; border-radius:14px; display:block; transition:transform .12s, box-shadow .12s; position:relative; overflow:hidden; }
+.metric-card:hover { transform: translateY(-6px); box-shadow: var(--neon-glow); }
+.metric-badge { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 14px rgba(0,0,0,0.25); flex-shrink:0; }
+.metric-badge img{ width:24px; height:24px; display:block }
+.metric-meta { margin-left:0; }
+.metric-label { color:var(--text-dim); font-size:14px; margin-bottom:8px; }
+.metric-value { font-size:32px; font-weight:600; color:var(--text); line-height:1; margin-bottom:8px; }
+.metric-percent { font-size:14px; color:var(--text-dim); display:inline-block }
+.metric-percent .percent-number { font-weight:700; margin-right:8px; }
+.metric-percent .percent-note { color:var(--text-dim); font-weight:400; opacity:0.9 }
+.metric-percent .percent-number.positive { color:#27e36a; }
+.metric-percent .percent-number.negative { color:var(--red); }
+.metric-row { display:flex; align-items:center; gap:16px; }
+
+.transactions { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; }
+.transactions-header { padding-left:8px; }
+.transactions-header h1 { margin:0 0 4px 0; color:var(--text); font-size:32px; font-weight:600; line-height:1; }
+.transactions-subtitle { margin:0 0 10px 0; color:var(--text-dim); font-size:14px; font-weight:300; }
+.transaction-item { display:flex; justify-content:space-between; align-items:center; padding:12px 8px; border-bottom:1px solid rgba(255,255,255,0.03); transition:background .12s; }
+.transaction-item:last-child { border-bottom:none; }
+.transaction-item:hover { background: rgba(93,255,155,0.03); }
+.trans-left { display:flex; align-items:center; gap:12px; }
+.trans-avatar { width:40px; height:40px; border-radius:8px; background: rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; }
+.trans-title { font-weight:700; color:var(--text); font-size:14px; }
+.trans-meta { font-size:12px; color:var(--text-muted); }
+.trans-amount { font-weight:800; }
+.trans-amount.positive { color:#27e36a; }
+.trans-amount.negative { color:var(--red); }
+
+.footer-dashboard { margin-top:18px; display:flex; align-items:center; gap:12px; color:var(--text-muted); }
+
+@media (max-width:900px) {
+  .sidebar{ display:none }
+  .metrics{ grid-template-columns:1fr; gap:14px }
+  .main-dashboard{ padding:18px }
+  .metric-value{ font-size:28px }
+  .metric-badge{ width:48px; height:48px; border-radius:10px }
+  .metric-badge img{ width:24px; height:24px }
+  .metric-row{ gap:12px; align-items:center }
+  .metric-meta{ margin-left:0 }
+  .transactions{ padding:14px }
+  .transaction-item{ padding:10px 6px }
+  .trans-title{ font-size:13px }
+  .trans-meta{ font-size:11px }
+}
+
+/* Adjust sidebar logo and footer layout */
+.sidebar .nav__logo { height:48px; }
+
+/* Make footer content span the full available width inside main (will not overlap sidebar)
+  - remove max-width so it stretches; keep padding aligned with main content */
+footer { padding:24px 0; }
+.footer__inner { max-width: none; width:100%; margin:0; padding:0 36px; box-sizing:border-box; display:flex; justify-content:center; align-items:center; gap:12px; position:relative; }
+.footer__logo { position:absolute; left:36px; top:50%; transform:translateY(-50%); height:36px; }
+.footer__text { text-align:center; margin:0 auto }
+
+/* hamburger menu (CSS only) */
+#nav-toggle { display: none; }
+.hamburger { display: none; background: transparent; border:1px solid rgba(255,255,255,0.04); padding:8px; border-radius:8px; cursor:pointer; }
+.hamburger .bars { width:18px; height:2px; background:var(--text); display:block; position:relative; }
+.hamburger .bars::before, .hamburger .bars::after { content: ''; position:absolute; left:0; width:18px; height:2px; background:var(--text); }
+.hamburger .bars::before { top:-6px; }
+.hamburger .bars::after { top:6px; }
+
+/* sidebar slide behavior on small screens */
+@media (max-width:900px) {
+  .sidebar { display:flex; position:fixed; left:0; top:0; bottom:0; width:260px; transform:translateX(-110%); transition:transform .28s ease; z-index:260; padding-top:20px; }
+  /* when checked, show sidebar */
+  #nav-toggle:checked ~ .dashboard .sidebar { transform: translateX(0); }
+
+  .nav-overlay { display:none; }
+  #nav-toggle:checked ~ .nav-overlay { display:block; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:240; }
+  .hamburger { display:inline-flex; align-items:center; justify-content:center; }
+  .topbar { gap:8px; }
+  .greeting { margin-left:6px; }
+}
+@media (max-width:900px) {
+  .footer__inner { padding:0 18px }
+  .footer__logo { position:static; transform:none; height:32px }
+}
+
+/* End moved styles */
+
 body {
   background: var(--bg);
   color: var(--text);
@@ -111,6 +216,7 @@ nav ul li a {
   color: #ccc;
   border-radius: 4px;
   transition: color 0.2s;
+  width: 80px;
 }
 
 @media (min-width: 600px) {
@@ -220,6 +326,38 @@ nav ul li a.nav__link--active::after {
   color: var(--text-dim);
   line-height: 1.8;
 }
+
+/* primary call-to-action button used across pages */
+.cta-btn {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1.5px solid rgba(93,255,155,0.18);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .20s ease, transform .12s ease, box-shadow .12s ease, color .12s ease;
+}
+.cta-btn:hover {
+  background: rgba(93,255,155,0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(93,255,155,0.06);
+}
+.cta-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(93,255,155,0.06);
+}
+
+/* small helpers to replace inline styles used in templates */
+.ml-8 { margin-left: 8px; }
+.mt-24 { margin-top: 24px; }
+.mt-28 { margin-top: 28px; }
+.mb-24 { margin-bottom: 24px; }
+.avatar-img-sm img { width: 22px; height: auto; }
+.flex-fill { flex: 1; }
+.footer--spaced { margin-top: 24px; }
 
 .hero__image {
   display: flex;
@@ -536,10 +674,10 @@ tbody td {
 }
 
 .newsletter__form-side .newsletter__subtitle {
-  font-size: 26px;
+  font-size: 20px;
   color: var(--text-dim);
-  margin-bottom: 36px;
-  font-weight: lighter;
+  margin-bottom: 20px;
+  font-weight: 300;
 }
 
 .newsletter__form {
@@ -780,9 +918,10 @@ footer {
   margin: 0;
 }
 
+/* ── Scanlines overlay ───────────────────────────────────── */
 .scanlines::before {
   content: '';
-  position: relative;
+  position: fixed;
   inset: 0;
   background: repeating-linear-gradient(
     0deg,
@@ -795,6 +934,7 @@ footer {
   z-index: 9999;
 }
 
+/* ── Hero extras (cadastro) ──────────────────────────────── */
 .hero { position: relative; overflow: hidden; }
 
 .hero h1 {
@@ -837,6 +977,7 @@ footer {
   text-align: center;
 }
 
+/* ── Section labels ──────────────────────────────────────── */
 .section-tag {
   font-family: var(--font-title);
   font-size: 13px;
@@ -849,6 +990,7 @@ footer {
 
 .section-title span { color: var(--neon); }
 
+/* ── Form panel & layout ─────────────────────────────────── */
 .form-panel {
   background: var(--card);
   border: 1px solid var(--border);
@@ -862,6 +1004,7 @@ footer {
   gap: 16px;
 }
 
+/* ── Form elements ───────────────────────────────────────── */
 .form-select {
   width: 100%;
   background: transparent;
@@ -954,6 +1097,7 @@ footer {
   box-shadow: 0 4px 16px rgba(93,255,155,0.25);
 }
 
+/* ── Info cards ──────────────────────────────────────────── */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -970,6 +1114,7 @@ footer {
   margin-bottom: 4px;
 }
 
+/* ── Styled list ─────────────────────────────────────────── */
 .styled-list { list-style: none; padding: 0; }
 
 .styled-list li {
@@ -987,6 +1132,7 @@ footer {
   font-size: 11px;
 }
 
+/* ── Footer extended (cadastro) ──────────────────────────── */
 .footer-links {
   display: flex;
   gap: 20px;

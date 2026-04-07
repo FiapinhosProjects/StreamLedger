@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamLedger | Dashboard (Teste)</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- styles for this page were moved to css/style.css -->
+</head>
+<body>
+  <input id="nav-toggle" type="checkbox">
+  <label for="nav-toggle" class="nav-overlay" aria-hidden="true"></label>
+
+  <div class="dashboard">
+    <aside class="sidebar">
+      <a href="index.html"><img src="assets/logo.png" alt="StreamLedger" class="nav__logo"></a>
+
+      <nav class="nav-vertical">
+        <ul>
+          <li><a href="#" class="nav__link--active"><img src="assets/home.svg" class="icon" alt=""> Visão Geral</a></li>
+          <li>
+            <a href="index.html" title="Voltar para apresentação">
+              <img src="assets/Voltar.svg" class="icon" alt="Voltar">
+              Voltar para apresentação
+              <svg class="icon ml-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.9"><path d="M15 18l-6-6 6-6" /></svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+  <div class="flex-fill"></div>
+    </aside>
+
+    <main class="main-dashboard">
+      <div class="topbar">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <label for="nav-toggle" class="hamburger" aria-label="Abrir menu" title="Abrir menu">
+            <span class="bars"></span>
+          </label>
+          <div class="greeting">
+            <img src="assets/user.svg" alt="Usuário">
+            <div>
+              <h2>E aí, Streamer!</h2>
+              <p>Vamos gerenciar suas finanças</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button class="cta-btn">+ Nova Transação</button>
+        </div>
+      </div>
+
+      <section class="metrics">
+        <div class="metric-card">
+          <div class="metric-row">
+            <div class="metric-badge" style="background:#6BD4B8;">
+              <img src="assets/LucroGeral.svg" alt="">
+            </div>
+            <div class="metric-meta">
+              <div class="metric-label">Faturamento Total</div>
+              <div class="metric-value">R$ 9.800,00</div>
+              <div class="metric-percent"><span class="percent-number positive">+15.3%</span><span class="percent-note">vs mês anterior</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-row">
+            <div class="metric-badge" style="background:#F87171;">
+              <img src="assets/CustosCanal.svg" alt="">
+            </div>
+            <div class="metric-meta">
+              <div class="metric-label">Custos do canal</div>
+              <div class="metric-value">R$ 3.800,00</div>
+              <div class="metric-percent"><span class="percent-number negative">+15.3%</span><span class="percent-note">vs mês anterior</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-row">
+            <div class="metric-badge" style="background:#3b82f6;">
+              <img src="assets/lucroReal.svg" alt="">
+            </div>
+            <div class="metric-meta">
+              <div class="metric-label">Lucro Real</div>
+              <div class="metric-value">R$ 6.000,00</div>
+              <div class="metric-percent"><span class="percent-number positive">+15.3%</span><span class="percent-note">vs mês anterior</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="transactions">
+        <div class="transactions-header">
+          <h1>Movimentações Recentes</h1>
+          <p class="transactions-subtitle">Últimas transações do mês</p>
+        </div>
+
+        <div class="transaction-item">
+          <div class="trans-left">
+            <div class="trans-avatar avatar-img-sm"><img src="assets/Despesa.svg" alt=""></div>
+            <div>
+              <div class="trans-title">Compra de Microfone</div>
+              <div class="trans-meta">Setup · 06/04/2026</div>
+            </div>
+          </div>
+          <div class="trans-amount negative">-R$300.00</div>
+        </div>
+
+        <div class="transaction-item">
+          <div class="trans-left">
+            <div class="trans-avatar avatar-img-sm"><img src="assets/Lucro.svg" alt=""></div>
+            <div>
+              <div class="trans-title">Donate</div>
+              <div class="trans-meta">Streamer · 05/04/2026</div>
+            </div>
+          </div>
+          <div class="trans-amount positive">+R$50.00</div>
+        </div>
+
+        <div class="transaction-item">
+          <div class="trans-left">
+            <div class="trans-avatar avatar-img-sm"><img src="assets/Despesa.svg" alt=""></div>
+            <div>
+              <div class="trans-title">Assinatura Studio Pro</div>
+              <div class="trans-meta">Software · 04/04/2026</div>
+            </div>
+          </div>
+          <div class="trans-amount negative">-R$49.00</div>
+        </div>
+
+        
+        <div class="transaction-item">
+          <div class="trans-left">
+            <div class="trans-avatar avatar-img-sm"><img src="assets/Lucro.svg" alt=""></div>
+            <div>
+              <div class="trans-title">Donate</div>
+              <div class="trans-meta">Streamer · 04/04/2026</div>
+            </div>
+          </div>
+          <div class="trans-amount positive">+R$50.00</div>
+        </div>
+
+        <div class="transaction-item">
+          <div class="trans-left">
+            <div class="trans-avatar avatar-img-sm"><img src="assets/Despesa.svg" alt=""></div>
+            <div>
+              <div class="trans-title">Compra de Teclado</div>
+              <div class="trans-meta">Setup · 03/04/2026</div>
+            </div>
+          </div>
+          <div class="trans-amount negative">-R$450.00</div>
+        </div>
+
+      </section>
+
+  <footer class="footer--spaced">
+        <div class="footer__inner">
+          <img src="assets/logo.png" alt="StreamLedger" class="footer__logo">
+          <div class="footer__text"><strong>StreamLedger © 2026</strong><br>Desenvolvido por Bruna Sousa · Gabriel Kott · Caio Leme · Gabriele Lopes</div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+</body>
+</html>
