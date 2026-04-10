@@ -359,67 +359,6 @@ nav ul li a.nav__link--active::after {
 .flex-fill { flex: 1; }
 .footer--spaced { margin-top: 24px; }
 
-/* Modal styles */
-.app-modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1200;
-}
-.app-modal.is-open {
-  display: flex;
-}
-.app-modal__backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(2,6,10,0.6);
-  backdrop-filter: blur(4px);
-}
-.app-modal__card {
-  position: relative;
-  max-width: 520px;
-  width: calc(100% - 48px);
-  z-index: 2;
-  padding: 22px;
-  border-radius: 12px;
-}
-.app-modal__close {
-  position: absolute;
-  right: 10px;
-  top: 8px;
-  background: transparent;
-  border: none;
-  color: var(--text-dim);
-  font-size: 26px;
-  cursor: pointer;
-}
-
-/* reuse metric-card styles but make modal background and border match green tone */
-.app-modal__card .metric-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: var(--neon-glow);
-}
-.app-modal__card .metric-card .metric-row { gap: 12px; align-items: center; }
-.app-modal__card .metric-label {
-  font-family: var(--font-title);
-  font-weight: 800;
-  font-size: 20px;
-  color: var(--neon-hover);
-}
-.app-modal__card .metric-badge { display: none; }
-.modal-subtitle {
-  font-family: var(--font-title);
-  font-weight: 300;
-  font-size: 14px;
-  color: var(--text-dim);
-  margin-top: 6px;
-}
-
 .hero__image {
   display: flex;
   justify-content: center;
