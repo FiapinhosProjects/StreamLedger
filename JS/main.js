@@ -13,7 +13,6 @@ let transactionToDelete = null;
 let pendingTransaction = null; // Guarda os dados para caso de duplicidade
 
 // --- MÁSCARA DE MOEDA EM TEMPO REAL ---
-// Verificamos se o amountInput existe, para não travar o index.html
 if (amountInput) {
     amountInput.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, "");
@@ -39,8 +38,6 @@ const formatCurrency = (value) => {
     return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 };
 
-// --- FUNÇÕES DO MODAL DE CADASTRO/EDIÇÃO ---
-// Mudança Crucial: 'window.openModal' garante que os botões do HTML consigam chamar a função
 window.openModal = (id = null) => {
     if (!modal) return;
 

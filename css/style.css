@@ -298,8 +298,6 @@ html {
 }
 
 @media (max-width:900px) {
-  /* Foi removido o '.sidebar { display: none }' daqui para não bugar o menu */
-  
   .metrics {
     grid-template-columns: 1fr;
     gap: 14px
@@ -384,9 +382,6 @@ footer {
   margin: 0 auto
 }
 
-/* ==========================================================================
-    MENU HAMBÚRGUER
-   ========================================================================== */
 #nav-toggle {
   display: none;
 }
@@ -431,7 +426,6 @@ footer {
 }
 
 @media (max-width:900px) {
-  /* Mantido apenas ajustes de layout geral que já estavam aqui */
   .topbar {
     gap: 8px;
   }
@@ -1297,9 +1291,6 @@ tbody td {
   }
 }
 
-/* ==========================================================================
-    ESTILOS EXCLUSIVOS DO BOOTSTRAP DASHBOARD (Apenas para test.html)
-   ========================================================================== */
 body.dashboard-body {
   background-color: #1a1a1a !important;
   display: flex;
@@ -1354,9 +1345,6 @@ body.dashboard-body {
   border-radius: 10px;
 }
 
-/* ==========================================================================
-    AQUI ESTÁ A LÓGICA DO MENU UNIFICADA E CORRIGIDA PARA O DASHBOARD
-   ========================================================================== */
 @media (max-width: 991px) {
   .dashboard-body .sidebar {
     position: fixed;
