@@ -42,10 +42,10 @@
       <div class="row align-items-center gy-4 w-100">
 
         <div class="col-12 col-md-6 text-center">
-          <h1 style="color: var(--neon); font-size: 4.0625rem; font-weight: 700; line-height: 1.1;">Seja um Ledger</h1>
-          <p class="text-body-secondary fs-5 mb-4" style="font-weight: 300;">Tenha acesso a atualizações em primeira mão</p>
+          <h1 class="fade-in" style="color: var(--neon); font-size: 4.0625rem; font-weight: 700; line-height: 1.1;">Seja um Ledger</h1>
+          <p class="text-body-secondary fs-5 mb-4 fade-in fade-in-d1" style="font-weight: 300;">Tenha acesso a atualizações em primeira mão</p>
 
-          <form id="newsletter-form" class="mx-auto text-start" style="max-width: 468px;">
+          <form id="newsletter-form" class="mx-auto text-start fade-in fade-in-d2" style="max-width: 468px;">
 
             <div class="mb-3">
               <label for="nome" class="form-label small fw-semibold" style="color: #C1FAD7;">Nome completo</label>
@@ -99,16 +99,14 @@
     </div>
   </main>
 
-  <!-- Modal Sucesso -->
-  <div class="modal fade" id="modal-success" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border text-center"
-        style="background: #1e2a1e; border-color: var(--neon) !important;">
-        <div class="modal-body py-5 px-4">
-          <h2 class="fw-bold mb-3" style="color: var(--neon); font-size: 2.625rem;">Sucesso!</h2>
-          <p class="text-body-secondary mb-4">Você será notificado quando<br>houver novas atualizações!</p>
-          <button type="button" class="cta-btn px-4" data-bs-dismiss="modal">Fechar</button>
-        </div>
+  <!-- Toast Sucesso -->
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+    <div id="toast-success" class="toast border d-flex align-items-center" role="alert" aria-live="assertive" aria-atomic="true"
+      style="background: var(--card); border-color: var(--neon) !important; min-width: 450px; max-width: 600px;">
+      <div class="toast-body d-flex align-items-center gap-3 py-2 px-3 w-100">
+        <strong style="color: var(--neon); white-space: nowrap;">✓ Sucesso!</strong>
+        <span class="text-body-secondary small">Inscrição realizada! Você será notificado quando houver atualizações.</span>
+        <button type="button" class="btn-close btn-close-white ms-auto flex-shrink-0" data-bs-dismiss="toast" aria-label="Fechar"></button>
       </div>
     </div>
   </div>
@@ -176,7 +174,8 @@
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      new bootstrap.Modal(document.getElementById('modal-success')).show();
+      const toast = new bootstrap.Toast(document.getElementById('toast-success'), { delay: 4000 });
+      toast.show();
       this.reset();
     });
   </script>
