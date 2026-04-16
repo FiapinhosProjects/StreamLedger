@@ -1,40 +1,52 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StreamLedger | Início</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <header>
-    <div class="nav__container">
-      <a href="index.html">
-        <img src="assets/logo.png" alt="StreamLedger" class="nav__logo">
+  <header class="sticky-top" style="background: var(--bg-header); border-bottom: 1px solid rgba(93,255,155,0.12);">
+    <nav class="navbar navbar-expand-md navbar-dark container-xl py-2">
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainNav" aria-controls="mainNav" aria-label="Abrir menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/logo.png" alt="StreamLedger" height="44">
       </a>
-      <nav>
-        <ul>
-          <li><a href="index.html" class="nav__link--active">Início</a></li>
-          <li><a href="about.html">Sobre</a></li>
-          <li><a href="research.html">Pesquisa</a></li>
-          <li><a href="news.html">Newsletter</a></li>
-        </ul>
-      </nav>
-    </div>
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="mainNav" aria-labelledby="mainNavLabel">
+        <div class="offcanvas-header">
+          <a href="index.html">
+            <img src="assets/logo.png" alt="StreamLedger" height="36">
+          </a>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+        </div>
+        <div class="offcanvas-body justify-content-center">
+          <ul class="navbar-nav gap-2">
+            <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html">Sobre</a></li>
+            <li class="nav-item"><a class="nav-link" href="research.html">Pesquisa</a></li>
+            <li class="nav-item"><a class="nav-link" href="news.html">Newsletter</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
   </header>
 
-  <main >
-    <section class="hero">
-      <div class="page__container">
-        <div class="hero__inner">
-          <div class="hero__text">
-            <h1>StreamLedger</h1>
-            <p class="mt-28 mb-24">
+  <main>
+    <section class="hero py-5">
+      <div class="container-xl">
+        <div class="row align-items-center gy-4">
+          <div class="col-12 col-lg-6 order-lg-1 order-2">
+            <h1 class="hero__title">StreamLedger</h1>
+            <p class="mt-4 mb-3">
               <a class="cta-btn" href="test.html">Conheça nosso primeiro protótipo</a>
             </p>
-            <p>
+            <p class="text-body-secondary">
               O StreamLedger será uma plataforma criada para ajudar streamers iniciantes a
               organizarem e entenderem melhor suas finanças. Em um único lugar, você pode
               acompanhar seus ganhos, controlar custos, registrar doações e visualizar todas
@@ -42,30 +54,54 @@
               conteúdo gamers tenham uma visão completa da sua atividade financeira.
             </p>
             <br>
-            <p>
+            <p class="text-body-secondary">
               Nosso objetivo é ajudar streamers a transformar sua paixão por jogar e criar
               conteúdo em algo mais organizado, profissional e sustentável, oferecendo mais
               clareza sobre seus ganhos e incentivando uma gestão financeira mais consciente
               desde o início da jornada no streaming.
             </p>
           </div>
-          <div class="hero__image">
-            <img src="assets/hero-dashboard.svg" alt="Dashboard StreamLedger">
+          <div class="col-12 col-lg-6 order-lg-2 order-1 text-center">
+            <img src="assets/hero-dashboard.svg" alt="Dashboard StreamLedger" class="img-fluid">
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    <div class="footer__inner">
-      <img src="assets/logo.png" alt="StreamLedger" class="footer__logo">
-      <div class="footer__text">
-        <strong>StreamLedger © 2026</strong><br>
-        Desenvolvido por Bruna Sousa &bull; Gabriel Kott &bull; Caio Leme &bull; Gabriele Lopes &bull; Davi Simione
+  <footer class="py-5" style="background: var(--bg-header); border-top: 1px solid rgba(93,255,155,0.08);">
+    <div class="container-xl">
+      <div class="row gy-4">
+        <div class="col-12 col-md-4">
+          <img src="assets/logo.png" alt="StreamLedger" height="36" class="mb-3">
+          <p class="text-body-secondary small mb-0">Gestão financeira simples e acessível para streamers iniciantes.</p>
+        </div>
+        <div class="col-12 col-md-4">
+          <h6 class="fw-bold mb-3" style="color: var(--neon);">Navegação</h6>
+          <ul class="list-unstyled d-flex flex-column gap-2">
+            <li><a href="index.html" class="text-body-secondary text-decoration-none small">Início</a></li>
+            <li><a href="about.html" class="text-body-secondary text-decoration-none small">Sobre</a></li>
+            <li><a href="research.html" class="text-body-secondary text-decoration-none small">Pesquisa</a></li>
+            <li><a href="news.html" class="text-body-secondary text-decoration-none small">Newsletter</a></li>
+            <li><a href="test.html" class="text-body-secondary text-decoration-none small">Protótipo</a></li>
+          </ul>
+        </div>
+        <div class="col-12 col-md-4">
+          <h6 class="fw-bold mb-3" style="color: var(--neon);">Equipe</h6>
+          <ul class="list-unstyled d-flex flex-column gap-2">
+            <li><a href="#" class="text-body-secondary text-decoration-none small">Bruna Sousa</a></li>
+            <li><a href="#" class="text-body-secondary text-decoration-none small">Gabriel Kott</a></li>
+            <li><a href="#" class="text-body-secondary text-decoration-none small">Caio Leme</a></li>
+            <li><a href="#" class="text-body-secondary text-decoration-none small">Gabriele Lopes</a></li>
+            <li><a href="#" class="text-body-secondary text-decoration-none small">Davi Simione</a></li>
+          </ul>
+        </div>
       </div>
+      <hr class="border-secondary border-opacity-25 my-4">
+      <p class="text-body-tertiary text-center small mb-0">StreamLedger &copy; 2026 &mdash; Todos os direitos reservados.</p>
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

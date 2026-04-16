@@ -1,16 +1,20 @@
 // Seleção de elementos principais
 const transactionList = document.querySelector('.transactions');
-const modal = document.getElementById('modal-transaction');
-const modalDelete = document.getElementById('modal-delete');
-const modalDuplicate = document.getElementById('modal-duplicate');
+const modalEl = document.getElementById('modal-transaction');
+const modalDeleteEl = document.getElementById('modal-delete');
+const modalDuplicateEl = document.getElementById('modal-duplicate');
 const transactionForm = document.getElementById('transaction-form');
-const btnNewTransaction = document.querySelector('.cta-btn');
 const amountInput = document.getElementById('amount');
+
+// Bootstrap Modal instances
+const bsModal = modalEl ? new bootstrap.Modal(modalEl) : null;
+const bsModalDelete = modalDeleteEl ? new bootstrap.Modal(modalDeleteEl) : null;
+const bsModalDuplicate = modalDuplicateEl ? new bootstrap.Modal(modalDuplicateEl) : null;
 
 // Busca os dados do LocalStorage ou inicia um array vazio
 let transactions = JSON.parse(localStorage.getItem('streamledger_data')) || [];
 let transactionToDelete = null;
-let pendingTransaction = null; // Guarda os dados para caso de duplicidade
+let pendingTransaction = null;
 
 // --- MÁSCARA DE MOEDA EM TEMPO REAL ---
 if (amountInput) {
@@ -39,9 +43,7 @@ const formatCurrency = (value) => {
 };
 
 window.openModal = (id = null) => {
-    if (!modal) return;
-
-    modal.style.display = 'flex';
+    if (!bsModal) return;
 
     if (id) {
         const t = transactions.find(item => item.id === id);
@@ -56,21 +58,23 @@ window.openModal = (id = null) => {
         transactionForm.reset();
         document.getElementById('edit-id').value = "";
     }
+
+    bsModal.show();
 };
 
 window.closeModal = () => {
-    if (modal) modal.style.display = 'none';
+    if (bsModal) bsModal.hide();
 };
 
 // --- FUNÇÕES DO MODAL DE EXCLUSÃO ---
 window.deleteTransaction = (id) => {
-    if (!modalDelete) return;
+    if (!bsModalDelete) return;
     transactionToDelete = id;
-    modalDelete.style.display = 'flex';
+    bsModalDelete.show();
 };
 
 window.closeDeleteModal = () => {
-    if (modalDelete) modalDelete.style.display = 'none';
+    if (bsModalDelete) bsModalDelete.hide();
     transactionToDelete = null;
 };
 
@@ -84,7 +88,7 @@ window.confirmDelete = () => {
 
 // --- FUNÇÕES DO MODAL DE DUPLICIDADE ---
 window.closeDuplicateModal = () => {
-    if (modalDuplicate) modalDuplicate.style.display = 'none';
+    if (bsModalDuplicate) bsModalDuplicate.hide();
     pendingTransaction = null;
 };
 
@@ -113,40 +117,41 @@ const renderTransactions = () => {
 
     const header = `
         <div class="transactions-header">
-            <h1 class="fs-4 text-neon">Movimentações Recentes</h1>
-            <p class="transactions-subtitle text-secondary">Últimas transações registradas</p>
+            <h1 class="fs-4">Movimentações Recentes</h1>
+            <p class="transactions-subtitle text-body-secondary">Últimas transações registradas</p>
         </div>`;
 
     transactionList.innerHTML = header;
 
     if (transactions.length === 0) {
-        transactionList.innerHTML += `<p style="color: #aaa; text-align: center; padding: 20px;">Nenhuma transação registrada ainda.</p>`;
+        transactionList.innerHTML += `<p class="text-body-tertiary text-center p-4">Nenhuma transação registrada ainda.</p>`;
         return;
     }
 
     transactions.slice().reverse().forEach(t => {
         const isIncome = t.type === 'income';
         const itemHtml = `
-            <div class="transaction-item d-flex justify-content-between align-items-center p-3 border-bottom border-secondary border-opacity-25 hover-bg">
-                <div class="trans-left d-flex align-items-center gap-3">
-                <div class="trans-avatar d-flex align-items-center justify-content-center rounded" style="width:40px; height:40px; background: rgba(255,255,255,0.05);">
-                    <img src="assets/${isIncome ? 'Lucro.svg' : 'Despesa.svg'}" alt="${isIncome ? 'Lucro' : 'Despesa'}" width="20">
+            <div class="transaction-item d-flex justify-content-between align-items-center p-3 border-bottom border-secondary border-opacity-10">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center justify-content-center rounded"
+                         style="width:40px; height:40px; background: rgba(255,255,255,0.05);">
+                        <img src="assets/${isIncome ? 'Lucro.svg' : 'Despesa.svg'}" alt="${isIncome ? 'Lucro' : 'Despesa'}" width="20">
+                    </div>
+                    <div>
+                        <div class="fw-bold">${t.title}</div>
+                        <div class="text-body-tertiary small">${t.category} · ${t.date}</div>
+                    </div>
                 </div>
-                <div>
-                    <div class="trans-title fw-bold text-white">${t.title}</div>
-                    <div class="trans-meta text-secondary" style="font-size: 12px;">${t.category} · ${t.date}</div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="fw-bold ${isIncome ? 'text-success' : 'text-danger'}">
+                        ${isIncome ? '+' : '-'}${formatCurrency(t.amount)}
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button onclick="window.openModal(${t.id})" class="btn-edit" title="Editar">✎</button>
+                        <button onclick="window.deleteTransaction(${t.id})" class="btn-delete" title="Excluir">✖</button>
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <div class="trans-amount fw-bold ${isIncome ? 'text-success' : 'text-danger'}">
-                    ${isIncome ? '+' : '-'}${formatCurrency(t.amount)}
-                </div>
-                <div class="d-flex gap-2">
-                    <button onclick="window.openModal(${t.id})" class="btn-edit" title="Editar">✎</button>
-                    <button onclick="window.deleteTransaction(${t.id})" class="btn-delete" title="Excluir">✖</button>
-                </div>
-            </div>
-        </div>`;
+            </div>`;
         transactionList.innerHTML += itemHtml;
     });
 };
@@ -178,7 +183,7 @@ if (transactionForm) {
 
         if (isDuplicate) {
             pendingTransaction = data;
-            if (modalDuplicate) modalDuplicate.style.display = 'flex';
+            if (bsModalDuplicate) bsModalDuplicate.show();
             return;
         }
 
@@ -203,13 +208,6 @@ const saveAndRefresh = () => {
     localStorage.setItem('streamledger_data', JSON.stringify(transactions));
     updateMetrics();
     renderTransactions();
-};
-
-// --- EVENTOS GERAIS ---
-window.onclick = (event) => {
-    if (event.target == modal) window.closeModal();
-    if (event.target == modalDelete) window.closeDeleteModal();
-    if (event.target == modalDuplicate) window.closeDuplicateModal();
 };
 
 document.addEventListener('DOMContentLoaded', saveAndRefresh);
