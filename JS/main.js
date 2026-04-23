@@ -211,3 +211,14 @@ const saveAndRefresh = () => {
 };
 
 document.addEventListener('DOMContentLoaded', saveAndRefresh);
+
+// --- RESETANDO MODAL ---
+if (modalEl) {
+    modalEl.addEventListener('show.bs.modal', () => {
+        const editId = document.getElementById('edit-id').value;
+        if (!editId) {
+            transactionForm.reset();
+            document.getElementById('modal-title').innerText = "Nova Transação";
+        }
+    });
+}
