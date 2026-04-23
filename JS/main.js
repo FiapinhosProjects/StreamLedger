@@ -5,6 +5,8 @@ const modalDeleteEl = document.getElementById('modal-delete');
 const modalDuplicateEl = document.getElementById('modal-duplicate');
 const transactionForm = document.getElementById('transaction-form');
 const amountInput = document.getElementById('amount');
+const typeSelect = document.getElementById('type');
+const categorySelect = document.getElementById('category');
 
 // Bootstrap Modal instances
 const bsModal = modalEl ? new bootstrap.Modal(modalEl) : null;
@@ -42,6 +44,131 @@ const formatCurrency = (value) => {
     return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 };
 
+let revenueChartInstance = null;
+
+// --- GRÁFICO (Chart.js) ---
+const initChart = () => {
+    const ctx = document.getElementById('revenueChart');
+    if (!ctx) return;
+
+    revenueChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Total Arrecadado'],
+            datasets: [
+                {
+                    label: 'twitch',
+                    data: [0],
+                    backgroundColor: '#9147FF',
+                    borderRadius: 6,
+                    barPercentage: 0.4,
+                    categoryPercentage: 0.5
+                },
+                {
+                    label: 'youtube',
+                    data: [0],
+                    backgroundColor: '#FB2C36',
+                    borderRadius: 6,
+                    barPercentage: 0.4,
+                    categoryPercentage: 0.5
+                },
+                {
+                    label: 'donates',
+                    data: [0],
+                    backgroundColor: '#00FF7F',
+                    borderRadius: 6,
+                    barPercentage: 0.4,
+                    categoryPercentage: 0.5
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)',
+                        drawBorder: false,
+                    },
+                    ticks: {
+                        color: '#a0a0a0',
+                    },
+                    border: {
+                        display: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                        drawBorder: false,
+                    },
+                    ticks: {
+                        color: '#a0a0a0',
+                    },
+                    border: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#a0a0a0',
+                        usePointStyle: true,
+                        boxWidth: 10,
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(18, 18, 20, 0.9)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    borderWidth: 1,
+                    padding: 10,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+        }
+    });
+};
+
+const updateCategoryOptions = () => {
+    if (!typeSelect || !categorySelect) return;
+    const isExpense = typeSelect.value === 'expense';
+    Array.from(categorySelect.options).forEach(option => {
+        const val = option.value;
+        if (['Twitch Subs', 'YouTube AdSense', 'Donates'].includes(val)) {
+            option.disabled = isExpense;
+            if (isExpense && categorySelect.value === val) {
+                categorySelect.value = 'Geral';
+            }
+        }
+    });
+};
+
+if (typeSelect) {
+    typeSelect.addEventListener('change', updateCategoryOptions);
+}
+
 window.openModal = (id = null) => {
     if (!bsModal) return;
 
@@ -58,6 +185,8 @@ window.openModal = (id = null) => {
         transactionForm.reset();
         document.getElementById('edit-id').value = "";
     }
+
+    updateCategoryOptions();
 
     bsModal.show();
 };
@@ -101,14 +230,36 @@ window.confirmDuplicate = () => {
 
 // --- LÓGICA DE INTERFACE ---
 const updateMetrics = () => {
-    const revenue = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
-    const costs = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
+    const isReceitasPage = window.location.pathname.includes('receitas.html');
 
-    const valueCards = document.querySelectorAll('.metric-value');
-    if (valueCards.length >= 3) {
-        valueCards[0].innerText = formatCurrency(revenue);
-        valueCards[1].innerText = formatCurrency(costs);
-        valueCards[2].innerText = formatCurrency(revenue - costs);
+    if (isReceitasPage) {
+        const twitchSubsIncomes = transactions.filter(t => t.type === 'income' && t.category === 'Twitch Subs').reduce((acc, t) => acc + t.amount, 0);
+        const youtubeAdsenseIncomes = transactions.filter(t => t.type === 'income' && t.category === 'YouTube AdSense').reduce((acc, t) => acc + t.amount, 0);
+        const donatesIncomes = transactions.filter(t => t.type === 'income' && t.category === 'Donates').reduce((acc, t) => acc + t.amount, 0);
+
+        const valueCards = document.querySelectorAll('.fs-3.fw-bold');
+        if (valueCards.length >= 3) {
+            valueCards[0].innerText = formatCurrency(twitchSubsIncomes);
+            valueCards[1].innerText = formatCurrency(youtubeAdsenseIncomes);
+            valueCards[2].innerText = formatCurrency(donatesIncomes);
+        }
+
+        if (revenueChartInstance) {
+            revenueChartInstance.data.datasets[0].data = [twitchSubsIncomes];
+            revenueChartInstance.data.datasets[1].data = [youtubeAdsenseIncomes];
+            revenueChartInstance.data.datasets[2].data = [donatesIncomes];
+            revenueChartInstance.update();
+        }
+    } else {
+        const revenue = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
+        const costs = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
+
+        const valueCards = document.querySelectorAll('.metric-value');
+        if (valueCards.length >= 3) {
+            valueCards[0].innerText = formatCurrency(revenue);
+            valueCards[1].innerText = formatCurrency(costs);
+            valueCards[2].innerText = formatCurrency(revenue - costs);
+        }
     }
 };
 
@@ -210,7 +361,10 @@ const saveAndRefresh = () => {
     renderTransactions();
 };
 
-document.addEventListener('DOMContentLoaded', saveAndRefresh);
+document.addEventListener('DOMContentLoaded', () => {
+    initChart();
+    saveAndRefresh();
+});
 
 // --- RESETANDO MODAL ---
 if (modalEl) {
@@ -219,6 +373,7 @@ if (modalEl) {
         if (!editId) {
             transactionForm.reset();
             document.getElementById('modal-title').innerText = "Nova Transação";
+            updateCategoryOptions();
         }
     });
 }
