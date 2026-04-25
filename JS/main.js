@@ -45,6 +45,7 @@ const formatCurrency = (value) => {
 };
 
 let revenueChartInstance = null;
+let expenseChartInstance = null;
 
 // --- GRÁFICO (Chart.js) ---
 const initChart = () => {
@@ -151,6 +152,61 @@ const initChart = () => {
     });
 };
 
+const initExpenseChart = () => {
+    const ctx = document.getElementById('expenseChart');
+    if (!ctx) return;
+
+    expenseChartInstance = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Setup', 'Software', 'Outros'],
+            datasets: [{
+                data: [0, 0, 0],
+                backgroundColor: ['#9147FF', '#00FF7F', '#FF6900'],
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        color: '#a0a0a0',
+                        usePointStyle: false,
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(18, 18, 20, 0.9)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    borderWidth: 1,
+                    padding: 10,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed !== null) {
+                                label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const isDespesasPage = window.location.pathname.includes('despesas.html');
+    if (!isDespesasPage) return;
+};
+
 const updateCategoryOptions = () => {
     if (!typeSelect || !categorySelect) return;
     const isExpense = typeSelect.value === 'expense';
@@ -231,6 +287,7 @@ window.confirmDuplicate = () => {
 // --- LÓGICA DE INTERFACE ---
 const updateMetrics = () => {
     const isReceitasPage = window.location.pathname.includes('receitas.html');
+    const isDespesasPage = window.location.pathname.includes('despesas.html');
 
     if (isReceitasPage) {
         const twitchSubsIncomes = transactions.filter(t => t.type === 'income' && t.category === 'Twitch Subs').reduce((acc, t) => acc + t.amount, 0);
@@ -250,6 +307,24 @@ const updateMetrics = () => {
             revenueChartInstance.data.datasets[2].data = [donatesIncomes];
             revenueChartInstance.update();
         }
+    } else if (isDespesasPage) {
+        const equipAmount = transactions.filter(t => t.type === 'expense' && t.category === 'Setup').reduce((acc, t) => acc + t.amount, 0);
+        const softAmount = transactions.filter(t => t.type === 'expense' && t.category === 'Software').reduce((acc, t) => acc + t.amount, 0);
+        const outrosAmount = transactions.filter(t => t.type === 'expense' && t.category !== 'Setup' && t.category !== 'Software').reduce((acc, t) => acc + t.amount, 0);
+
+        const valueCards = document.querySelectorAll('.metric-value');
+        if (valueCards.length >= 3) {
+            valueCards[0].innerText = formatCurrency(equipAmount);
+            valueCards[1].innerText = formatCurrency(softAmount);
+            valueCards[2].innerText = formatCurrency(outrosAmount);
+        }
+
+        if (expenseChartInstance) {
+            expenseChartInstance.data.datasets[0].data = [equipAmount, softAmount, outrosAmount];
+            expenseChartInstance.update();
+        }
+
+        renderTopExpenses();
     } else {
         const revenue = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
         const costs = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
@@ -304,6 +379,37 @@ const renderTransactions = () => {
                 </div>
             </div>`;
         transactionList.innerHTML += itemHtml;
+    });
+};
+
+const renderTopExpenses = () => {
+    const topExpensesList = document.getElementById('topExpensesList');
+    if (!topExpensesList) return;
+
+    const expenses = transactions.filter(t => t.type === 'expense')
+                                 .sort((a, b) => b.amount - a.amount)
+                                 .slice(0, 5);
+
+    topExpensesList.innerHTML = '';
+
+    if (expenses.length === 0) {
+        topExpensesList.innerHTML = `<p class="text-body-tertiary small">Nenhuma despesa registrada.</p>`;
+        return;
+    }
+
+    expenses.forEach(t => {
+        const itemHtml = `
+            <div class="d-flex justify-content-between align-items-center p-3 rounded-3" style="background: rgba(255, 255, 255, 0.05);">
+                <div>
+                    <div class="fw-bold" style="color: #fff;">${t.title}</div>
+                    <div class="text-body-tertiary small">${t.category}</div>
+                </div>
+                <div class="fw-bold text-danger">
+                    ${formatCurrency(t.amount)}
+                </div>
+            </div>
+        `;
+        topExpensesList.innerHTML += itemHtml;
     });
 };
 
@@ -363,6 +469,7 @@ const saveAndRefresh = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     initChart();
+    initExpenseChart();
     saveAndRefresh();
 });
 
