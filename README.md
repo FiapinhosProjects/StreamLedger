@@ -11,10 +11,15 @@
 <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
 <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
+<img src="https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" />
 </p>
 
 <p align="center">
 <i>Organize suas finanças de streaming de forma simples, visual e estratégica.</i>
+</p>
+
+<p align="center">
+<a href="https://streamledger.gabrielkott.workers.dev/">🔗 Ver Demo Online</a>
 </p>
 
 ---
@@ -71,17 +76,12 @@ streamledger/
 ## 🛠 Como Executar
 
 ```bash
-# 1. Clone o repositório
 git clone https://github.com/GabrielKott/streamledger.git
 cd streamledger
-
-# 2. Abra no navegador
-start index.html       # Windows
-open index.html        # macOS
-xdg-open index.html    # Linux
+start index.html
 ```
 
-> 💡 Projeto em HTML/CSS puro — sem dependências. Para features avançadas: `npx serve`
+> 💡 Projeto em HTML/CSS/JS + Bootstrap — sem build necessário.
 
 ---
 
