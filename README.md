@@ -62,13 +62,18 @@ O **StreamLedger** reúne em um único ambiente tudo o que um streamer precisa p
 
 ```
 streamledger/
-├── index.html        # Home / Apresentação
-├── about.html        # Sobre o projeto
-├── research.html     # Pesquisa e dados
-├── news.html         # Newsletter / cadastro
-├── test.html         # Protótipo do dashboard (demo)
-└── assets/
-    └── logo-fiap.png
+├── .github/
+├── JS/
+├── assets/
+├── css/
+├── index.html          # Home / Apresentação
+├── about.html          # Sobre o projeto
+├── research.html       # Pesquisa e dados
+├── news.html           # Newsletter / cadastro
+├── test.html           # Protótipo do dashboard
+├── receitas.html       # Registro de receitas
+├── despesas.html       # Controle de despesas
+└── README.md
 ```
 
 ---
