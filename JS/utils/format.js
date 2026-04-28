@@ -1,6 +1,20 @@
-// máscara de moeda
-export const applyCurrencyMask = (input) => {
-    input.addEventListener('input', (e) => {
+// --- UTILITÁRIOS DE FORMATAÇÃO ---
+ 
+// Formata número do banco de dados para o input
+export const formatToInput = (value) => {
+    let formatted = value.toFixed(2).replace(".", ",");
+    return formatted.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+};
+ 
+// Formata valores para a tela com o "R$"
+export const formatCurrency = (value) => {
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+};
+ 
+// Aplica máscara de moeda em tempo real no input
+export const applyAmountMask = (amountInput) => {
+    if (!amountInput) return;
+    amountInput.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, "");
         if (value === "") {
             e.target.value = "";
@@ -12,12 +26,4 @@ export const applyCurrencyMask = (input) => {
         e.target.value = value;
     });
 };
-
-export const formatToInput = (value) => {
-    let formatted = value.toFixed(2).replace(".", ",");
-    return formatted.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-};
-
-export const formatCurrency = (value) => {
-    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-};
+ 
