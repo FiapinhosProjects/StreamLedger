@@ -1,112 +1,108 @@
-# FIAP - Faculdade de Informática e Administração Paulista
 
 
 <p align="center">
-<a href= "https://www.fiap.com.br/"><img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
+<a href="https://www.fiap.com.br/"><img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Administração Paulista" border="0" width="30%"></a>
 </p>
 
-<br>
+<h1 align="center">💰 Stream Ledger — Dashboard Financeiro para Streamers</h1>
 
-# Stream Ledger - Dashboard Financeiro 
+<p align="center">
+<img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=for-the-badge" />
+<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
+<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
+</p>
 
-## Fiapinhos
-
-## 👨‍🎓 Integrantes: 
-- <a href="https://www.linkedin.com/in/brunasousasantos/">Bruna Sousa </a>
-- <a href="https://www.linkedin.com/in/davi-simione-01127830b/">Davi Simione</a>
-- <a href="https://www.linkedin.com/in/caiobertaglia/">Caio Leme</a> 
-- <a href="https://www.linkedin.com/in/gabriel-kott-3494342ab/">Gabriel Kott</a> 
-- <a href="https://www.linkedin.com/in/gabrielelopes1925/">Gabriele Lopes</a>
-
-## 👩‍🏫 Professores:
-### Tutor(a) 
-- <a href="https://www.linkedin.com/in/profgonzalez/">Lucas Gonzalez</a>
-
-
-## 📜 Descrição
-
-StreamLedger é uma plataforma criada para ajudar streamers iniciantes e pequenos criadores de conteúdo a organizarem suas finanças de forma simples e visual.
-
-A aplicação permite registrar receitas, controlar despesas e compreender melhor o fluxo financeiro do canal, ajudando criadores a tomarem decisões mais estratégicas sobre seu crescimento.
-
-O universo do streaming cresce a cada ano, com milhares de pessoas compartilhando conteúdo e construindo comunidades em plataformas digitais. Entretanto, muitos criadores enfrentam dificuldades quando precisam lidar com:
-
-- controle financeiro
-- organização de receitas
-- gestão de despesas
-- planejamento de investimentos
-
-O StreamLedger surge como uma solução para transformar dados financeiros em informações claras e acessíveis, permitindo que streamers acompanhem sua evolução financeira.
+<p align="center">
+<i>Organize suas finanças de streaming de forma simples, visual e estratégica.</i>
+</p>
 
 ---
 
-## 🚀 Solução
+## 🎯 O Problema
 
-O StreamLedger foi desenvolvido como uma plataforma de gestão financeira voltada para streamers, reunindo em um único ambiente as principais informações sobre o canal.
+O universo do streaming cresce a cada ano, mas muitos criadores enfrentam dificuldades com:
 
-### A plataforma oferece
-
-- Registro de receitas provenientes de plataformas de streaming
-- Controle de despesas relacionadas ao canal
-- Visão geral do fluxo financeiro
-- Organização das movimentações financeiras
-- Informações sobre plataformas de streaming
-
-Com isso, criadores de conteúdo podem entender melhor sua situação financeira e planejar o crescimento do canal.
+- 📊 Controle financeiro desorganizado
+- 💸 Falta de visão sobre receitas e despesas do canal
+- 📉 Dificuldade em planejar investimentos e crescimento
+- 🤯 Informações espalhadas em diversas plataformas
 
 ---
 
-## ✨ Funcionalidades (exemplo)
+## 🚀 A Solução
 
-- Dashboard com métricas principais (faturamento, custos, lucro)
-- Lista de movimentações (receitas e despesas)
-- Formulário para cadastrar transações
-- Gráficos e comparativos (próximo passo)
+O **StreamLedger** reúne em um único ambiente tudo o que um streamer precisa para entender e controlar sua vida financeira:
+
+| Feature | Descrição |
+|---------|-----------|
+| 📈 Dashboard | Métricas principais: faturamento, custos e lucro |
+| 💵 Receitas | Registro de receitas de plataformas de streaming |
+| 🧾 Despesas | Controle de gastos relacionados ao canal |
+| 📋 Movimentações | Lista completa de transações financeiras |
+| 📝 Cadastro | Formulário para registrar novas transações |
+| 📊 Gráficos | Comparativos visuais *(próximo passo)* |
 
 ---
 
 ## 🎨 Design
 
-Principais decisões de design:
-
-- Interface em Dark Mode com predominância de tons neon verdes
-- Layout moderno, inspirado no universo gamer
-- Componentes responsivos e foco em legibilidade
+- 🌑 **Dark Mode** com tons neon verdes
+- 🎮 Layout moderno inspirado no universo gamer
+- 📱 Componentes responsivos com foco em legibilidade
 
 ---
 
-## 🧭 Estrutura da aplicação
+## 📁 Estrutura do Projeto
 
-A aplicação possui páginas principais:
-
-- `index.html` — Home / Apresentação
-- `about.html` — Sobre o projeto
-- `research.html` — Pesquisa e dados
-- `news.html` — Newsletter / cadastro
-- `test.html` — Protótipo do dashboard (demo)
+```
+streamledger/
+├── index.html        # Home / Apresentação
+├── about.html        # Sobre o projeto
+├── research.html     # Pesquisa e dados
+├── news.html         # Newsletter / cadastro
+├── test.html         # Protótipo do dashboard (demo)
+└── assets/
+    └── logo-fiap.png
+```
 
 ---
 
-## 🛠 Como executar
-
-1. Clone o repositório:
+## 🛠 Como Executar
 
 ```bash
+# 1. Clone o repositório
 git clone https://github.com/GabrielKott/streamledger.git
 cd streamledger
+
+# 2. Abra no navegador
+start index.html       # Windows
+open index.html        # macOS
+xdg-open index.html    # Linux
 ```
 
-2. Abra `index.html` em um navegador (projeto está em HTML/CSS puro):
-
-```bash
-open index.html    # macOS
-xdg-open index.html # Linux
-start index.html   # Windows (PowerShell)
-```
-
-> Observação: o projeto não requer um servidor para visualização básica; para features avançadas recomendo servir com um servidor estático (ex: `npx serve`).
-
+> 💡 Projeto em HTML/CSS puro — sem dependências. Para features avançadas: `npx serve`
 
 ---
 
-© 2026 StreamLedger
+## 👨‍🎓 Integrantes — Equipe Fiapinhos
+
+| Nome | LinkedIn |
+|------|----------|
+| Bruna Sousa | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/brunasousasantos/) |
+| Davi Simione | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/davi-simione-01127830b/) |
+| Caio Leme | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/caiobertaglia/) |
+| Gabriel Kott | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/gabriel-kott-3494342ab/) |
+| Gabriele Lopes | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/gabrielelopes1925/) |
+
+## 👩‍🏫 Tutor
+
+| Nome | LinkedIn |
+|------|----------|
+| Lucas Gonzalez | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/profgonzalez/) |
+
+---
+
+<p align="center">
+<b>© 2026 StreamLedger — FIAP</b>
+</p>
