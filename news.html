@@ -7,6 +7,25 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .toggle-password {
+      background: #121214;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-left: none;
+      color: #fff;
+    }
+    .toggle-password:hover, .toggle-password:active {
+      background: #121214 !important;
+      border-color: rgba(255,255,255,0.1) !important;
+    }
+    .toggle-password:hover svg, .toggle-password:active svg {
+      stroke: #39FF88;
+      opacity: 1 !important;
+    }
+    .form-control.border-end-0 {
+      border-right: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -66,7 +85,7 @@
               </div>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
               <label for="email" class="form-label small fw-semibold" style="color: #C1FAD7;">E-mail</label>
               <div class="input-group">
                 <span class="input-group-text" style="background: #121214; border-color: rgba(255,255,255,0.1);">
@@ -81,6 +100,97 @@
                   required
                   style="background: #121214; border-color: rgba(255,255,255,0.1);"
                 >
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="senha" class="form-label small fw-semibold" style="color: #C1FAD7;">Senha</label>
+              <div class="input-group">
+                <span class="input-group-text" style="background: #121214; border-color: rgba(255,255,255,0.1);">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39FF88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.7;">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input
+                  type="password"
+                  class="form-control py-3 border-end-0"
+                  id="senha"
+                  name="senha"
+                  placeholder="Crie uma senha"
+                  required
+                  minlength="8"
+                  style="background: #121214; border-color: rgba(255,255,255,0.1);"
+                >
+                <button class="btn toggle-password" type="button" tabindex="-1">
+                  <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.7; transition: stroke 0.3s, opacity 0.3s;">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg class="eye-off-icon d-none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.7; transition: stroke 0.3s, opacity 0.3s;">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmaSenha" class="form-label small fw-semibold" style="color: #C1FAD7;">Confirmar Senha</label>
+              <div class="input-group">
+                <span class="input-group-text" style="background: #121214; border-color: rgba(255,255,255,0.1);">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39FF88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.7;">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input
+                  type="password"
+                  class="form-control py-3 border-end-0"
+                  id="confirmaSenha"
+                  name="confirmaSenha"
+                  placeholder="Confirme a senha"
+                  required
+                  minlength="6"
+                  style="background: #121214; border-color: rgba(255,255,255,0.1);"
+                >
+                <button class="btn toggle-password" type="button" tabindex="-1">
+                  <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.7; transition: stroke 0.3s, opacity 0.3s;">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg class="eye-off-icon d-none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.7; transition: stroke 0.3s, opacity 0.3s;">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <ul id="password-rules" class="list-unstyled mt-0 mb-0 small text-body-tertiary" style="font-size: 0.825rem;">
+                <li id="rule-length" class="d-flex align-items-center gap-2 mb-1" style="transition: color 0.3s ease;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="rule-icon"><line x1="5" y1="12" x2="19" y2="12"></line></svg> Mínimo 8 caracteres
+                </li>
+                <li id="rule-upper" class="d-flex align-items-center gap-2 mb-1" style="transition: color 0.3s ease;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="rule-icon"><line x1="5" y1="12" x2="19" y2="12"></line></svg> 1 letra maiúscula
+                </li>
+                <li id="rule-lower" class="d-flex align-items-center gap-2 mb-1" style="transition: color 0.3s ease;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="rule-icon"><line x1="5" y1="12" x2="19" y2="12"></line></svg> 1 letra minúscula
+                </li>
+                <li id="rule-number" class="d-flex align-items-center gap-2 mb-1" style="transition: color 0.3s ease;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="rule-icon"><line x1="5" y1="12" x2="19" y2="12"></line></svg> 1 número
+                </li>
+                <li id="rule-special" class="d-flex align-items-center gap-2 mb-1" style="transition: color 0.3s ease;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="rule-icon"><line x1="5" y1="12" x2="19" y2="12"></line></svg> 1 caractere especial
+                </li>
+                <li id="rule-match" class="d-flex align-items-center gap-2 mb-1" style="transition: color 0.3s ease;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="rule-icon"><line x1="5" y1="12" x2="19" y2="12"></line></svg> As senhas coincidem
+                </li>
+              </ul>
+              <div class="mt-2 small" style="color: rgba(255, 255, 255, 0.4); font-size: 0.75rem; font-style: italic;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Guarde bem! Esta será sua senha de acesso oficial quando o StreamLedger for lançado.
               </div>
             </div>
 
@@ -149,6 +259,8 @@
     const form = document.getElementById('newsletter-form');
     const nomeInput = document.getElementById('nome');
     const emailInput = document.getElementById('email');
+    const senhaInput = document.getElementById('senha');
+    const confirmaSenhaInput = document.getElementById('confirmaSenha');
 
     nomeInput.addEventListener('invalid', function() {
       if (this.validity.valueMissing) {
@@ -172,11 +284,88 @@
       this.setCustomValidity('');
     });
 
+    confirmaSenhaInput.addEventListener('input', function() {
+      const isMatch = senhaInput.value !== '' && this.value === senhaInput.value;
+
+      if (this.value !== senhaInput.value) {
+        this.setCustomValidity('As senhas não coincidem.');
+      } else {
+        this.setCustomValidity('');
+      }
+
+      updateRuleStatus(document.getElementById('rule-match'), isMatch);
+    });
+
+    const iconCheck = '<polyline points="20 6 9 17 4 12"></polyline>';
+    const iconDash = '<line x1="5" y1="12" x2="19" y2="12"></line>';
+
+    function updateRuleStatus(element, isValid) {
+      const iconGroup = element.querySelector('.rule-icon');
+      if (isValid) {
+        element.style.color = '#39FF88';
+        iconGroup.innerHTML = iconCheck;
+      } else {
+        element.style.color = '';
+        iconGroup.innerHTML = iconDash;
+      }
+    }
+
+    senhaInput.addEventListener('input', function() {
+      const val = this.value;
+      
+      const isLength = val.length >= 8;
+      const isUpper = /[A-Z]/.test(val);
+      const isLower = /[a-z]/.test(val);
+      const isNumber = /[0-9]/.test(val);
+      const isSpecial = /[^A-Za-z0-9]/.test(val);
+      const isMatch = val !== '' && val === confirmaSenhaInput.value;
+
+      updateRuleStatus(document.getElementById('rule-length'), isLength);
+      updateRuleStatus(document.getElementById('rule-upper'), isUpper);
+      updateRuleStatus(document.getElementById('rule-lower'), isLower);
+      updateRuleStatus(document.getElementById('rule-number'), isNumber);
+      updateRuleStatus(document.getElementById('rule-special'), isSpecial);
+      updateRuleStatus(document.getElementById('rule-match'), isMatch);
+
+      if (!isLength || !isUpper || !isLower || !isNumber || !isSpecial) {
+        this.setCustomValidity('Por favor, atenda a todas as regras da senha.');
+      } else {
+        this.setCustomValidity('');
+      }
+
+      if (confirmaSenhaInput.value && this.value !== confirmaSenhaInput.value) {
+        confirmaSenhaInput.setCustomValidity('As senhas não coincidem.');
+      } else {
+        confirmaSenhaInput.setCustomValidity('');
+      }
+    });
+
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       const toast = new bootstrap.Toast(document.getElementById('toast-success'), { delay: 4000 });
       toast.show();
       this.reset();
+    });
+
+    const toggleBtns = document.querySelectorAll('.toggle-password');
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const type = senhaInput.type === 'password' ? 'text' : 'password';
+        senhaInput.type = type;
+        confirmaSenhaInput.type = type;
+
+        toggleBtns.forEach(b => {
+          const eye = b.querySelector('.eye-icon');
+          const eyeOff = b.querySelector('.eye-off-icon');
+          if (type === 'text') {
+            eye.classList.add('d-none');
+            eyeOff.classList.remove('d-none');
+          } else {
+            eye.classList.remove('d-none');
+            eyeOff.classList.add('d-none');
+          }
+        });
+      });
     });
   </script>
   <script type="module" src="JS/main.js"></script>
