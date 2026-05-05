@@ -807,7 +807,9 @@ body.dashboard-body {
 }
 
 .input-group:focus-within .input-group-text,
-.input-group:focus-within .form-control {
+.input-group:focus-within .form-control,
+.input-group:focus-within .toggle-password,
+.input-group:focus-within .btn {
   border-color: var(--neon) !important;
 }
 
@@ -822,6 +824,18 @@ body.dashboard-body {
   border-color: var(--red) !important;
 }
 
+.input-group:has(.is-valid):focus-within {
+  box-shadow: 0 0 0 4px rgba(57, 255, 136, 0.15) !important;
+}
+
+.input-group:has(.is-valid) .form-control,
+.input-group:has(.is-valid) .input-group-text,
+.input-group:has(.is-valid) .toggle-password,
+.input-group:has(.is-valid) .btn {
+  border-color: var(--bs-form-valid-border-color) !important;
+}
+
+/* Remover ícones de fundo do Bootstrap nas validações para não encavalar */
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px #121214 inset !important;
   -webkit-text-fill-color: var(--bs-body-color) !important;
