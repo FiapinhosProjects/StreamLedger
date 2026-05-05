@@ -132,17 +132,53 @@ export const initFormSubmit = () => {
         }
  
         processSaveTransaction(data);
+
+        // Feedback de salvamento por meio de Toast
+        let toastEl = document.getElementById('toast-success');
+        if (!toastEl) {
+            toastEl = document.createElement('div');
+            toastEl.id = 'toast-success';
+            toastEl.className = 'toast align-items-center position-fixed bottom-0 end-0 m-3';
+            toastEl.setAttribute('role', 'alert');
+            toastEl.setAttribute('aria-live', 'assertive');
+            toastEl.setAttribute('aria-atomic', 'true');
+            toastEl.style.zIndex = '1090';
+            toastEl.style.background = 'var(--card)';
+            toastEl.style.borderColor = 'var(--neon)';
+            toastEl.innerHTML = `
+              <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-3">
+                  <strong style="color: var(--neon);">✓ Sucesso!</strong>
+                  <span class="text-body-secondary small">Transação salva com sucesso!</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+              </div>
+            `;
+            document.body.appendChild(toastEl);
+        }
+        
+        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        toast.show();
     };
 };
  
 // --- RESET DO MODAL AO ABRIR ---
 export const initModalResetListener = () => {
     if (!modalEl) return;
+    
+    // Força o reset completo toda vez que o modal for fechado
+    modalEl.addEventListener('hidden.bs.modal', () => {
+        document.getElementById('edit-id').value = '';
+        transactionForm.reset();
+        document.getElementById('modal-title').innerText = "Lançar Movimentação";
+        updateCategoryOptions();
+    });
+
     modalEl.addEventListener('show.bs.modal', () => {
         const editId = document.getElementById('edit-id').value;
         if (!editId) {
             transactionForm.reset();
-            document.getElementById('modal-title').innerText = "Nova Transação";
+            document.getElementById('modal-title').innerText = "Lançar Movimentação";
             updateCategoryOptions();
         }
     });

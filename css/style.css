@@ -7,8 +7,8 @@
   --bs-body-color: #ffffff;
   --bs-primary: #5DFF9B;
   --bs-primary-rgb: 93, 255, 155;
-  --bs-secondary-color: #cccccc;
-  --bs-tertiary-color: #999999;
+  --bs-secondary-color: #e0e0e0;
+  --bs-tertiary-color: #bbbbbb;
   --bs-danger: #ff4466;
   --bs-danger-rgb: 255, 68, 102;
   --bs-warning: #ffcc00;
@@ -793,14 +793,33 @@ body.dashboard-body {
   background: #1a1a20;
 }
 
+.form-control.is-invalid:focus,
+.form-control.is-valid:focus,
+.form-control.is-invalid,
+.form-control.is-valid {
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
 .input-group:focus-within {
   border-radius: var(--bs-border-radius);
-  box-shadow: 0 0 15px rgba(93, 255, 155, 0.25);
+  box-shadow: none !important;
 }
 
 .input-group:focus-within .input-group-text,
 .input-group:focus-within .form-control {
-  border-color: var(--neon);
+  border-color: var(--neon) !important;
+}
+
+/* Tratamento de Erro (is-invalid) sobrepondo o verde */
+.input-group:has(.is-invalid):focus-within {
+  box-shadow: none !important;
+}
+
+.input-group:has(.is-invalid) .input-group-text,
+.input-group:has(.is-invalid) .form-control,
+.input-group:has(.is-invalid) .toggle-password {
+  border-color: var(--red) !important;
 }
 
 input:-webkit-autofill {
