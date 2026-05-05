@@ -1,6 +1,6 @@
 // --- MÓDULO DE RENDERIZAÇÃO ---
 
-import { formatCurrency } from '../utils/format.js';
+import { formatCurrency, formatDate, escapeHTML } from '../utils/formatters.js';
 import { revenueChartInstance, expenseChartInstance } from '../charts/charts.js';
 
 const transactionList = document.querySelector('.transactions');
@@ -23,17 +23,24 @@ export const renderTransactions = (transactions) => {
 
     transactions.slice().reverse().forEach(t => {
         const isIncome = t.type === 'income';
+        const isDespesa = t.type === 'expense';
+        
+        // Sanitização de entradas do usuário contra XSS
+        const safeTitle = escapeHTML(t.title);
+        const safeCategory = escapeHTML(t.category);
+
         const itemHtml = `
-            <div class="transaction-item d-flex justify-content-between align-items-center p-3 border-bottom border-secondary border-opacity-10">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="d-flex align-items-center justify-content-center rounded"
-                         style="width:40px; height:40px; background: rgba(255,255,255,0.05);">
-                        <img src="assets/${isIncome ? 'Lucro.svg' : 'Despesa.svg'}" alt="${isIncome ? 'Lucro' : 'Despesa'}" width="20">
-                    </div>
-                    <div>
-                        <div class="fw-bold">${t.title}</div>
-                        <div class="text-body-tertiary small">${t.category} · ${t.date}</div>
-                    </div>
+            <div class="transaction-item highlight-border d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center p-3 mb-2 rounded" 
+                 style="background: var(--card);">
+                <div class="d-flex align-items-center gap-3 mb-2 mb-sm-0">
+                  <div class="cat-icon bg-opacity-10 d-flex align-items-center justify-content-center border"
+                       style="width: 40px; height: 40px; border-radius: 8px; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1) !important;">
+                    ${getCategoryIcon(t.category)}
+                  </div>
+                  <div>
+                    <h6 class="mb-0 fw-semibold">${safeTitle}</h6>
+                    <small class="text-body-tertiary">${formatDate(t.date)} &bull; ${safeCategory}</small>
+                  </div>
                 </div>
                 <div class="d-flex align-items-center gap-3">
                     <div class="fw-bold ${isIncome ? 'text-success' : 'text-danger'}">
@@ -66,14 +73,14 @@ export const renderTopExpenses = (transactions) => {
 
     expenses.forEach(t => {
         const itemHtml = `
-            <div class="d-flex justify-content-between align-items-center p-3 rounded-3" style="background: rgba(255, 255, 255, 0.05);">
-                <div>
-                    <div class="fw-bold" style="color: #fff;">${t.title}</div>
-                    <div class="text-body-tertiary small">${t.category}</div>
-                </div>
-                <div class="fw-bold text-danger">
-                    ${formatCurrency(t.amount)}
-                </div>
+            <div class="d-flex justify-content-between align-items-center p-2 mb-2 rounded" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+              <div class="d-flex align-items-center gap-2">
+                ${getCategoryIcon(t.category)}
+                <span class="small fw-medium">${escapeHTML(t.title)}</span>
+              </div>
+              <div class="fw-bold text-danger">
+                  ${formatCurrency(t.amount)}
+              </div>
             </div>
         `;
         topExpensesList.innerHTML += itemHtml;
