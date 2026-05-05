@@ -1,6 +1,6 @@
 // --- PONTO DE ENTRADA PRINCIPAL ---
 
-import { loadTransactions } from './services/storage.js';
+import { getTransactions } from './data/storage.js';
 import { applyAmountMask } from './utils/format.js';
 import { setTransactions, saveAndRefresh } from './modules/transactions.js';
 import { initChart, initExpenseChart } from './charts/charts.js';
@@ -28,7 +28,7 @@ window.confirmDuplicate = confirmDuplicate;
 // --- INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
     // Carrega os dados do localStorage
-    const stored = loadTransactions();
+    const stored = getTransactions();
     setTransactions(stored);
 
     // Aplica máscara no input de valor

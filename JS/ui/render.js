@@ -1,9 +1,27 @@
 // --- MÓDULO DE RENDERIZAÇÃO ---
 
-import { formatCurrency, formatDate, escapeHTML } from '../utils/formatters.js';
+import { formatCurrency, formatToInput } from '../utils/format.js';
+import { escapeHTML } from '../utils/formatters.js';
 import { revenueChartInstance, expenseChartInstance } from '../charts/charts.js';
 
 const transactionList = document.querySelector('.transactions');
+
+// --- HELPER FUNÇÕES LOCAIS ---
+const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    return dateStr; // Retorna como String caso queira adicionar formatação depois
+};
+
+const getCategoryIcon = (category) => {
+    switch(category) {
+        case 'Twitch Subs': return '<img src="assets/Twitch.svg" width="20">';
+        case 'YouTube AdSense': return '<img src="assets/Youtube.svg" width="20">';
+        case 'Donates': return '<img src="assets/Donate.svg" width="20">';
+        case 'Setup': return '<img src="assets/equipamento.svg" width="20">';
+        case 'Software': return '<img src="assets/software.svg" width="20">';
+        default: return '<img src="assets/Outros.svg" width="20">';
+    }
+};
 
 export const renderTransactions = (transactions) => {
     if (!transactionList) return;

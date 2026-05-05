@@ -835,6 +835,20 @@ body.dashboard-body {
   border-color: var(--bs-form-valid-border-color) !important;
 }
 
+.form-check-input:checked {
+  background-color: var(--neon) !important;
+  border-color: var(--neon) !important;
+}
+
+.form-check-input.is-valid:checked {
+  background-color: var(--bs-form-valid-border-color) !important;
+  border-color: var(--bs-form-valid-border-color) !important;
+}
+
+.form-check-input.is-invalid {
+  border-color: var(--bs-form-invalid-border-color) !important;
+}
+
 /* Remover ícones de fundo do Bootstrap nas validações para não encavalar */
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px #121214 inset !important;
