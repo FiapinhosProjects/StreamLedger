@@ -535,23 +535,26 @@
       }
     });
 
-  document.querySelectorAll('.toggle-password').forEach(btn => {
-  btn.addEventListener('click', function () {
-    // 1. Sobe até o .input-group pai desse botão específico
-    const group = this.closest('.input-group');
+  const toggleBtns = document.querySelectorAll('.toggle-password');
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', function () {
+        const type = senhaInput.type === 'password' ? 'text' : 'password';
+        senhaInput.type = type;
+        confirmaSenhaInput.type = type;
 
-    // 2. Dentro desse grupo, pega só o input de senha correspondente
-    const input = group.querySelector('input[type="password"], input[type="text"]');
-
-    // 3. Alterna o tipo apenas desse input
-    const show = input.type === 'password';
-    input.type = show ? 'text' : 'password';
-
-    // 4. Alterna os ícones apenas desse botão
-    this.querySelector('.eye-icon').classList.toggle('d-none', show);
-    this.querySelector('.eye-off-icon').classList.toggle('d-none', !show);
-  });
-});
+        toggleBtns.forEach(b => {
+          const eye = b.querySelector('.eye-icon');
+          const eyeOff = b.querySelector('.eye-off-icon');
+          if (type === 'text') {
+            eye.classList.add('d-none');
+            eyeOff.classList.remove('d-none');
+          } else {
+            eye.classList.remove('d-none');
+            eyeOff.classList.add('d-none');
+          }
+        });
+      });
+    });
   </script>
   <script type="module" src="JS/main.js"></script>
 </body>
