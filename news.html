@@ -2,7 +2,8 @@
 <html lang="pt-BR" data-bs-theme="dark">
 
 <head>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data:; media-src 'self';">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data:; media-src 'self';">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StreamLedger | Newsletter</title>
@@ -226,17 +227,21 @@
             </div>
 
             <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="politicaSeguranca" name="politicaSeguranca" required style="border-color: rgba(255,255,255,0.2); background-color: #121214;">
+              <input type="checkbox" class="form-check-input" id="politicaSeguranca" name="politicaSeguranca" required
+                style="border-color: rgba(255,255,255,0.2); background-color: #121214;">
               <label class="form-check-label small text-body-tertiary" for="politicaSeguranca">
-                Li e concordo com a <a href="#" data-bs-toggle="modal" data-bs-target="#modal-psi" class="text-decoration-none" style="color: var(--neon);">Política de Segurança da Informação</a>.
+                Li e concordo com a <a href="#" data-bs-toggle="modal" data-bs-target="#modal-psi"
+                  class="text-decoration-none" style="color: var(--neon);">Política de Segurança da Informação</a>.
               </label>
               <div class="invalid-feedback">Você precisa aceitar a Política de Segurança.</div>
             </div>
 
             <div class="mb-4 form-check">
-              <input type="checkbox" class="form-check-input" id="termosLGPD" name="termosLGPD" required style="border-color: rgba(255,255,255,0.2); background-color: #121214;">
+              <input type="checkbox" class="form-check-input" id="termosLGPD" name="termosLGPD" required
+                style="border-color: rgba(255,255,255,0.2); background-color: #121214;">
               <label class="form-check-label small text-body-tertiary" for="termosLGPD">
-                Autorizo o compartilhamento e tratamento dos meus dados conforme a <a href="#" data-bs-toggle="modal" data-bs-target="#modal-lgpd" class="text-decoration-none" style="color: var(--neon);">LGPD</a>.
+                Autorizo o compartilhamento e tratamento dos meus dados conforme a <a href="#" data-bs-toggle="modal"
+                  data-bs-target="#modal-lgpd" class="text-decoration-none" style="color: var(--neon);">LGPD</a>.
               </label>
               <div class="invalid-feedback">Você precisa autorizar os termos da LGPD.</div>
             </div>
@@ -257,35 +262,43 @@
   </main>
 
   <!-- Modal Sucesso -->
-  <div class="modal fade" id="modal-sucesso" tabindex="-1" aria-labelledby="modalSucessoLabel" aria-modal="true" role="dialog">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border" style="background: var(--card); border-color: rgba(93,255,155,0.35) !important; border-radius: 16px; overflow: hidden;">
+  <div class="modal fade" id="modal-sucesso" tabindex="-1" aria-labelledby="modalSucessoLabel" aria-modal="true"
+    role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border"
+        style="background: var(--card); border-color: rgba(93,255,155,0.35) !important; border-radius: 16px; overflow: hidden;">
 
-      <div class="modal-header border-0 pb-0 pe-3 pt-3">
-        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </div>
-
-      <div class="modal-body text-center px-5 pb-2 pt-1">
-        <div class="mb-4" style="display: inline-flex; align-items: center; justify-content: center; width: 72px; height: 72px; border-radius: 50%; background: rgba(57,255,136,0.12); border: 1.5px solid rgba(57,255,136,0.4);">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#39FF88" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
+        <div class="modal-header border-0 pb-0 pe-3 pt-3">
+          <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"
+            aria-label="Fechar"></button>
         </div>
 
-        <h5 class="fw-bold mb-2" id="modalSucessoLabel" style="color: var(--neon); font-size: 1.35rem;">Inscrição confirmada!</h5>
-        <p class="text-body-secondary mb-1" style="font-size: 0.95rem; line-height: 1.6;">
-          Bem-vindo ao <strong style="color: #fff;">StreamLedger</strong>. Você será notificado assim que tivermos novidades.
-        </p>
-        <p id="modal-sucesso-nome" class="mb-0" style="color: var(--neon); font-size: 0.875rem; font-weight: 500;"></p>
-      </div>
+        <div class="modal-body text-center px-5 pb-2 pt-1">
+          <div class="mb-4"
+            style="display: inline-flex; align-items: center; justify-content: center; width: 72px; height: 72px; border-radius: 50%; background: rgba(57,255,136,0.12); border: 1.5px solid rgba(57,255,136,0.4);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#39FF88" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
 
-      <div class="modal-footer border-0 justify-content-center pb-4 pt-3">
-        <button type="button" class="cta-btn px-5 py-2" data-bs-dismiss="modal">Fechar</button>
-      </div>
+          <h5 class="fw-bold mb-2" id="modalSucessoLabel" style="color: var(--neon); font-size: 1.35rem;">Inscrição
+            confirmada!</h5>
+          <p class="text-body-secondary mb-1" style="font-size: 0.95rem; line-height: 1.6;">
+            Bem-vindo ao <strong style="color: #fff;">StreamLedger</strong>. Você será notificado assim que tivermos
+            novidades.
+          </p>
+          <p id="modal-sucesso-nome" class="mb-0" style="color: var(--neon); font-size: 0.875rem; font-weight: 500;">
+          </p>
+        </div>
 
+        <div class="modal-footer border-0 justify-content-center pb-4 pt-3">
+          <button type="button" class="cta-btn px-5 py-2" data-bs-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
     </div>
   </div>
-</div>
 
 
   <!-- Modal Política de Segurança da Informação -->
@@ -298,22 +311,29 @@
         </div>
         <div class="modal-body text-body-secondary small" style="line-height: 1.6;">
           <p>Bem-vindo à Política de Segurança da Informação do <strong>StreamLedger</strong>.</p>
-          <p>O StreamLedger tem como prioridade garantir a confidencialidade, integridade e disponibilidade dos dados sob nossa responsabilidade. Esta política estabelece os padrões elevados que norteiam a segurança das suas movimentações financeiras:</p>
-          
+          <p>O StreamLedger tem como prioridade garantir a confidencialidade, integridade e disponibilidade dos dados
+            sob nossa responsabilidade. Esta política estabelece os padrões elevados que norteiam a segurança das suas
+            movimentações financeiras:</p>
+
           <h6 class="text-white mt-4 mb-2">1. Proteção de Dados Financeiros</h6>
-          <p>Suas informações de fluxo de caixa e histórico de transações são armazenadas localmente com tecnologia de cifragem robusta (como algoritmos contínuos e mascaramento anti-injeção), garantindo que somente você tenha amplo acesso à própria resiliência contábil.</p>
-          
+          <p>Suas informações de fluxo de caixa e histórico de transações são armazenadas localmente com tecnologia de
+            cifragem robusta (como algoritmos contínuos e mascaramento anti-injeção), garantindo que somente você tenha
+            amplo acesso à própria resiliência contábil.</p>
+
           <h6 class="text-white mt-4 mb-2">2. Comunicação Criptografada</h6>
-          <p>Toda conexão entre o seu ambiente cliente e nossos registros é criptografada fim a fim usando redes HTTPS restritas sobre os protocolos TLS de alto padrão tecnológico.</p>
+          <p>Toda conexão entre o seu ambiente cliente e nossos registros é criptografada fim a fim usando redes HTTPS
+            restritas sobre os protocolos TLS de alto padrão tecnológico.</p>
 
           <h6 class="text-white mt-4 mb-2">3. Prevenção e Monitoramento</h6>
-          <p>Aplicamos continuamente auditorias contra ameaças cibernéticas como SQL Injection e XSS via Políticas de Segurança de Conteúdo (CSP) blindadas rigorosamente no cabeçalho da nossa aplicação.</p>
+          <p>Aplicamos continuamente auditorias contra ameaças cibernéticas como SQL Injection e XSS via Políticas de
+            Segurança de Conteúdo (CSP) blindadas rigorosamente no cabeçalho da nossa aplicação.</p>
 
           <p class="mt-4 mb-0"><em>Última atualização: Maio de 2026.</em></p>
         </div>
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
-          <button type="button" class="cta-btn px-4 py-2" id="btn-aceitar-psi" data-bs-dismiss="modal" style="border: 1px solid var(--neon); border-radius: 6px; font-size: 0.875rem;">Aceitar Política</button>
+          <button type="button" class="cta-btn px-4 py-2" id="btn-aceitar-psi" data-bs-dismiss="modal"
+            style="border: 1px solid var(--neon); border-radius: 6px; font-size: 0.875rem;">Aceitar Política</button>
         </div>
       </div>
     </div>
@@ -328,22 +348,29 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
         <div class="modal-body text-body-secondary small" style="line-height: 1.6;">
-          <p>De acordo com as premissas estabelecidas na <strong>Lei Geral de Proteção de Dados (Lei Federal nº 13.709/2018)</strong>, informamos sobre a coleta e o consentimento explícito dos seus dados.</p>
-          
+          <p>De acordo com as premissas estabelecidas na <strong>Lei Geral de Proteção de Dados (Lei Federal nº
+              13.709/2018)</strong>, informamos sobre a coleta e o consentimento explícito dos seus dados.</p>
+
           <h6 class="text-white mt-4 mb-2">Quais dados coletamos?</h6>
-          <p>Nós armazenamos apenas informações diretas ligadas às operações descritas no registro da conta e seu fluxo financeiro inserido expressamente por você.</p>
-          
+          <p>Nós armazenamos apenas informações diretas ligadas às operações descritas no registro da conta e seu fluxo
+            financeiro inserido expressamente por você.</p>
+
           <h6 class="text-white mt-4 mb-2">Finalidade do tratamento</h6>
-          <p>Ao concordar com nossos termos de Privacidade, você autoriza que os dados coletados sejam processados com a exclusiva e dedicada finalidade de geração de relatórios para o seu Dashboard pessoal e cálculos lógicos pertinentes a você (como receitas e despesas ativas).</p>
-          
+          <p>Ao concordar com nossos termos de Privacidade, você autoriza que os dados coletados sejam processados com a
+            exclusiva e dedicada finalidade de geração de relatórios para o seu Dashboard pessoal e cálculos lógicos
+            pertinentes a você (como receitas e despesas ativas).</p>
+
           <h6 class="text-white mt-4 mb-2">Dos Seus Direitos</h6>
-          <p>Sob a égide da LGPD, você possui livre direito de exclusão da plataforma a qualquer momento. Você pode requisitar aos canais oficiais a exportação ou exclusão limpa do armazenamento da sua base, o apagamento sistêmico é imediato e irrecuperável.</p>
+          <p>Sob a égide da LGPD, você possui livre direito de exclusão da plataforma a qualquer momento. Você pode
+            requisitar aos canais oficiais a exportação ou exclusão limpa do armazenamento da sua base, o apagamento
+            sistêmico é imediato e irrecuperável.</p>
 
           <p class="mt-4 mb-0"><em>Declaro compreender integralmente a legalidade supracitada.</em></p>
         </div>
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
-          <button type="button" class="cta-btn px-4 py-2" id="btn-aceitar-lgpd" data-bs-dismiss="modal" style="border: 1px solid var(--neon); border-radius: 6px; font-size: 0.875rem;">Aceitar Termos</button>
+          <button type="button" class="cta-btn px-4 py-2" id="btn-aceitar-lgpd" data-bs-dismiss="modal"
+            style="border: 1px solid var(--neon); border-radius: 6px; font-size: 0.875rem;">Aceitar Termos</button>
         </div>
       </div>
     </div>
@@ -498,16 +525,16 @@
       }
     }
 
-    politicaSegurancaInput.addEventListener('change', function() { validateCheckbox(this); });
-    termosLGPDInput.addEventListener('change', function() { validateCheckbox(this); });
+    politicaSegurancaInput.addEventListener('change', function () { validateCheckbox(this); });
+    termosLGPDInput.addEventListener('change', function () { validateCheckbox(this); });
 
     // Aceite automático via Modal
-    document.getElementById('btn-aceitar-psi').addEventListener('click', function() {
+    document.getElementById('btn-aceitar-psi').addEventListener('click', function () {
       politicaSegurancaInput.checked = true;
       validateCheckbox(politicaSegurancaInput);
     });
 
-    document.getElementById('btn-aceitar-lgpd').addEventListener('click', function() {
+    document.getElementById('btn-aceitar-lgpd').addEventListener('click', function () {
       termosLGPDInput.checked = true;
       validateCheckbox(termosLGPDInput);
     });
@@ -526,8 +553,12 @@
       const isFormValid = form.querySelectorAll('.is-invalid').length === 0;
 
       if (isFormValid) {
-        const toast = new bootstrap.Toast(document.getElementById('toast-success'), { delay: 4000 });
-        toast.show();
+        const nomeVal = nomeInput.value.trim();
+        const primeiroNome = nomeVal.split(' ')[0];
+        const paragrafoNome = document.getElementById('modal-sucesso-nome');
+        paragrafoNome.textContent = primeiroNome ? `Bem-vindo, ${primeiroNome} ✦` : '';
+        const modalSucesso = new bootstrap.Modal(document.getElementById('modal-sucesso'));
+        modalSucesso.show();
 
         this.reset();
 
@@ -552,7 +583,7 @@
       }
     });
 
-  const toggleBtns = document.querySelectorAll('.toggle-password');
+    const toggleBtns = document.querySelectorAll('.toggle-password');
     toggleBtns.forEach(btn => {
       btn.addEventListener('click', function () {
         const type = senhaInput.type === 'password' ? 'text' : 'password';
