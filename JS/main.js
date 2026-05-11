@@ -4,6 +4,7 @@ import { getTransactions } from './data/storage.js';
 import { applyAmountMask } from './utils/format.js';
 import { setTransactions, saveAndRefresh } from './modules/transactions.js';
 import { initChart, initExpenseChart } from './charts/charts.js';
+import { initProjection } from './modules/projection.js';
 import {
     openModal,
     closeModal,
@@ -44,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializa o listener de reset do modal
     initModalResetListener();
+
+    // Inicializa a projeção financeira
+    initProjection();
 
     // Renderiza métricas e transações
     saveAndRefresh();

@@ -3,6 +3,16 @@ import { getTotalByType } from '../utils/calculations.js';
 import { formatCurrency } from '../utils/format.js';
 import { applyAmountMask } from '../utils/format.js';
 
+const GOAL_STORAGE_KEY = 'streamLedger_goal';
+
+const saveGoal = (value) => {
+    localStorage.setItem(GOAL_STORAGE_KEY, value);
+};
+
+const loadGoal = () => {
+    return localStorage.getItem(GOAL_STORAGE_KEY) || '';
+};
+
 export const initProjection = () => {
     const btn = document.getElementById('calc-projection-btn');
     const goalInput = document.getElementById('goal-input');
@@ -12,11 +22,29 @@ export const initProjection = () => {
 
     applyAmountMask(goalInput);
 
+    const savedGoal = loadGoal();
+    if (savedGoal) {
+        goalInput.value = savedGoal;
+        const transactions = getTransactions();
+        resultDiv.innerHTML = calculateGoalProgress(transactions, savedGoal);
+    }
+
     btn.addEventListener('click', () => {
         const transactions = getTransactions();
         const result = calculateGoalProgress(transactions, goalInput.value);
         resultDiv.innerHTML = result;
+        saveGoal(goalInput.value);
     });
+};
+
+export const refreshProjection = () => {
+    const goalInput = document.getElementById('goal-input');
+    const resultDiv = document.getElementById('projection-result');
+
+    if (!goalInput || !resultDiv || !goalInput.value) return;
+
+    const transactions = getTransactions();
+    resultDiv.innerHTML = calculateGoalProgress(transactions, goalInput.value);
 };
 
 const calculateGoalProgress = (transactions, goalStr) => {
@@ -30,9 +58,6 @@ const calculateGoalProgress = (transactions, goalStr) => {
         return `<p class="text-body-tertiary small mb-0">Registre transações para calcular o progresso.</p>`;
     }
 
-    // f(x) = ax (função de 1º grau)
-    // a = lucro acumulado (receitas - despesas)
-    // O progresso é a razão linear entre o acumulado e a meta
     const revenue = getTotalByType(transactions, 'income');
     const costs = getTotalByType(transactions, 'expense');
     const currentBalance = revenue - costs;

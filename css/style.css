@@ -968,6 +968,14 @@ input:-webkit-autofill {
   outline: none;
 }
 
+/* Projeção Financeira */
+.projection-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+}
+
 /* Animação de entrada do ícone de sucesso no modal */
 @keyframes popIn {
   0%   { transform: scale(0.5); opacity: 0; }

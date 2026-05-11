@@ -5,6 +5,7 @@ import { updateMetrics } from '../ui/render.js';
 import { renderTransactions } from '../ui/render.js';
 import { closeModal } from '../ui/modals.js';
 import { isDuplicate } from '../utils/calculations.js';
+import { refreshProjection } from './projection.js';
 
 export let transactions = [];
 
@@ -16,6 +17,7 @@ export const saveAndRefresh = () => {
     saveTransactions(transactions);
     updateMetrics(transactions);
     renderTransactions(transactions);
+    refreshProjection();
 };
 
 export const processSaveTransaction = (data) => {
