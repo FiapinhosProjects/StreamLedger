@@ -1,7 +1,7 @@
 // --- MÓDULO DE RENDERIZAÇÃO ---
 
 import { formatCurrency, formatToInput } from '../utils/format.js';
-import { escapeHTML } from '../utils/formatters.js';
+import { escapeHTML } from '../utils/sanitize.js';
 import { revenueChartInstance, expenseChartInstance } from '../charts/charts.js';
 
 const transactionList = document.querySelector('.transactions');
