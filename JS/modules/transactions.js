@@ -4,6 +4,7 @@ import { saveTransactions } from '../data/storage.js';
 import { updateMetrics } from '../ui/render.js';
 import { renderTransactions } from '../ui/render.js';
 import { closeModal } from '../ui/modals.js';
+import { isDuplicate } from '../utils/calculations.js';
 
 export let transactions = [];
 
@@ -30,4 +31,23 @@ export const processSaveTransaction = (data) => {
 
     saveAndRefresh();
     closeModal();
+};
+
+export const buildTransactionData = () => {
+    const id = document.getElementById('edit-id').value;
+    const rawAmountStr = document.getElementById('amount').value.replace(/\./g, '').replace(',', '.');
+    const amountFloat = parseFloat(rawAmountStr);
+
+    return {
+        id: id ? parseInt(id) : Date.now(),
+        title: document.getElementById('desc').value,
+        amount: amountFloat,
+        type: document.getElementById('type').value,
+        category: document.getElementById('category').value,
+        date: id ? transactions.find(t => t.id === parseInt(id)).date : new Date().toLocaleDateString('pt-BR')
+    };
+};
+
+export const checkDuplicate = (data) => {
+    return isDuplicate(transactions, data);
 };

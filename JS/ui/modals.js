@@ -1,7 +1,7 @@
 // --- MÓDULO DE MODAIS ---
 
 import { formatToInput } from '../utils/format.js';
-import { transactions, processSaveTransaction, saveAndRefresh } from '../modules/transactions.js';
+import { transactions, processSaveTransaction, saveAndRefresh, buildTransactionData, checkDuplicate } from '../modules/transactions.js';
 
 // Elementos dos modais
 const modalEl = document.getElementById('modal-transaction');
@@ -105,27 +105,9 @@ export const initFormSubmit = () => {
     transactionForm.onsubmit = (e) => {
         e.preventDefault();
 
-        const id = document.getElementById('edit-id').value;
-        let rawAmountStr = document.getElementById('amount').value.replace(/\./g, '').replace(',', '.');
-        const amountFloat = parseFloat(rawAmountStr);
+        const data = buildTransactionData();
 
-        const data = {
-            id: id ? parseInt(id) : Date.now(),
-            title: document.getElementById('desc').value,
-            amount: amountFloat,
-            type: document.getElementById('type').value,
-            category: document.getElementById('category').value,
-            date: id ? transactions.find(t => t.id === parseInt(id)).date : new Date().toLocaleDateString('pt-BR')
-        };
-
-        const isDuplicate = transactions.some(t =>
-            t.title.trim().toLowerCase() === data.title.trim().toLowerCase() &&
-            t.amount === data.amount &&
-            t.type === data.type &&
-            t.id !== data.id
-        );
-
-        if (isDuplicate) {
+        if (checkDuplicate(data)) {
             pendingTransaction = data;
             if (bsModalDuplicate) bsModalDuplicate.show();
             return;

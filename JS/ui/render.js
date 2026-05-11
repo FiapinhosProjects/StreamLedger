@@ -1,8 +1,9 @@
 // --- MÓDULO DE RENDERIZAÇÃO ---
 
-import { formatCurrency, formatToInput } from '../utils/format.js';
+import { formatCurrency } from '../utils/format.js';
 import { escapeHTML } from '../utils/sanitize.js';
 import { revenueChartInstance, expenseChartInstance } from '../charts/charts.js';
+import { getTotalByType, getTotalByCategory, getTotalExcludingCategories } from '../utils/calculations.js';
 
 const transactionList = document.querySelector('.transactions');
 
@@ -116,50 +117,62 @@ export const updateMetrics = (transactions) => {
     const isDespesasPage = window.location.pathname.includes('despesas.html');
 
     if (isReceitasPage) {
-        const twitchSubsIncomes = transactions.filter(t => t.type === 'income' && t.category === 'Twitch Subs').reduce((acc, t) => acc + t.amount, 0);
-        const youtubeAdsenseIncomes = transactions.filter(t => t.type === 'income' && t.category === 'YouTube AdSense').reduce((acc, t) => acc + t.amount, 0);
-        const donatesIncomes = transactions.filter(t => t.type === 'income' && t.category === 'Donates').reduce((acc, t) => acc + t.amount, 0);
-
-        const valueCards = document.querySelectorAll('.fs-3.fw-bold');
-        if (valueCards.length >= 3) {
-            valueCards[0].innerText = formatCurrency(twitchSubsIncomes);
-            valueCards[1].innerText = formatCurrency(youtubeAdsenseIncomes);
-            valueCards[2].innerText = formatCurrency(donatesIncomes);
-        }
-
-        if (revenueChartInstance) {
-            revenueChartInstance.data.datasets[0].data = [twitchSubsIncomes];
-            revenueChartInstance.data.datasets[1].data = [youtubeAdsenseIncomes];
-            revenueChartInstance.data.datasets[2].data = [donatesIncomes];
-            revenueChartInstance.update();
-        }
+        updateReceitasMetrics(transactions);
     } else if (isDespesasPage) {
-        const equipAmount = transactions.filter(t => t.type === 'expense' && t.category === 'Setup').reduce((acc, t) => acc + t.amount, 0);
-        const softAmount = transactions.filter(t => t.type === 'expense' && t.category === 'Software').reduce((acc, t) => acc + t.amount, 0);
-        const outrosAmount = transactions.filter(t => t.type === 'expense' && t.category !== 'Setup' && t.category !== 'Software').reduce((acc, t) => acc + t.amount, 0);
-
-        const valueCards = document.querySelectorAll('.metric-value');
-        if (valueCards.length >= 3) {
-            valueCards[0].innerText = formatCurrency(equipAmount);
-            valueCards[1].innerText = formatCurrency(softAmount);
-            valueCards[2].innerText = formatCurrency(outrosAmount);
-        }
-
-        if (expenseChartInstance) {
-            expenseChartInstance.data.datasets[0].data = [equipAmount, softAmount, outrosAmount];
-            expenseChartInstance.update();
-        }
-
-        renderTopExpenses(transactions);
+        updateDespesasMetrics(transactions);
     } else {
-        const revenue = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
-        const costs = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
+        updateDashboardMetrics(transactions);
+    }
+};
 
-        const valueCards = document.querySelectorAll('.metric-value');
-        if (valueCards.length >= 3) {
-            valueCards[0].innerText = formatCurrency(revenue);
-            valueCards[1].innerText = formatCurrency(costs);
-            valueCards[2].innerText = formatCurrency(revenue - costs);
-        }
+const updateReceitasMetrics = (transactions) => {
+    const twitchSubs = getTotalByCategory(transactions, 'income', 'Twitch Subs');
+    const youtubeAdsense = getTotalByCategory(transactions, 'income', 'YouTube AdSense');
+    const donates = getTotalByCategory(transactions, 'income', 'Donates');
+
+    const valueCards = document.querySelectorAll('.fs-3.fw-bold');
+    if (valueCards.length >= 3) {
+        valueCards[0].innerText = formatCurrency(twitchSubs);
+        valueCards[1].innerText = formatCurrency(youtubeAdsense);
+        valueCards[2].innerText = formatCurrency(donates);
+    }
+
+    if (revenueChartInstance) {
+        revenueChartInstance.data.datasets[0].data = [twitchSubs];
+        revenueChartInstance.data.datasets[1].data = [youtubeAdsense];
+        revenueChartInstance.data.datasets[2].data = [donates];
+        revenueChartInstance.update();
+    }
+};
+
+const updateDespesasMetrics = (transactions) => {
+    const equipAmount = getTotalByCategory(transactions, 'expense', 'Setup');
+    const softAmount = getTotalByCategory(transactions, 'expense', 'Software');
+    const outrosAmount = getTotalExcludingCategories(transactions, 'expense', ['Setup', 'Software']);
+
+    const valueCards = document.querySelectorAll('.metric-value');
+    if (valueCards.length >= 3) {
+        valueCards[0].innerText = formatCurrency(equipAmount);
+        valueCards[1].innerText = formatCurrency(softAmount);
+        valueCards[2].innerText = formatCurrency(outrosAmount);
+    }
+
+    if (expenseChartInstance) {
+        expenseChartInstance.data.datasets[0].data = [equipAmount, softAmount, outrosAmount];
+        expenseChartInstance.update();
+    }
+
+    renderTopExpenses(transactions);
+};
+
+const updateDashboardMetrics = (transactions) => {
+    const revenue = getTotalByType(transactions, 'income');
+    const costs = getTotalByType(transactions, 'expense');
+
+    const valueCards = document.querySelectorAll('.metric-value');
+    if (valueCards.length >= 3) {
+        valueCards[0].innerText = formatCurrency(revenue);
+        valueCards[1].innerText = formatCurrency(costs);
+        valueCards[2].innerText = formatCurrency(revenue - costs);
     }
 };
