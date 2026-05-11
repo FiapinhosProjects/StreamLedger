@@ -950,18 +950,22 @@ input:-webkit-autofill {
   font-size: 1.1rem;
 }
 
-.btn-edit:hover {
+.btn-edit:hover,
+.btn-edit:focus-visible {
   color: var(--neon);
   background: rgba(93, 255, 155, 0.1);
   border: 1px solid rgba(93, 255, 155, 0.3);
   box-shadow: 0 0 10px rgba(93, 255, 155, 0.3);
+  outline: none;
 }
 
-.btn-delete:hover {
+.btn-delete:hover,
+.btn-delete:focus-visible {
   color: var(--red);
   background: rgba(255, 68, 102, 0.1);
   border: 1px solid rgba(255, 68, 102, 0.3);
   box-shadow: 0 0 10px rgba(255, 68, 102, 0.3);
+  outline: none;
 }
 
 /* Animação de entrada do ícone de sucesso no modal */

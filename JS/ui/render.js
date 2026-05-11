@@ -35,7 +35,13 @@ export const renderTransactions = (transactions) => {
     transactionList.innerHTML = header;
 
     if (transactions.length === 0) {
-        transactionList.innerHTML += `<p class="text-body-tertiary text-center p-4">Nenhuma transação registrada ainda.</p>`;
+        transactionList.innerHTML += `
+            <div class="text-center p-5">
+                <p class="text-body-tertiary mb-3">Nenhuma transação registrada ainda.</p>
+                <button onclick="window.openModal()" class="btn btn-sm" style="background: var(--neon); color: #121214; font-weight: 600; border-radius: 8px; padding: 0.5rem 1.25rem;">
+                    + Registrar primeira transação
+                </button>
+            </div>`;
         return;
     }
 
