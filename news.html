@@ -556,7 +556,7 @@
         const nomeVal = nomeInput.value.trim();
         const primeiroNome = nomeVal.split(' ')[0];
         const paragrafoNome = document.getElementById('modal-sucesso-nome');
-        paragrafoNome.textContent = primeiroNome ? `Bem-vindo, ${primeiroNome} ✦` : '';
+        paragrafoNome.textContent = primeiroNome ? `Bem-vindo(a), ${primeiroNome} ✦` : '';
         const modalSucesso = new bootstrap.Modal(document.getElementById('modal-sucesso'));
         modalSucesso.show();
 
