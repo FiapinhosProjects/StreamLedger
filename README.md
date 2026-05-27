@@ -1,7 +1,7 @@
 
 
 <p align="center">
-<a href="https://www.fiap.com.br/"><img src="public/assets/Fiapinhos.png" alt="FIAP - Faculdade de Informática e Administração Paulista" border="0" width="30%"></a>
+<a href="https://www.fiap.com.br/"><img src="public/assets/fiapinhos.png" alt="FIAP - Faculdade de Informática e Administração Paulista" border="0" width="30%"></a>
 </p>
 
 <h1 align="center">💰🎮 StreamLedger — Dashboard Financeiro para Streamers</h1>
