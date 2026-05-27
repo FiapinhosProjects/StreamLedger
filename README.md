@@ -8,10 +8,9 @@
 
 <p align="center">
 <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=for-the-badge" />
-<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
-<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
-<img src="https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" />
+<img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+<img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
+<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
 </p>
 
 <p align="center">
@@ -19,7 +18,7 @@
 </p>
 
 <p align="center">
-<a href="https://gabrielkott.github.io/StreamLedger/test.html">🔗 Ver Demo Online</a>
+<a href="https://streamledger.gabrielkott.workers.dev/">🔗 Ver Demo Online</a>
 </p>
 
 ---
@@ -66,13 +65,13 @@ streamledger/
 ├── JS/
 ├── assets/
 ├── css/
-├── index.html          # Home / Apresentação
-├── about.html          # Sobre o projeto
-├── research.html       # Pesquisa e dados
-├── news.html           # Newsletter / cadastro
-├── test.html           # Protótipo do dashboard
-├── receitas.html       # Registro de receitas
-├── despesas.html       # Controle de despesas
+├── index.html
+├── about.html
+├── research.html
+├── news.html
+├── test.html
+├── receitas.html
+├── despesas.html
 └── README.md
 ```
 
@@ -86,7 +85,7 @@ cd streamledger
 start index.html
 ```
 
-> 💡 Projeto em HTML/CSS/JS + Bootstrap — sem build necessário.
+> 💡 Projeto em Next.js + Tailwind CSS + TypeScript.
 
 ---
 
