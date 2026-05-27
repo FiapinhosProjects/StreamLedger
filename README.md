@@ -60,29 +60,40 @@ O **StreamLedger** reúne em um único ambiente tudo o que um streamer precisa p
 ## 📁 Estrutura do Projeto
 
 ```
-streamledger/
-├── .github/
-├── JS/
-├── assets/
-├── css/
-├── index.html
-├── about.html
-├── research.html
-├── news.html
-├── test.html
-├── receitas.html
-├── despesas.html
-└── README.md
-```
+                                                                                                                            
+  ├── public/
+  │   └── assets/              # Imagens, ícones e vídeo
+  ├── src/
+  │   ├── app/
+  │   │   ├── (app)/           # Páginas autenticadas (com sidebar)
+  │   │   │   ├── dashboard/
+  │   │   │   ├── despesas/
+  │   │   │   └── receitas/
+  │   │   ├── (marketing)/     # Páginas públicas (com navbar/footer)
+  │   │   │   ├── newsletter/
+  │   │   │   ├── pesquisa/
+  │   │   │   └── sobre/                                                                                                    
+  │   │   ├── globals.css
+  │   │   └── layout.tsx       # Layout raiz
+  │   ├── components/
+  │   │   ├── layout/          # Navbar, Footer, Sidebar
+  │   │   ├── modals/          # Modais de ação (criar, deletar, duplicar)
+  │   │   └── ui/              # Componentes visuais (cards, gráficos, toast)
+  │   ├── hooks/               # Custom hooks (useTransactions)
+  │   └── lib/                 # Utilitários (formatação, cálculos, storage)
+  ├── next.config.ts
+  ├── package.json
+  ├── tsconfig.json
+  └── tailwind / postcss / eslint configs
+  ```
+
 
 ---
 
 ## 🛠 Como Executar
 
-```bash
-git clone https://github.com/GabrielKott/streamledger.git
-cd streamledger
-start index.html
+```navegador
+https://stream-ledger-beige.vercel.app/
 ```
 
 > 💡 Projeto em Next.js + Tailwind CSS + TypeScript.
