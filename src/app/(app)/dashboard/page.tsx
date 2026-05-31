@@ -147,7 +147,7 @@ export default function Dashboard() {
           iconBg="#a78bfa"
           label="Lucro em USD"
           value={rateLoading ? "Carregando..." : profitUsd !== null ? `$ ${profitUsd.toFixed(2)}` : "Indisponível"}
-          subtitle={rate ? `Cotação: R$ ${rate.toFixed(2)}` : undefined}
+          subtitle={rate ? `Cotação ≈ R$ ${rate.toFixed(2)}` : undefined}
         />
       </div>
 
