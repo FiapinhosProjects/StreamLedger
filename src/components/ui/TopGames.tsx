@@ -24,13 +24,13 @@ export default function TopGames() {
       )}
 
       {!loading && !error && (
-        <div className="flex gap-4 overflow-x-auto pb-2">
+        <div className="flex gap-4 overflow-x-auto py-3 -my-3 px-1 -mx-1">
           {games.map((game) => (
             <div
               key={game.id}
               className="flex-shrink-0 w-28 group cursor-default"
             >
-              <div className="relative w-28 h-36 rounded-lg overflow-hidden border border-border group-hover:border-neon/40 group-hover:shadow-[0_0_12px_rgba(93,255,155,0.2)] transition-all duration-300">
+              <div className="relative w-28 h-36 rounded-lg overflow-hidden border border-border group-hover:border-neon group-hover:shadow-[0_0_16px_rgba(93,255,155,0.4)] group-hover:scale-110 group-hover:z-10 transition-all duration-300">
                 <Image
                   src={game.image}
                   alt={game.name}
