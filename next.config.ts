@@ -1,23 +1,29 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Headers de segurança do site
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "static-cdn.jtvnw.net",
+      },
+    ],
+  },
   async headers() {
     return [
       {
         source: "/(.*)",
         headers: [
           {
-            // Política de segurança de conteúdo (CSP)
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: blob:",
+              "img-src 'self' data: blob: https://static-cdn.jtvnw.net",
               "media-src 'self'",
-              "connect-src 'self'",
+              "connect-src 'self' https://economia.awesomeapi.com.br",
               "frame-src 'none'",
               "object-src 'none'",
               "base-uri 'self'",
@@ -25,17 +31,14 @@ const nextConfig: NextConfig = {
             ].join("; "),
           },
           {
-            // Previne que o navegador tente adivinhar o tipo do arquivo
             key: "X-Content-Type-Options",
             value: "nosniff",
           },
           {
-            // Impede que o site seja carregado dentro de um iframe
             key: "X-Frame-Options",
             value: "DENY",
           },
           {
-            // Controla quais informações são enviadas no header Referer
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
           },

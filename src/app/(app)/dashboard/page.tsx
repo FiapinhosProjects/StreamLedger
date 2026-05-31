@@ -12,8 +12,10 @@ import TransactionModal from "@/components/modals/TransactionModal";
 import DeleteModal from "@/components/modals/DeleteModal";
 import DuplicateModal from "@/components/modals/DuplicateModal";
 import GoalTracker from "@/components/ui/GoalTracker";
+import TopGames from "@/components/ui/TopGames";
 import Toast from "@/components/ui/Toast";
 import { useTransactions } from "@/hooks/useTransactions";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
 import { formatCurrency } from "@/lib/format";
 import { getTotalByType } from "@/lib/calculations";
 import { Transaction } from "@/lib/storage";
@@ -39,10 +41,14 @@ export default function Dashboard() {
   const [toastMessage, setToastMessage] = useState("");
   const hideToast = useCallback(() => setToastVisible(false), []);
 
+  // Cotação USD-BRL em tempo real
+  const { rate, loading: rateLoading } = useExchangeRate();
+
   // Calcula os totais para os cards de métrica
   const revenue = getTotalByType(transactions, "income");
   const costs = getTotalByType(transactions, "expense");
   const profit = revenue - costs;
+  const profitUsd = rate ? profit / rate : null;
 
   // Verifica se já existe uma transação igual
   const checkDuplicate = (data: Omit<Transaction, "id" | "date">) => {
@@ -131,11 +137,18 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Cards de métricas (Faturamento, Custos, Lucro) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      {/* Cards de métricas (Faturamento, Custos, Lucro, USD) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <MetricCard icon="/assets/LucroGeral.svg" iconBg="#6BD4B8" label="Faturamento Total" value={formatCurrency(revenue)} />
         <MetricCard icon="/assets/CustosCanal.svg" iconBg="#F87171" label="Custos do Canal" value={formatCurrency(costs)} />
         <MetricCard icon="/assets/lucroReal.svg" iconBg="#3b82f6" label="Lucro Real" value={formatCurrency(profit)} />
+        <MetricCard
+          icon="/assets/conversao.svg"
+          iconBg="#a78bfa"
+          label="Lucro em USD"
+          value={rateLoading ? "Carregando..." : profitUsd !== null ? `$ ${profitUsd.toFixed(2)}` : "Indisponível"}
+          subtitle={rate ? `Cotação: R$ ${rate.toFixed(2)}` : undefined}
+        />
       </div>
 
       {/* Lista de transações recentes */}
@@ -186,6 +199,11 @@ export default function Dashboard() {
 
       {/* Componente de meta financeira */}
       <GoalTracker transactions={transactions} />
+
+      {/* Jogos em alta na Twitch */}
+      <div className="mt-6">
+        <TopGames />
+      </div>
 
       {/* Modal de criar/editar transação */}
       <TransactionModal

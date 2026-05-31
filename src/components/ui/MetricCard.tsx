@@ -10,11 +10,18 @@ import Image from "next/image";
 // iconBg: cor de fundo do ícone (ex: "#6BD4B8")
 // label: texto descritivo (ex: "Faturamento Total")
 // value: valor formatado (ex: "R$ 1.500,00")
-export default function MetricCard({ icon, iconBg, label, value }: any) {
+interface MetricCardProps {
+  icon: string;
+  iconBg: string;
+  label: string;
+  value: string;
+  subtitle?: string;
+}
+
+export default function MetricCard({ icon, iconBg, label, value, subtitle }: MetricCardProps) {
   return (
     <div className="bg-card border border-border rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:border-neon/40 hover:shadow-[0_0_20px_rgba(93,255,155,0.15)] hover:scale-[1.02] cursor-default">
       <div className="flex items-center gap-4">
-        {/* Ícone com fundo colorido */}
         <div
           className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
           style={{ background: iconBg }}
@@ -22,10 +29,10 @@ export default function MetricCard({ icon, iconBg, label, value }: any) {
           <Image src={icon} alt="" width={24} height={24} />
         </div>
 
-        {/* Texto: label em cima, valor embaixo */}
         <div>
           <p className="text-sm text-muted">{label}</p>
           <p className="text-2xl font-bold">{value}</p>
+          {subtitle && <p className="text-xs text-muted mt-0.5">{subtitle}</p>}
         </div>
       </div>
     </div>
