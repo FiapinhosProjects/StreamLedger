@@ -162,7 +162,7 @@ export default function Dashboard() {
             <p className="text-muted mb-3">Nenhuma transação registrada ainda.</p>
             <button
               onClick={() => { setEditing(null); setModalOpen(true); }}
-              className="px-4 py-2 text-sm rounded-lg bg-neon text-background font-semibold"
+              className="px-4 py-2 text-sm rounded-lg bg-neon text-background font-semibold hover:opacity-80 active:scale-95 transition-all duration-200"
             >
               + Registrar primeira transação
             </button>
