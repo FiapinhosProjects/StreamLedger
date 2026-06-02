@@ -104,7 +104,7 @@ export default function GoalTracker({ transactions }: any) {
         </div>
         <button
           onClick={handleCalc}
-          className="px-4 py-2 text-sm rounded-lg bg-neon text-background font-semibold hover:bg-neon-hover transition-colors"
+          className="px-4 py-2 text-sm rounded-lg bg-neon text-background font-semibold hover:opacity-80 active:scale-95 transition-all duration-200"
         >
           Calcular
         </button>
