@@ -97,7 +97,7 @@ export default function Despesas() {
         </div>
         <button
           onClick={() => { setEditing(null); setModalOpen(true); }}
-          className="px-5 py-2.5 rounded-full border border-neon/20 font-semibold text-sm hover:bg-neon/10 hover:shadow-[0_0_12px_rgba(93,255,155,0.4)] hover:-translate-y-0.5 hover:border-neon/50 transition-all duration-300"
+          className="px-5 py-2.5 rounded-full border border-neon/20 font-semibold text-sm cursor-pointer hover:bg-neon/10 hover:shadow-[0_0_12px_rgba(93,255,155,0.4)] hover:-translate-y-0.5 hover:border-neon/50 active:scale-95 transition-all duration-300"
         >
           + Nova Transação
         </button>
