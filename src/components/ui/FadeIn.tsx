@@ -17,7 +17,7 @@ export default function FadeIn({ children, className = "", delay = 0 }: any) {
   const ref = useRef<HTMLDivElement>(null);
 
   // Controla se o elemento já apareceu na tela
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   // Observa quando o elemento aparece na tela (scroll)
   useEffect(() => {
