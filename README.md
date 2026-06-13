@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-<a href="https://streamledger.gabrielkott.workers.dev/">🔗 Ver Demo Online</a>
+<a href="https://stream-ledger-ruddy.vercel.app/">🔗 Ver Demo Online</a>
 </p>
 
 ---
