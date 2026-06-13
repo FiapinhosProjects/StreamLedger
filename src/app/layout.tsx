@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 
@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   title: "StreamLedger",
   description: "Dashboard financeiro para streamers",
   icons: { icon: "/assets/favicon.png" },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
