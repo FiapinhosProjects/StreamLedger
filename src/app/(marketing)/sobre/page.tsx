@@ -10,10 +10,10 @@ export default function Sobre() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
       {/* Seção 1: Nossa Motivação */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-12 lg:mb-16">
         <div>
           <FadeIn>
-            <h1 className="text-[65px] font-bold text-neon mb-8 whitespace-nowrap">Nossa Motivação</h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[65px] font-bold text-neon mb-6 lg:mb-8">Nossa Motivação</h1>
           </FadeIn>
           <FadeIn delay={0.15}>
             <div className="space-y-4">
@@ -27,14 +27,14 @@ export default function Sobre() {
           </FadeIn>
         </div>
         <FadeIn className="flex justify-center" delay={0.2}>
-          <Image src="/assets/motivacao.svg" alt="Motivação" width={400} height={400} className="w-full max-w-sm" />
+          <Image src="/assets/motivacao.svg" alt="Motivação" width={400} height={400} className="w-full max-w-[280px] sm:max-w-sm" />
         </FadeIn>
       </section>
 
       {/* Seção 2: Texto + imagem invertidos */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         <FadeIn className="order-2 lg:order-1 flex justify-center" delay={0.1}>
-          <Image src="/assets/solucao.svg" alt="Solução" width={400} height={400} className="w-full max-w-sm" />
+          <Image src="/assets/solucao.svg" alt="Solução" width={400} height={400} className="w-full max-w-[280px] sm:max-w-sm" />
         </FadeIn>
         <FadeIn className="order-1 lg:order-2 space-y-4" delay={0.2}>
           <p className="text-muted leading-relaxed">
@@ -50,7 +50,7 @@ export default function Sobre() {
 
       {/* Seção 3: Nossa Solução */}
       <FadeIn>
-        <h2 className="text-[36px] font-bold text-neon text-center mt-16">Nossa Solução</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-[36px] font-bold text-neon text-center mt-12 lg:mt-16">Nossa Solução</h2>
       </FadeIn>
 
       <FadeIn delay={0.15}>

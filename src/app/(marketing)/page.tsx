@@ -16,14 +16,14 @@ export default function Home() {
           {/* Coluna do texto */}
           <div className="order-2 lg:order-1">
             <FadeIn>
-              <h1 className="text-[65px] font-bold text-neon leading-tight mb-8">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[65px] font-bold text-neon leading-tight mb-6 lg:mb-8">
                 StreamLedger
               </h1>
             </FadeIn>
 
             {/* Botão para acessar o protótipo */}
             <FadeIn delay={0.1}>
-              <p className="mb-4">
+              <p className="mb-4 text-center lg:text-left">
                 <Link
                   href="/dashboard"
                   className="inline-block px-6 py-3 rounded-full border border-neon/20 font-semibold hover:bg-neon/10 hover:shadow-[0_0_12px_rgba(93,255,155,0.4)] hover:-translate-y-0.5 transition-all duration-300"

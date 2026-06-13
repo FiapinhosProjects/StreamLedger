@@ -82,20 +82,20 @@ export default function Newsletter() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 flex-1 flex items-center">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 flex items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
 
         {/* Coluna do formulário */}
-        <div className="text-center md:text-left">
+        <div className="text-center lg:text-left">
           <FadeIn>
-            <h1 className="text-[65px] font-bold text-neon leading-tight mb-2">Seja um Ledger</h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[65px] font-bold text-neon leading-tight mb-2">Seja um Ledger</h1>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <p className="text-muted text-lg mb-8 font-light">Tenha acesso a atualizações em primeira mão</p>
+            <p className="text-muted text-base sm:text-lg mb-6 lg:mb-8 font-light">Tenha acesso a atualizações em primeira mão</p>
           </FadeIn>
 
           <FadeIn delay={0.2}>
-          <form onSubmit={handleSubmit} noValidate className="max-w-md mx-auto md:mx-0 text-left space-y-4">
+          <form onSubmit={handleSubmit} noValidate className="max-w-md mx-auto lg:mx-0 text-left space-y-4">
             {/* Campo: Nome */}
             <div>
               <label htmlFor="nome" className="block text-sm font-semibold text-[#C1FAD7] mb-1">Nome completo</label>
@@ -211,8 +211,8 @@ export default function Newsletter() {
           </FadeIn>
         </div>
 
-        {/* Coluna da imagem (só aparece no desktop) */}
-        <FadeIn className="hidden md:flex justify-center" delay={0.3}>
+        {/* Coluna da imagem (só aparece no lg+) */}
+        <FadeIn className="hidden lg:flex justify-center" delay={0.3}>
           <Image src="/assets/hero-dashboard.svg" alt="Dashboard StreamLedger" width={500} height={400} className="w-full max-w-md" />
         </FadeIn>
       </div>

@@ -18,9 +18,9 @@ export default function Pesquisa() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
       {/* Seção 1: Introdução sobre o crescimento dos streamers */}
-      <section className="mb-16">
+      <section className="mb-12 lg:mb-16">
         <FadeIn>
-          <h1 className="text-[65px] font-bold text-neon mb-6 leading-tight text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[65px] font-bold text-neon mb-4 sm:mb-6 leading-tight text-center">
             O crescimento dos<br />Streamers Gamers
           </h1>
         </FadeIn>
@@ -51,8 +51,8 @@ export default function Pesquisa() {
 
       {/* Tabela de plataformas */}
       <FadeIn>
-        <section className="mb-16">
-          <div className="overflow-x-auto border border-border rounded-lg">
+        <section className="mb-12 lg:mb-16 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="border border-border rounded-lg min-w-[500px] sm:min-w-0">
             <table className="w-full text-left">
               <thead className="bg-[#1e3020]">
                 <tr>
@@ -100,7 +100,7 @@ export default function Pesquisa() {
       {/* Seção 2: Pesquisa de Aplicação */}
       <section>
         <FadeIn>
-          <h2 className="text-[36px] font-extrabold text-neon text-center mb-8">Pesquisa de Aplicação</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-[36px] font-extrabold text-neon text-center mb-6 lg:mb-8">Pesquisa de Aplicação</h2>
         </FadeIn>
 
         {/* Texto + gráfico lado a lado */}
@@ -123,7 +123,7 @@ export default function Pesquisa() {
               </p>
             </div>
             <div className="flex justify-center">
-              <Image src="/assets/grafico-mercado.svg" alt="Gráfico de crescimento do mercado de games" width={500} height={400} className="w-full max-w-md" />
+              <Image src="/assets/grafico-mercado.svg" alt="Gráfico de crescimento do mercado de games" width={500} height={400} className="w-full max-w-[280px] sm:max-w-md" />
             </div>
           </div>
         </FadeIn>
