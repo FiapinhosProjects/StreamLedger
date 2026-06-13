@@ -17,40 +17,48 @@ export default function FadeIn({ children, className = "", delay = 0 }: any) {
   const ref = useRef<HTMLDivElement>(null);
 
   // Controla se o elemento já apareceu na tela
-  const [visible, setVisible] = useState(false);
-
+  const [visible, setVisible] = useState(true);
+  const [mounted, setMounted] = useState(false);
   // Observa quando o elemento aparece na tela (scroll)
   useEffect(() => {
+    setMounted(true);
+    setVisible(false);
+
     const el = ref.current;
     if (!el) return;
 
-    // IntersectionObserver detecta quando o elemento entra na viewport
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          // Para de observar depois que já apareceu
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.1 } // Dispara quando 10% do elemento está visível
-    );
+    const timeout = setTimeout(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            observer.unobserve(el);
+          }
+        },
+        { threshold: 0.1 }
+      );
 
-    observer.observe(el);
+      observer.observe(el);
 
-    // Limpa o observer quando o componente desmonta
-    return () => observer.disconnect();
+      return () => observer.disconnect();
+    }, 50);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
     <div
       ref={ref}
       className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(24px)",
-        transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
-      }}
+      style={
+        mounted
+          ? {
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(24px)",
+            transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
+          }
+          : {}
+      }
     >
       {children}
     </div>
