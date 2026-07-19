@@ -61,3 +61,161 @@ export function getGoal(): string {
 export function saveGoal(value: string) {
   localStorage.setItem(GOAL_KEY, value);
 }
+
+// ============================================
+// Autenticação e Verificação de Idade
+// Conforme Lei Felca
+// ============================================
+
+// Chaves de storage para autenticação
+const USER_KEY = "streamLedger_user";
+const PARENT_KEY = "streamLedger_parent";
+const PARENTAL_LINKS_KEY = "streamLedger_parental_links";
+const AUDIT_KEY = "streamLedger_audit";
+
+// Usuário atual verificado
+export interface StoredUser {
+  cpf: string;
+  nome: string;
+  email: string;
+  birthDate: string;
+  ageGroup: "adult" | "minor_16_17" | "minor_under_16";
+  govBrLevel: "bronze" | "prata" | "ouro";
+  consentGiven: boolean;
+  consentTimestamp?: string;
+  linkedParentId?: string;
+  verified: boolean;
+  verifiedAt: string;
+}
+
+export function getCurrentUser(): StoredUser | null {
+  if (typeof window === "undefined") return null;
+  const data = localStorage.getItem(USER_KEY);
+  if (!data) return null;
+  try {
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+}
+
+export function saveCurrentUser(user: StoredUser) {
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
+}
+
+export function clearCurrentUser() {
+  localStorage.removeItem(USER_KEY);
+}
+
+// Responsável legal
+export interface StoredParent {
+  id: string;
+  cpf: string;
+  nome: string;
+  email: string;
+  govBrLevel: "bronze" | "prata" | "ouro";
+  linkedMinors: string[];
+  notificationPrefs?: {
+    alertAllTransactions: boolean;
+    threshold: number;
+    emailEnabled: boolean;
+  };
+  createdAt: string;
+}
+
+export function getParentAccount(): StoredParent | null {
+  if (typeof window === "undefined") return null;
+  const data = localStorage.getItem(PARENT_KEY);
+  if (!data) return null;
+  try {
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+}
+
+export function saveParentAccount(parent: StoredParent) {
+  localStorage.setItem(PARENT_KEY, JSON.stringify(parent));
+}
+
+export function clearParentAccount() {
+  localStorage.removeItem(PARENT_KEY);
+}
+
+// Vínculos parentais
+export interface StoredParentalLink {
+  id: string;
+  parentId: string;
+  minorCpf: string;
+  minorName: string;
+  minorEmail: string;
+  minorAge: number;
+  minorBirthDate: string;
+  status: "pending" | "accepted" | "rejected" | "expired";
+  linkCode: string;
+  createdAt: string;
+  acceptedAt?: string;
+  expiresAt: string;
+}
+
+export function getParentalLinks(): StoredParentalLink[] {
+  if (typeof window === "undefined") return [];
+  const data = localStorage.getItem(PARENTAL_LINKS_KEY);
+  if (!data) return [];
+  try {
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+export function saveParentalLinks(links: StoredParentalLink[]) {
+  localStorage.setItem(PARENTAL_LINKS_KEY, JSON.stringify(links));
+}
+
+export function addParentalLink(link: StoredParentalLink) {
+  const links = getParentalLinks();
+  links.push(link);
+  saveParentalLinks(links);
+}
+
+export function updateParentalLink(id: string, updates: Partial<StoredParentalLink>) {
+  const links = getParentalLinks();
+  const index = links.findIndex((l) => l.id === id);
+  if (index !== -1) {
+    links[index] = { ...links[index], ...updates };
+    saveParentalLinks(links);
+  }
+}
+
+// Auditoria
+export interface StoredAuditEntry {
+  id: string;
+  timestamp: string;
+  cpf: string;
+  userType: "minor" | "adult" | "parent";
+  action: string;
+  details: Record<string, unknown>;
+  parentalLinkId?: string;
+}
+
+export function getAuditLog(): StoredAuditEntry[] {
+  if (typeof window === "undefined") return [];
+  const data = localStorage.getItem(AUDIT_KEY);
+  if (!data) return [];
+  try {
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+export function addAuditEntry(entry: Omit<StoredAuditEntry, "id" | "timestamp">) {
+  const entries = getAuditLog();
+  entries.push({
+    ...entry,
+    id: Date.now().toString(),
+    timestamp: new Date().toISOString(),
+  });
+  localStorage.setItem(AUDIT_KEY, JSON.stringify(entries));
+}
