@@ -25,7 +25,7 @@ export default function Home() {
             <FadeIn delay={0.1}>
               <p className="mb-4 text-center lg:text-left">
                 <Link
-                  href="/dashboard"
+                  href="/login"
                   className="inline-block px-6 py-3 rounded-full border border-neon/20 font-semibold hover:bg-neon/10 hover:shadow-[0_0_12px_rgba(93,255,155,0.4)] hover:-translate-y-0.5 transition-all duration-300"
                 >
                   Conheça nosso primeiro protótipo

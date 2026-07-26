@@ -59,7 +59,7 @@ export default function Navbar() {
 
         {/* Botão "Acessar Demo" à direita (desktop) */}
         <Link
-          href="/dashboard"
+          href="/login"
           className="hidden md:inline-block absolute right-4 text-base font-semibold px-4 py-2 rounded-full border border-neon/20 hover:bg-neon/10 hover:shadow-[0_0_12px_rgba(93,255,155,0.4)] hover:-translate-y-0.5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neon focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           Acessar Demo
@@ -101,7 +101,7 @@ export default function Navbar() {
             ))}
             <li>
               <Link
-                href="/dashboard"
+                href="/login"
                 onClick={() => setOpen(false)}
                 className="block py-2 text-sm font-semibold text-neon"
               >

@@ -8,6 +8,7 @@
 
 import Link from "next/link";
 import { useAgeVerification } from "@/hooks/useAgeVerification";
+import { calculateAge } from "@/lib/cpfValidation";
 
 export default function AcessoBloqueadoPage() {
   const { user, logout } = useAgeVerification();
@@ -119,15 +120,4 @@ export default function AcessoBloqueadoPage() {
       </div>
     </div>
   );
-}
-
-// Função auxiliar para calcular idade
-function calculateAge(birthDate: string): number {
-  const [day, month, year] = birthDate.split("/").map(Number);
-  const today = new Date();
-  let age = today.getFullYear() - year;
-  if (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)) {
-    age--;
-  }
-  return age < 0 ? 0 : age;
 }
