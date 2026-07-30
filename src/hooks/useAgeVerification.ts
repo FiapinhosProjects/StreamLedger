@@ -11,14 +11,13 @@ import {
   saveCurrentUser,
   clearCurrentUser,
   addAuditEntry,
+  getParentalLinks,
   type StoredUser,
 } from "@/lib/storage";
 import {
   validateCPF,
   calculateAge,
   classifyUser,
-  generateRandomBirthDate,
-  formatCPF,
 } from "@/lib/cpfValidation";
 import type { GovBrLevel, AgeGroup } from "@/lib/user-types";
 
@@ -33,6 +32,19 @@ interface MockGovBrData {
   nivel: GovBrLevel;
   nome: string;
   email: string;
+}
+
+/**
+ * Verifica se menor tem vínculo parental ativo
+ */
+function checkMinorHasLink(cpf: string): { hasLink: boolean; parentId?: string } {
+  const links = getParentalLinks();
+  const link = links.find((l) => l.minorCpf === cpf && l.status === "accepted");
+
+  if (link) {
+    return { hasLink: true, parentId: link.parentId };
+  }
+  return { hasLink: false };
 }
 
 /**
@@ -78,6 +90,13 @@ export function useAgeVerification() {
       const age = calculateAge(birthDate);
       const ageGroup = classifyUser(age);
 
+      // Verifica se menor tem vínculo parental ativo
+      const { hasLink, parentId } = checkMinorHasLink(cpf);
+
+      // Se é menor mas tem vínculo ativo, libera acesso
+      const isAdult = age >= 18;
+      const hasParentalLink = hasLink && !isAdult;
+
       // Cria usuário verificado
       const user: StoredUser = {
         cpf,
@@ -86,8 +105,8 @@ export function useAgeVerification() {
         birthDate,
         ageGroup,
         govBrLevel: mockData.nivel,
-        consentGiven: age >= 18,
-        linkedParentId: undefined,
+        consentGiven: isAdult || hasParentalLink,
+        linkedParentId: hasParentalLink ? parentId : undefined,
         verified: true,
         verifiedAt: new Date().toISOString(),
       };
@@ -98,9 +117,9 @@ export function useAgeVerification() {
       // Registra auditoria
       addAuditEntry({
         cpf,
-        userType: ageGroup === "adult" ? "adult" : "minor",
-        action: ageGroup === "adult" ? "AGE_GROUP_CLASSIFIED" : "AGE_GROUP_CLASSIFIED",
-        details: { age, ageGroup, govBrLevel: mockData.nivel },
+        userType: isAdult ? "adult" : "minor",
+        action: isAdult ? "ADULT_LOGIN" : (hasParentalLink ? "MINOR_WITH_LINK" : "MINOR_WITHOUT_LINK"),
+        details: { age, ageGroup, govBrLevel: mockData.nivel, hasParentalLink, parentId },
       });
 
       // Atualiza estado
@@ -108,7 +127,8 @@ export function useAgeVerification() {
         isLoading: false,
         isVerified: true,
         user,
-        needsParentalConsent: ageGroup !== "adult",
+        // Menor sem vínculo precisa de consentimento parental
+        needsParentalConsent: !isAdult && !hasParentalLink,
       });
 
       return { success: true, user };
@@ -130,7 +150,7 @@ export function useAgeVerification() {
   }, []);
 
   /**
-   * Define vínculo parental (após aprovação do responsável)
+   * Define vínculo parental manualmente (após responsável criar)
    */
   const setParentalLink = useCallback((parentId: string) => {
     const user = getCurrentUser();
@@ -194,98 +214,5 @@ export function useGovBrMock() {
     openModal,
     closeModal,
     simulateLogin,
-  };
-}
-
-/**
- * Hook para gerenciar estado de verificação via CPF
- */
-export function useCPFVerification() {
-  const [cpf, setCpf] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [cpfError, setCpfError] = useState<string | null>(null);
-  const [birthDateError, setBirthDateError] = useState<string | null>(null);
-
-  const formatCpfInput = useCallback((value: string) => {
-    const numbers = value.replace(/\D/g, "");
-    if (numbers.length <= 11) {
-      setCpf(formatCPF(numbers));
-    }
-  }, []);
-
-  const formatDateInput = useCallback((value: string) => {
-    const numbers = value.replace(/\D/g, "");
-    let formatted = "";
-
-    if (numbers.length > 0) {
-      formatted = numbers.substring(0, 2);
-    }
-    if (numbers.length > 2) {
-      formatted += "/" + numbers.substring(2, 4);
-    }
-    if (numbers.length > 4) {
-      formatted += "/" + numbers.substring(4, 8);
-    }
-
-    setBirthDate(formatted);
-  }, []);
-
-  const validate = useCallback(() => {
-    let valid = true;
-
-    // Valida CPF
-    const cleanCpf = cpf.replace(/\D/g, "");
-    if (cleanCpf.length !== 11) {
-      setCpfError("CPF deve ter 11 dígitos");
-      valid = false;
-    } else if (!validateCPF(cleanCpf)) {
-      setCpfError("CPF inválido");
-      valid = false;
-    } else {
-      setCpfError(null);
-    }
-
-    // Valida data de nascimento
-    const dateParts = birthDate.split("/");
-    if (dateParts.length !== 3 || dateParts[0].length !== 2 || dateParts[1].length !== 2 || dateParts[2].length !== 4) {
-      setBirthDateError("Data deve ser DD/MM/AAAA");
-      valid = false;
-    } else {
-      const [, , year] = dateParts.map(Number);
-      if (year < 1900 || year > new Date().getFullYear()) {
-        setBirthDateError("Ano inválido");
-        valid = false;
-      } else {
-        setBirthDateError(null);
-      }
-    }
-
-    return valid;
-  }, [cpf, birthDate]);
-
-  const getAgeGroup = useCallback((): AgeGroup | null => {
-    if (!validateCPF(cpf) || !birthDate) return null;
-    const age = calculateAge(birthDate);
-    return classifyUser(age);
-  }, [cpf, birthDate]);
-
-  const reset = useCallback(() => {
-    setCpf("");
-    setBirthDate("");
-    setCpfError(null);
-    setBirthDateError(null);
-  }, []);
-
-  return {
-    cpf,
-    setCpf: formatCpfInput,
-    birthDate,
-    setBirthDate: formatDateInput,
-    cpfError,
-    birthDateError,
-    validate,
-    getAgeGroup,
-    reset,
-    calculateAge: (date: string) => calculateAge(date),
   };
 }

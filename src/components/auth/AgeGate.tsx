@@ -7,10 +7,12 @@
 
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAgeVerification } from "@/hooks/useAgeVerification";
+import { useInputMask, formatCpfValue, formatDateValue } from "@/hooks/useInputMask";
 import { validateCPF, calculateAge } from "@/lib/cpfValidation";
+import { getParentalLinks } from "@/lib/storage";
 import YotiVerification, { type YotiResult } from "./YotiVerification";
 import BlockedAccess from "./BlockedAccess";
 
@@ -29,16 +31,19 @@ export default function AgeGate({ children }: AgeGateProps) {
     }
   }, [isVerified, isLoading, router]);
 
+  // Inputs com máscara de cursor position
+  const cpfInput = useInputMask({ formatFn: formatCpfValue });
+  const birthDateInput = useInputMask({ formatFn: formatDateValue });
+
   // Estados locais para o formulário
-  const [cpf, setCpf] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [cpfError, setCpfError] = useState<string | null>(null);
-  const [birthDateError, setBirthDateError] = useState<string | null>(null);
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // Estado do fluxo
   const [step, setStep] = useState<"form" | "yoti" | "parental">("form");
   const [declaredAge, setDeclaredAge] = useState<number>(0);
+
+  // Loading state para transição entre etapas
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Modal de Em Breve (Gov.br)
   const [showGovBrModal, setShowGovBrModal] = useState(false);
@@ -46,127 +51,110 @@ export default function AgeGate({ children }: AgeGateProps) {
   // Estado do checkbox de declaração
   const [declarationChecked, setDeclarationChecked] = useState(false);
 
-  // Refs para controlar posição do cursor
-  const cpfInputRef = useRef<HTMLInputElement>(null);
-  const birthDateInputRef = useRef<HTMLInputElement>(null);
-
-  // Handler para formatar CPF - mantém cursor na posição correta
-  const handleCpfChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target;
-    const value = input.value;
-    const selectionStart = input.selectionStart || 0;
-
-    const numbers = value.replace(/\D/g, "");
-    let formatted = numbers.substring(0, 3);
-    if (numbers.length > 3) formatted += "." + numbers.substring(3, 6);
-    if (numbers.length > 6) formatted += "." + numbers.substring(6, 9);
-    if (numbers.length > 9) formatted += "-" + numbers.substring(9, 11);
-
-    setCpf(formatted);
-
-    // Calcula nova posição do cursor baseada nos caracteres digitados
-    const digitsBeforeCursor = value.substring(0, selectionStart).replace(/\D/g, "").length;
-    let newCursorPos = digitsBeforeCursor;
-    if (digitsBeforeCursor > 3) newCursorPos++;
-    if (digitsBeforeCursor > 6) newCursorPos++;
-    if (digitsBeforeCursor > 9) newCursorPos++;
-    newCursorPos = Math.min(newCursorPos, formatted.length);
-
-    // Restaura posição do cursor após o re-render
-    requestAnimationFrame(() => {
-      if (cpfInputRef.current) {
-        cpfInputRef.current.setSelectionRange(newCursorPos, newCursorPos);
-      }
-    });
-  }, []);
-
-  // Handler para formatar data - mantém cursor na posição correta
-  const handleDateChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target;
-    const value = input.value;
-    const selectionStart = input.selectionStart || 0;
-
-    const numbers = value.replace(/\D/g, "");
-    let formatted = "";
-
-    if (numbers.length > 0) {
-      formatted = numbers.substring(0, 2);
+  // Resetar estados quando volta para o formulário
+  useEffect(() => {
+    if (step === "form") {
+      setDeclarationChecked(false);
+      setIsTransitioning(false);
     }
-    if (numbers.length > 2) {
-      formatted += "/" + numbers.substring(2, 4);
-    }
-    if (numbers.length > 4) {
-      formatted += "/" + numbers.substring(4, 8);
-    }
-
-    setBirthDate(formatted);
-
-    // Calcula nova posição do cursor
-    const digitsBeforeCursor = value.substring(0, selectionStart).replace(/\D/g, "").length;
-    let newCursorPos = digitsBeforeCursor;
-    if (digitsBeforeCursor > 2) newCursorPos++;
-    if (digitsBeforeCursor > 4) newCursorPos++;
-    newCursorPos = Math.min(newCursorPos, formatted.length);
-
-    // Restaura posição do cursor após o re-render
-    requestAnimationFrame(() => {
-      if (birthDateInputRef.current) {
-        birthDateInputRef.current.setSelectionRange(newCursorPos, newCursorPos);
-      }
-    });
-  }, []);
+  }, [step]);
 
   // Validação
   const handleValidate = useCallback(() => {
     let valid = true;
-    const cleanCpf = cpf.replace(/\D/g, "");
+    const cleanCpf = cpfInput.value.replace(/\D/g, "");
 
     if (cleanCpf.length !== 11) {
-      setCpfError("CPF deve ter 11 dígitos");
+      cpfInput.setError("CPF deve ter 11 dígitos");
       valid = false;
     } else if (!validateCPF(cleanCpf)) {
-      setCpfError("CPF inválido");
+      cpfInput.setError("CPF inválido");
       valid = false;
     } else {
-      setCpfError(null);
+      cpfInput.setError(null);
     }
 
-    const dateParts = birthDate.split("/");
+    const dateParts = birthDateInput.value.split("/");
     if (dateParts.length !== 3 || dateParts[0].length !== 2 || dateParts[1].length !== 2 || dateParts[2].length !== 4) {
-      setBirthDateError("Data deve ser DD/MM/AAAA");
+      birthDateInput.setError("Data deve ser DD/MM/AAAA");
       valid = false;
     } else {
       const [, , year] = dateParts.map(Number);
       if (year < 1900 || year > new Date().getFullYear()) {
-        setBirthDateError("Ano inválido");
+        birthDateInput.setError("Ano inválido");
         valid = false;
       } else {
-        setBirthDateError(null);
+        birthDateInput.setError(null);
       }
     }
 
     return valid;
-  }, [cpf, birthDate]);
+  }, [cpfInput, birthDateInput]);
+
+  // Verifica se menor tem vínculo parental ativo
+  const checkMinorHasLink = useCallback((cpf: string): { hasLink: boolean; parentId?: string } => {
+    const links = getParentalLinks();
+    const link = links.find((l) => l.minorCpf === cpf && l.status === "accepted");
+    if (link) {
+      return { hasLink: true, parentId: link.parentId };
+    }
+    return { hasLink: false };
+  }, []);
+
+  // Login direto para menores com vínculo
+  const loginMinorWithLink = useCallback(() => {
+    const cleanCpf = cpfInput.value.replace(/\D/g, "");
+    const mockData = {
+      nivel: "ouro" as const,
+      nome: "Usuário Verificado",
+      email: "usuario@exemplo.com",
+    };
+
+    const loginResult = loginWithGovBr(cleanCpf, mockData, birthDateInput.value);
+    if (!loginResult.success) {
+      setLoginError(loginResult.error || "Erro ao verificar");
+      setStep("form");
+    }
+  }, [cpfInput.value, birthDateInput.value, loginWithGovBr]);
 
   // Continuar após validar CPF
   const handleContinue = useCallback(() => {
     if (!handleValidate()) return;
 
-    // Calcular idade declarada
-    const age = calculateAge(birthDate);
-    setDeclaredAge(age);
+    setIsTransitioning(true);
 
-    // Redirecionar baseado na idade
-    if (age >= 18) {
-      setStep("yoti");
-    } else {
-      setStep("parental");
-    }
-  }, [handleValidate, birthDate]);
+    setTimeout(() => {
+      const age = calculateAge(birthDateInput.value);
+      setDeclaredAge(age);
+      const cleanCpf = cpfInput.value.replace(/\D/g, "");
+
+      if (age >= 18) {
+        // Adulto: vai para verificação facial
+        setStep("yoti");
+        setIsTransitioning(false);
+      } else {
+        // Menor: verifica se tem vínculo parental
+        const { hasLink, parentId } = checkMinorHasLink(cleanCpf);
+
+        if (hasLink) {
+          // Menor com vínculo: login automático
+          loginMinorWithLink();
+        } else {
+          // Menor sem vínculo: mostra tela de parental
+          setStep("parental");
+          setIsTransitioning(false);
+        }
+      }
+    }, 300);
+  }, [handleValidate, birthDateInput, cpfInput, checkMinorHasLink, loginMinorWithLink]);
 
   // Voltar ao formulário
   const handleBack = useCallback(() => {
-    setStep("form");
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setStep("form");
+      setIsTransitioning(false);
+    }, 200);
   }, []);
 
   // Login após verificação Yoti
@@ -177,19 +165,19 @@ export default function AgeGate({ children }: AgeGateProps) {
       return;
     }
 
-    const cleanCpf = cpf.replace(/\D/g, "");
+    const cleanCpf = cpfInput.value.replace(/\D/g, "");
     const mockData = {
       nivel: "ouro" as const,
       nome: "Usuário Verificado",
       email: "usuario@exemplo.com",
     };
 
-    const loginResult = loginWithGovBr(cleanCpf, mockData, birthDate);
+    const loginResult = loginWithGovBr(cleanCpf, mockData, birthDateInput.value);
     if (!loginResult.success) {
       setLoginError(loginResult.error || "Erro ao verificar");
       setStep("form");
     }
-  }, [cpf, birthDate, loginWithGovBr]);
+  }, [cpfInput.value, birthDateInput.value, loginWithGovBr]);
 
   // Carregando
   if (isLoading) {
@@ -361,19 +349,19 @@ export default function AgeGate({ children }: AgeGateProps) {
                     CPF
                   </label>
                   <input
-                    ref={cpfInputRef}
+                    ref={cpfInput.inputRef}
                     type="text"
-                    value={cpf}
-                    onChange={handleCpfChange}
+                    value={cpfInput.value}
+                    onChange={cpfInput.handleChange}
                     placeholder="000.000.000-00"
-                    className={`w-full rounded-lg border ${cpfError ? "border-red" : "border-white/10"} bg-background px-3 py-2.5 text-sm outline-none focus:border-neon/50`}
+                    className={`w-full rounded-lg border ${cpfInput.error ? "border-red" : "border-white/10"} bg-background px-3 py-2.5 text-sm outline-none focus:border-neon/50`}
                     maxLength={14}
                     autoComplete="off"
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
                   />
-                  {cpfError && <p className="text-red text-xs mt-1">{cpfError}</p>}
+                  {cpfInput.error && <p className="text-red text-xs mt-1">{cpfInput.error}</p>}
                 </div>
 
                 <div>
@@ -381,19 +369,19 @@ export default function AgeGate({ children }: AgeGateProps) {
                     Data de Nascimento
                   </label>
                   <input
-                    ref={birthDateInputRef}
+                    ref={birthDateInput.inputRef}
                     type="text"
-                    value={birthDate}
-                    onChange={handleDateChange}
+                    value={birthDateInput.value}
+                    onChange={birthDateInput.handleChange}
                     placeholder="DD/MM/AAAA"
-                    className={`w-full rounded-lg border ${birthDateError ? "border-red" : "border-white/10"} bg-background px-3 py-2.5 text-sm outline-none focus:border-neon/50`}
+                    className={`w-full rounded-lg border ${birthDateInput.error ? "border-red" : "border-white/10"} bg-background px-3 py-2.5 text-sm outline-none focus:border-neon/50`}
                     maxLength={10}
                     autoComplete="off"
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
                   />
-                  {birthDateError && <p className="text-red text-xs mt-1">{birthDateError}</p>}
+                  {birthDateInput.error && <p className="text-red text-xs mt-1">{birthDateInput.error}</p>}
                 </div>
 
                 {loginError && (
@@ -433,14 +421,24 @@ export default function AgeGate({ children }: AgeGateProps) {
 
                 <button
                   type="submit"
-                  disabled={!declarationChecked}
-                  className={`w-full py-3 rounded-xl font-semibold transition-all ${
-                    declarationChecked
+                  disabled={!declarationChecked || isTransitioning}
+                  className={`w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
+                    declarationChecked && !isTransitioning
                       ? "bg-neon text-background hover:opacity-90"
                       : "bg-neon/30 text-background/50 cursor-not-allowed"
                   }`}
                 >
-                  Continuar
+                  {isTransitioning ? (
+                    <>
+                      <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      <span>Verificando...</span>
+                    </>
+                  ) : (
+                    "Continuar"
+                  )}
                 </button>
               </div>
             </form>

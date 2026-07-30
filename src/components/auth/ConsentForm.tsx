@@ -7,12 +7,14 @@
 "use client";
 
 import { useState } from "react";
-import { validateCPF, formatCPF, calculateAge, classifyUser } from "@/lib/cpfValidation";
+import { useInputMask, formatCpfValue, formatDateValue } from "@/hooks/useInputMask";
+import { validateCPF, calculateAge, classifyUser } from "@/lib/cpfValidation";
 import type { AgeGroup } from "@/lib/user-types";
 
 interface ConsentFormProps {
   onSubmit: (data: ConsentData) => void;
   onCancel: () => void;
+  onBack?: () => void;
 }
 
 export interface ConsentData {
@@ -24,43 +26,21 @@ export interface ConsentData {
   ageGroup: AgeGroup;
 }
 
-export default function ConsentForm({ onSubmit, onCancel }: ConsentFormProps) {
-  const [minorCpf, setMinorCpf] = useState("");
+export default function ConsentForm({ onSubmit, onCancel, onBack }: ConsentFormProps) {
   const [minorName, setMinorName] = useState("");
-  const [minorBirthDate, setMinorBirthDate] = useState("");
   const [minorEmail, setMinorEmail] = useState("");
   const [consentChecked, setConsentChecked] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const formatCpfInput = (value: string) => {
-    const numbers = value.replace(/\D/g, "");
-    if (numbers.length <= 11) {
-      setMinorCpf(formatCPF(numbers));
-    }
-  };
-
-  const formatDateInput = (value: string) => {
-    const numbers = value.replace(/\D/g, "");
-    let formatted = "";
-
-    if (numbers.length > 0) {
-      formatted = numbers.substring(0, 2);
-    }
-    if (numbers.length > 2) {
-      formatted += "/" + numbers.substring(2, 4);
-    }
-    if (numbers.length > 4) {
-      formatted += "/" + numbers.substring(4, 8);
-    }
-
-    setMinorBirthDate(formatted);
-  };
+  // Inputs com máscara de cursor position
+  const cpfInput = useInputMask({ formatFn: formatCpfValue });
+  const dateInput = useInputMask({ formatFn: formatDateValue });
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
     // Valida CPF do menor
-    const cleanCpf = minorCpf.replace(/\D/g, "");
+    const cleanCpf = cpfInput.value.replace(/\D/g, "");
     if (cleanCpf.length !== 11) {
       newErrors.minorCpf = "CPF deve ter 11 dígitos";
     } else if (!validateCPF(cleanCpf)) {
@@ -73,7 +53,7 @@ export default function ConsentForm({ onSubmit, onCancel }: ConsentFormProps) {
     }
 
     // Valida data
-    const dateParts = minorBirthDate.split("/");
+    const dateParts = dateInput.value.split("/");
     if (dateParts.length !== 3 || dateParts[0].length !== 2 || dateParts[1].length !== 2 || dateParts[2].length !== 4) {
       newErrors.minorBirthDate = "Data deve ser DD/MM/AAAA";
     } else {
@@ -103,13 +83,13 @@ export default function ConsentForm({ onSubmit, onCancel }: ConsentFormProps) {
 
     if (!validate()) return;
 
-    const age = calculateAge(minorBirthDate);
+    const age = calculateAge(dateInput.value);
     const ageGroup = classifyUser(age);
 
     onSubmit({
-      minorCpf: minorCpf.replace(/\D/g, ""),
+      minorCpf: cpfInput.value.replace(/\D/g, ""),
       minorName: minorName.trim(),
-      minorBirthDate,
+      minorBirthDate: dateInput.value,
       minorEmail: minorEmail.trim(),
       consentGiven: true,
       ageGroup,
@@ -120,8 +100,23 @@ export default function ConsentForm({ onSubmit, onCancel }: ConsentFormProps) {
     <div className="bg-card border border-neon/20 rounded-2xl overflow-hidden">
       {/* Header */}
       <div className="bg-neon/5 border-b border-neon/20 p-4">
-        <h2 className="text-lg font-bold text-neon">Termo de Responsabilidade Parental</h2>
-        <p className="text-muted text-sm">Conforme Lei 15.211/2025 (ECA Digital)</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-neon">Termo de Responsabilidade Parental</h2>
+            <p className="text-muted text-sm">Conforme Lei 15.211/2025 (ECA Digital)</p>
+          </div>
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="text-white/60 hover:text-white transition-colors"
+              title="Voltar"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Form */}
@@ -133,9 +128,10 @@ export default function ConsentForm({ onSubmit, onCancel }: ConsentFormProps) {
               CPF do Menor
             </label>
             <input
+              ref={cpfInput.inputRef}
               type="text"
-              value={minorCpf}
-              onChange={(e) => formatCpfInput(e.target.value)}
+              value={cpfInput.value}
+              onChange={cpfInput.handleChange}
               placeholder="000.000.000-00"
               className={`w-full rounded-lg border ${errors.minorCpf ? "border-red" : "border-white/10"} bg-background px-3 py-2.5 text-sm outline-none focus:border-neon/50`}
               maxLength={14}
@@ -164,9 +160,10 @@ export default function ConsentForm({ onSubmit, onCancel }: ConsentFormProps) {
               Data de Nascimento do Menor
             </label>
             <input
+              ref={dateInput.inputRef}
               type="text"
-              value={minorBirthDate}
-              onChange={(e) => formatDateInput(e.target.value)}
+              value={dateInput.value}
+              onChange={dateInput.handleChange}
               placeholder="DD/MM/AAAA"
               className={`w-full rounded-lg border ${errors.minorBirthDate ? "border-red" : "border-white/10"} bg-background px-3 py-2.5 text-sm outline-none focus:border-neon/50`}
               maxLength={10}

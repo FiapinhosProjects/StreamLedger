@@ -82,6 +82,8 @@ export function useParentalLink() {
 
   /**
    * Cria vínculo com menor
+   * O vínculo é criado como "accepted" automaticamente, pois o responsável
+   * está confirmando diretamente. Não precisa de aceite adicional.
    */
   const createLink = useCallback(
     (params: CreateLinkParams): StoredParentalLink | null => {
@@ -96,7 +98,7 @@ export function useParentalLink() {
       const age = calculateAge(params.minorBirthDate);
       const ageGroup = classifyUser(age);
 
-      // Cria vínculo
+      // Cria vínculo como accepted (responsável confirmou diretamente)
       const link: StoredParentalLink = {
         id: Date.now().toString(),
         parentId: state.parent.id,
@@ -105,9 +107,10 @@ export function useParentalLink() {
         minorEmail: params.minorEmail,
         minorAge: age,
         minorBirthDate: params.minorBirthDate,
-        status: "pending",
+        status: "accepted",
         linkCode: generateLinkCode(),
         createdAt: new Date().toISOString(),
+        acceptedAt: new Date().toISOString(),
         expiresAt: generateExpirationDate(),
       };
 
@@ -117,12 +120,19 @@ export function useParentalLink() {
       addAuditEntry({
         cpf: state.parent.cpf,
         userType: "parent",
-        action: "MINOR_LINK_REQUESTED",
-        details: { minorAge: age, minorName: params.minorName },
+        action: "MINOR_LINK_CREATED",
+        details: { minorAge: age, minorName: params.minorName, minorCpf: params.minorCpf },
         parentalLinkId: link.id,
       });
 
-      setState((prev) => ({ ...prev, links: [...prev.links, link] }));
+      setState((prev) => ({
+        ...prev,
+        links: [...prev.links, link],
+        parent: prev.parent
+          ? { ...prev.parent, linkedMinors: [...prev.parent.linkedMinors, params.minorCpf] }
+          : null,
+      }));
+
       return link;
     },
     [state.parent]
