@@ -1,14 +1,18 @@
 // ============================================
 // TransactionModal.tsx - Modal para criar/editar transação
 // Formulário com descrição, valor, tipo e categoria
+// Com validação de input robusta
 // ============================================
 
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Transaction } from "@/lib/storage";
-import { maskCurrency, parseCurrencyInput } from "@/lib/format";
-import { sanitizeInput } from "@/lib/sanitize";
+import { maskCurrency } from "@/lib/format";
+import {
+  validateAndSanitizeTitle,
+  validateAmount,
+  parseCurrencyValue,
+} from "@/lib/validation";
 
 // Categorias de receita (quando tipo = "income")
 const incomeCategories = [
@@ -35,6 +39,7 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
   const [amount, setAmount] = useState("");
   const [type, setType] = useState<"income" | "expense">("income");
   const [category, setCategory] = useState("Twitch Subs");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Referência ao elemento <dialog> do HTML
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -85,10 +90,35 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validação robusta
+    const newErrors: Record<string, string> = {};
+
+    // Valida título
+    const titleResult = validateAndSanitizeTitle(title);
+    if (!titleResult.valid) {
+      newErrors.title = titleResult.errors[0];
+    }
+
+    // Valida valor
+    const numericAmount = parseCurrencyValue(amount);
+    const amountResult = validateAmount(numericAmount);
+    if (!amountResult.valid) {
+      newErrors.amount = amountResult.errors[0];
+    }
+
+    // Se tem erros, mostra e não salva
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Limpa erros
+    setErrors({});
+
     // Monta os dados e envia para o componente pai
     onSave({
-      title: sanitizeInput(title),
-      amount: parseCurrencyInput(amount),
+      title: title.trim(),
+      amount: numericAmount,
       type,
       category,
     });
@@ -129,11 +159,19 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
               id="desc"
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                setErrors((prev) => ({ ...prev, title: "" }));
+              }}
               placeholder="Ex: Doação Twitch, Microfone..."
               required
-              className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-neon/50"
+              className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-neon/50 ${
+                errors.title ? "border-red bg-red/5" : "border-white/10 bg-background"
+              }`}
             />
+            {errors.title && (
+              <p className="text-red text-xs mt-1">{errors.title}</p>
+            )}
           </div>
 
           {/* Campos: Valor e Tipo (lado a lado) */}
@@ -146,11 +184,19 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
                 id="amount"
                 type="text"
                 value={amount}
-                onChange={(e) => setAmount(maskCurrency(e.target.value))}
+                onChange={(e) => {
+                  setAmount(maskCurrency(e.target.value));
+                  setErrors((prev) => ({ ...prev, amount: "" }));
+                }}
                 placeholder="0,00"
                 required
-                className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-neon/50"
+                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-neon/50 ${
+                  errors.amount ? "border-red bg-red/5" : "border-white/10 bg-background"
+                }`}
               />
+              {errors.amount && (
+                <p className="text-red text-xs mt-1">{errors.amount}</p>
+              )}
             </div>
             <div>
               <label htmlFor="type" className="block text-xs font-semibold text-muted uppercase tracking-wide mb-1">

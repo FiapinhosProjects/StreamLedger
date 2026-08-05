@@ -3,6 +3,7 @@
 // Componente que verifica se usuário tem 18+ antes de acessar
 // Conforme Lei Felca (Lei 15.211/2025)
 // Fluxo: CPF -> Verifica idade -> Yoti (18+) ou Parental (<18)
+// Com rate limiting para prevenir brute force
 // ============================================
 
 "use client";
@@ -13,6 +14,7 @@ import { useAgeVerification } from "@/hooks/useAgeVerification";
 import { useInputMask, formatCpfValue, formatDateValue } from "@/hooks/useInputMask";
 import { validateCPF, calculateAge } from "@/lib/cpfValidation";
 import { getParentalLinks } from "@/lib/storage";
+import { checkClientRateLimit } from "@/lib/rateLimit";
 import YotiVerification, { type YotiResult } from "./YotiVerification";
 import BlockedAccess from "./BlockedAccess";
 
@@ -37,6 +39,7 @@ export default function AgeGate({ children }: AgeGateProps) {
 
   // Estados locais para o formulário
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [rateLimitError, setRateLimitError] = useState<string | null>(null);
 
   // Estado do fluxo
   const [step, setStep] = useState<"form" | "yoti" | "parental">("form");
@@ -121,12 +124,23 @@ export default function AgeGate({ children }: AgeGateProps) {
   const handleContinue = useCallback(() => {
     if (!handleValidate()) return;
 
+    // Rate limiting - verifica antes de processar
+    const cleanCpf = cpfInput.value.replace(/\D/g, "");
+    const rateLimit = checkClientRateLimit("LOGIN_ATTEMPT", cleanCpf);
+
+    if (!rateLimit.allowed) {
+      const retryInSeconds = Math.ceil(rateLimit.resetIn / 1000);
+      setRateLimitError(`Muitas tentativas. Tente novamente em ${retryInSeconds} segundos.`);
+      setIsTransitioning(false);
+      return;
+    }
+
+    setRateLimitError(null);
     setIsTransitioning(true);
 
     setTimeout(() => {
       const age = calculateAge(birthDateInput.value);
       setDeclaredAge(age);
-      const cleanCpf = cpfInput.value.replace(/\D/g, "");
 
       if (age >= 18) {
         // Adulto: vai para verificação facial
@@ -386,6 +400,12 @@ export default function AgeGate({ children }: AgeGateProps) {
 
                 {loginError && (
                   <p className="text-red text-sm text-center">{loginError}</p>
+                )}
+
+                {rateLimitError && (
+                  <div className="bg-red/10 border border-red/30 rounded-lg p-3">
+                    <p className="text-red text-sm text-center font-medium">{rateLimitError}</p>
+                  </div>
                 )}
 
                 {/* Checkbox de declaração */}

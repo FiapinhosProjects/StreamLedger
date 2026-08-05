@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { checkServerRateLimit, getRateLimitHeaders } from "@/lib/rateLimit";
 
 async function getTwitchToken(): Promise<string> {
   const res = await fetch("https://id.twitch.tv/oauth2/token", {
@@ -15,14 +16,37 @@ async function getTwitchToken(): Promise<string> {
   return data.access_token;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Rate limiting
+  // Usa IP do cliente como identificador
+  const forwarded = request.headers.get("x-forwarded-for");
+  const ip = forwarded ? forwarded.split(",")[0] : "unknown";
+
+  const rateLimit = checkServerRateLimit(ip, "API_REQUEST");
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      {
+        error: "Too many requests. Please try again later.",
+        retryAfter: Math.ceil(rateLimit.resetIn / 1000),
+      },
+      {
+        status: 429,
+        headers: getRateLimitHeaders(rateLimit),
+      }
+    );
+  }
+
   const clientId = process.env.TWITCH_CLIENT_ID;
   const clientSecret = process.env.TWITCH_CLIENT_SECRET;
 
   if (!clientId || !clientSecret) {
     return NextResponse.json(
       { error: "Twitch credentials not configured" },
-      { status: 500 }
+      {
+        status: 500,
+        headers: getRateLimitHeaders(rateLimit),
+      }
     );
   }
 
@@ -44,11 +68,19 @@ export async function GET() {
       image: game.box_art_url.replace("{width}", "120").replace("{height}", "160"),
     }));
 
-    return NextResponse.json({ games });
+    return NextResponse.json(
+      { games },
+      {
+        headers: getRateLimitHeaders(rateLimit),
+      }
+    );
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch top games" },
-      { status: 500 }
+      {
+        status: 500,
+        headers: getRateLimitHeaders(rateLimit),
+      }
     );
   }
 }

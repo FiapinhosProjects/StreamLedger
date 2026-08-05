@@ -3,6 +3,8 @@
 // Converte números para formato brasileiro (R$)
 // ============================================
 
+import { parseCurrencyValue as validateAndParseCurrency } from "./validation";
+
 // Formata um número para o formato de moeda brasileira
 // Exemplo: 1500.5 → "R$ 1.500,50"
 export function formatCurrency(value: number): string {
@@ -14,10 +16,9 @@ export function formatCurrency(value: number): string {
 
 // Converte o texto digitado no input para um número
 // Exemplo: "1.500,00" → 1500.00
+// Usa validação do módulo validation.ts
 export function parseCurrencyInput(value: string): number {
-  // Remove os pontos de milhar e troca vírgula por ponto
-  const cleaned = value.replace(/\./g, "").replace(",", ".");
-  return parseFloat(cleaned) || 0;
+  return validateAndParseCurrency(value);
 }
 
 // Aplica a máscara de moeda enquanto o usuário digita
