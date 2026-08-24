@@ -14,6 +14,7 @@ import DuplicateModal from "@/components/modals/DuplicateModal";
 import GoalTracker from "@/components/ui/GoalTracker";
 import TopGames from "@/components/ui/TopGames";
 import Toast from "@/components/ui/Toast";
+import Chatbot from "@/components/chatbot/Chatbot";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 import { formatCurrency } from "@/lib/format";
@@ -77,6 +78,16 @@ export default function Dashboard() {
       setToastVisible(true);
     }
   };
+
+  // Callback disparado quando o chatbot confirma uma transação
+  const handleChatbotConfirm = useCallback(
+    (data: { title: string; amount: number; type: "income" | "expense"; category: string }) => {
+      addTransaction(data);
+      setToastMessage("Transação salva via assistente! ✅");
+      setToastVisible(true);
+    },
+    [addTransaction]
+  );
 
   // Confirma salvar mesmo sendo duplicata
   const handleConfirmDuplicate = () => {
@@ -204,6 +215,9 @@ export default function Dashboard() {
       <div className="mt-6">
         <TopGames />
       </div>
+
+      {/* Chatbot flutuante */}
+      <Chatbot onConfirm={handleChatbotConfirm} />
 
       {/* Modal de criar/editar transação */}
       <TransactionModal
