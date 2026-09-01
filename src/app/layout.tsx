@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import SecurityProvider from "@/components/providers/SecurityProvider";
+import ServiceWorkerProvider from "@/components/providers/ServiceWorkerProvider";
+import InstallPromptProvider from "@/components/providers/InstallPromptProvider";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -12,12 +14,24 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "StreamLedger",
   description: "Dashboard financeiro para streamers",
-  icons: { icon: "/assets/favicon.png" },
+  manifest: "/manifest.json",
+  icons: { icon: "/assets/favicon.png", apple: "/assets/favicon.png" },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "StreamLedger",
+  },
+  openGraph: {
+    title: "StreamLedger",
+    description: "Dashboard financeiro para streamers",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#0d0d0d",
 };
 
 export default function RootLayout({
@@ -28,7 +42,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${montserrat.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
-      <SecurityProvider>{children}</SecurityProvider>
+      <ServiceWorkerProvider>
+        <SecurityProvider>
+          <InstallPromptProvider>{children}</InstallPromptProvider>
+        </SecurityProvider>
+      </ServiceWorkerProvider>
     </body>
     </html>
   );

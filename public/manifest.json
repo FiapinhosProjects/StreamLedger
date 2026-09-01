@@ -1,0 +1,36 @@
+{
+  "name": "StreamLedger",
+  "short_name": "StreamLedger",
+  "description": "Dashboard financeiro para streamers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0d0d0d",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
+  "categories": ["finance", "utilities"],
+  "icons": [
+    {
+      "src": "/assets/favicon.png",
+      "sizes": "328x280",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/favicon.png",
+      "sizes": "328x280",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Nova Transação",
+      "short_name": "Nova",
+      "url": "/dashboard",
+      "description": "Registrar nova transação"
+    }
+  ]
+}
