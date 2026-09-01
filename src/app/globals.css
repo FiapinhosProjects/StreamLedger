@@ -30,11 +30,9 @@ button:focus-visible,
   border-radius: 4px;
 }
 
-select:focus-visible,
+/* Textareas usam a própria border-neon/50 do componente como foco */
 textarea:focus-visible {
-  outline: 2px solid var(--color-neon);
-  outline-offset: 2px;
-  box-shadow: 0 0 8px rgba(93, 255, 155, 0.3);
+  outline: none;
 }
 
 /* Inputs isolados (fora de container com ícone) */

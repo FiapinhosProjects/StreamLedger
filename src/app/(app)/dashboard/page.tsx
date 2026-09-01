@@ -82,11 +82,24 @@ export default function Dashboard() {
   // Callback disparado quando o chatbot confirma uma transação
   const handleChatbotConfirm = useCallback(
     (data: { title: string; amount: number; type: "income" | "expense"; category: string }) => {
-      addTransaction(data);
+      const saved = addTransaction(data);
       setToastMessage("Transação salva via assistente! ✅");
       setToastVisible(true);
+      return saved;
     },
     [addTransaction]
+  );
+
+  // Callback disparado quando o chatbot exclui uma transação
+  const handleChatbotDelete = useCallback(
+    (data: { title: string; amount: number; type: "income" | "expense"; category: string; id?: number }) => {
+      if (data.id != null) {
+        deleteTransaction(data.id);
+        setToastMessage("Transação excluída! 🗑️");
+        setToastVisible(true);
+      }
+    },
+    [deleteTransaction]
   );
 
   // Confirma salvar mesmo sendo duplicata
@@ -217,7 +230,7 @@ export default function Dashboard() {
       </div>
 
       {/* Chatbot flutuante */}
-      <Chatbot onConfirm={handleChatbotConfirm} />
+      <Chatbot onConfirm={handleChatbotConfirm} onDelete={handleChatbotDelete} />
 
       {/* Modal de criar/editar transação */}
       <TransactionModal

@@ -19,20 +19,27 @@ export interface ParsedTransaction {
   data: string;
 }
 
+export interface StorageTransaction {
+  id?: number;
+  title: string;
+  amount: number;
+  type: "income" | "expense";
+  category: string;
+}
+
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
   content: string;
-  /** Transação extraída pela IA (presente apenas quando content
-   *  contém a mensagem de confirmação) */
-  parsedTransaction?: ParsedTransaction;
-  /** Transação já convertida para o formato do storage */
-  storageTransaction?: {
-    title: string;
-    amount: number;
-    type: "income" | "expense";
-    category: string;
-  };
+  timestamp: Date;
+  /** Texto original do usuário (para retry em erro) */
+  originalText?: string;
+  /** Transações extraídas pela IA */
+  transactions: Array<{
+    parsed: ParsedTransaction;
+    storage: StorageTransaction;
+    status: "pending" | "confirmed" | "dismissed";
+  }>;
 }
 
 // ---------------------------------------------------
@@ -49,140 +56,282 @@ const CATEGORY_MAP: Record<string, string> = {
 };
 
 // ---------------------------------------------------
+// Helpers
+// ---------------------------------------------------
+
+function uid(prefix: string): string {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+}
+
+function parseTransaction(
+  parsed: ParsedTransaction
+): StorageTransaction | null {
+  const tipoStorage =
+    parsed.tipo === "entrada" ? "income" : "expense";
+
+  const safeTitle = String(parsed.descricao ?? "")
+    .slice(0, 100)
+    .replace(/"/g, "'")
+    .trim();
+  const safeAmount = Number(parsed.valor);
+  const safeCategory = CATEGORY_MAP[String(parsed.categoria)] ?? "Geral";
+
+  if (
+    !["entrada", "saida"].includes(parsed.tipo) ||
+    isNaN(safeAmount) ||
+    safeAmount <= 0 ||
+    !safeTitle
+  ) {
+    return null;
+  }
+
+  return {
+    title: safeTitle,
+    amount: safeAmount,
+    type: tipoStorage as "income" | "expense",
+    category: safeCategory,
+  };
+}
+
+// ---------------------------------------------------
 // Hook
 // ---------------------------------------------------
 
 export function useChatbot() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
-      id: "welcome",
+      id: uid("welcome"),
       role: "assistant",
-      content:
-        "Olá! 👋 Sou o assistente financeiro do StreamLedger.\n\nMe conte sua transação em linguagem natural, por exemplo:\n• *Recebi 80 reais de subs hoje*\n• *Gastei 250 no headset novo*\n\nQuando eu entender, vou te pedir uma confirmação antes de salvar.",
+      content: "Olá! 👋 Sou o assistente financeiro do StreamLedger.\n\nMe conte sua transação em linguagem natural. Pode incluir várias de uma vez!\n• *Recebi 80 de sub e gastei 200 no headset*\n• *Doação de 50 e assinatura VPN de 30*\n\nQuando eu entender, vou te pedir confirmação antes de salvar cada uma.",
+      timestamp: new Date(),
+      transactions: [],
     },
   ]);
 
   const [isTyping, setIsTyping] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [typingMessage, setTypingMessage] = useState("Digitando...");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Rola para o final sempre que as mensagens mudam
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  // Envia mensagem do usuário
   const sendMessage = useCallback(
     async (text: string) => {
       if (!text.trim()) return;
 
+      abortControllerRef.current?.abort();
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
       const userMsg: ChatMessage = {
-        id: `user-${Date.now()}`,
+        id: uid("user"),
         role: "user",
         content: text.trim(),
+        timestamp: new Date(),
+        transactions: [],
       };
 
       setMessages((prev) => [...prev, userMsg]);
       setIsTyping(true);
-      setError(null);
+      setTypingMessage("Iniciando...");
       scrollToBottom();
+
+      const typingTimer = setTimeout(
+        () => setTypingMessage("Processando transações..."),
+        3_000
+      );
 
       try {
         const res = await fetch("/api/chatbot/parse", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: text.trim() }),
+          signal: AbortSignal.timeout(35_000),
         });
 
-        const data = await res.json();
+        if (!res.ok) {
+          let errorMessage = "Erro do servidor. Tente novamente.";
+          try {
+            const errData = await res.json();
+            errorMessage = errData.error ?? errorMessage;
+          } catch { /* usa genérica */ }
+          throw Object.assign(new Error(errorMessage), { retryText: text.trim() });
+        }
 
-        if (data.success) {
-          const parsed: ParsedTransaction = data.transaction;
-
-          const tipoStorage =
-            parsed.tipo === "entrada" ? "income" : "expense";
-
-          const storageTransaction = {
-            title: parsed.descricao,
-            amount: parsed.valor,
-            type: tipoStorage as "income" | "expense",
-            category: CATEGORY_MAP[parsed.categoria] ?? "Geral",
-          };
-
-          // Mensagem de confirmação com a transação extraída
-          const tipoLabel = parsed.tipo === "entrada" ? "Entrada" : "Saída";
-          const valorFmt = parsed.valor.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
+        let data: { success: boolean; transactions?: ParsedTransaction[]; error?: string };
+        try {
+          data = await res.json();
+        } catch {
+          throw Object.assign(new Error("Resposta inválida do servidor."), {
+            retryText: text.trim(),
           });
-          const dataFmt = new Date(parsed.data + "T00:00:00").toLocaleDateString(
-            "pt-BR"
-          );
+        }
+
+        if (data.success && Array.isArray(data.transactions) && data.transactions.length > 0) {
+          const built = data.transactions
+            .map((parsed) => {
+              const storage = parseTransaction(parsed);
+              return storage ? { parsed, storage, status: "pending" as const } : null;
+            })
+            .filter(Boolean) as Array<{
+              parsed: ParsedTransaction;
+              storage: StorageTransaction;
+              status: "pending" | "confirmed" | "dismissed";
+            }>;
+
+          if (built.length === 0) {
+            throw Object.assign(
+              new Error(
+                "Dados das transações inválidos. Tente novamente."
+              ),
+              { retryText: text.trim() }
+            );
+          }
+
+          const total = built.length;
+          const intro =
+            total === 1
+              ? "Encontrei 1 transação!"
+              : `Encontrei ${total} transações! Confirme cada uma abaixo.`;
 
           const assistantMsg: ChatMessage = {
-            id: `assistant-${Date.now()}`,
+            id: uid("assistant"),
             role: "assistant",
-            content:
-              `Entendi! Aqui estão os dados que extraí:\n\n` +
-              `📌 **Tipo:** ${tipoLabel}\n` +
-              `💬 **Descrição:** ${parsed.descricao}\n` +
-              `💰 **Valor:** ${valorFmt}\n` +
-              `🏷 **Categoria:** ${parsed.categoria}\n` +
-              `📅 **Data:** ${dataFmt}\n\n` +
-              `Posso salvar essa transação? 🤔`,
-            parsedTransaction: parsed,
-            storageTransaction,
+            content: intro,
+            timestamp: new Date(),
+            transactions: built,
           };
 
           setMessages((prev) => [...prev, assistantMsg]);
         } else {
-          // Mensagem amigável quando a IA não entende
           const assistantMsg: ChatMessage = {
-            id: `assistant-${Date.now()}`,
+            id: uid("assistant"),
             role: "assistant",
             content:
-              `Ops! ${data.error}\n\n` +
-              `Dica: mencione um **valor** e se é uma **entrada** ou **saída**.\n` +
-              `Exemplo: *"Recebi 50 reais de doação"*`,
+              (data.error ?? "Não consegui identificar transações.") +
+              "\n\nDica: mencione um valor e se é entrada ou saída.\nExemplo: *'Recebi 50 de doação'* ou *'Gastei 200 no headset'*",
+            timestamp: new Date(),
+            transactions: [],
           };
           setMessages((prev) => [...prev, assistantMsg]);
         }
-      } catch {
+      } catch (err) {
+        const e = err as Error & { retryText?: string };
         const assistantMsg: ChatMessage = {
-          id: `assistant-${Date.now()}`,
+          id: uid("assistant"),
           role: "assistant",
-          content:
-            "Houve um erro de conexão. Tente novamente em alguns instantes. 😅",
+          content: e.message ?? "Houve um erro. Tente novamente.",
+          timestamp: new Date(),
+          transactions: [],
+          originalText: e.retryText,
         };
         setMessages((prev) => [...prev, assistantMsg]);
       } finally {
+        clearTimeout(typingTimer);
         setIsTyping(false);
+        setTypingMessage("Digitando...");
         scrollToBottom();
       }
     },
     [scrollToBottom]
   );
 
-  // Limpa o histórico
+  // Confirma uma transação específica dentro de uma mensagem
+  const confirmTransaction = useCallback(
+    (messageId: string, storage: StorageTransaction) => {
+      setMessages((prev) =>
+        prev.map((m) => {
+          if (m.id !== messageId) return m;
+          return {
+            ...m,
+            transactions: m.transactions.map((t) =>
+              t.storage.title === storage.title &&
+              t.storage.amount === storage.amount
+                ? { ...t, status: "confirmed" as const }
+                : t
+            ),
+          };
+        })
+      );
+    },
+    []
+  );
+
+  // Atualiza o id de uma transação confirmada (após salvar no storage)
+  const updateTransactionId = useCallback(
+    (messageId: string, storage: StorageTransaction, id: number) => {
+      setMessages((prev) =>
+        prev.map((m) => {
+          if (m.id !== messageId) return m;
+          return {
+            ...m,
+            transactions: m.transactions.map((t) =>
+              t.storage.title === storage.title &&
+              t.storage.amount === storage.amount
+                ? { ...t, storage: { ...t.storage, id } }
+                : t
+            ),
+          };
+        })
+      );
+    },
+    []
+  );
+
+  // Descarta uma transação específica dentro de uma mensagem
+  const dismissTransaction = useCallback((messageId: string, storage: StorageTransaction) => {
+    setMessages((prev) =>
+      prev.map((m) => {
+        if (m.id !== messageId) return m;
+        return {
+          ...m,
+          transactions: m.transactions.map((t) =>
+            t.storage.title === storage.title &&
+            t.storage.amount === storage.amount
+              ? { ...t, status: "dismissed" as const }
+              : t
+          ),
+        };
+      })
+    );
+  }, []);
+
+  // Descarta mensagem inteira (erro)
+  const dismissMessage = useCallback((id: string) => {
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === id
+          ? { ...m, content: "Transação cancelada. Fique à vontade para fazer outra! 😊", transactions: [] }
+          : m
+      )
+    );
+  }, []);
+
   const clearHistory = useCallback(() => {
     setMessages([
       {
-        id: "welcome",
+        id: uid("welcome"),
         role: "assistant",
-        content:
-          "Histórico limpo! Me conte sua próxima transação. 😊",
+        content: "Histórico limpo! Me conte suas transações. 😊",
+        timestamp: new Date(),
+        transactions: [],
       },
     ]);
-    setError(null);
   }, []);
 
   return {
     messages,
     isTyping,
-    error,
+    typingMessage,
     messagesEndRef,
     sendMessage,
     clearHistory,
+    dismissMessage,
+    confirmTransaction,
+    dismissTransaction,
+    updateTransactionId,
     scrollToBottom,
   };
 }
