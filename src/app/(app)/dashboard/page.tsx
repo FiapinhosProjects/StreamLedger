@@ -17,6 +17,7 @@ import Toast from "@/components/ui/Toast";
 import Chatbot from "@/components/chatbot/Chatbot";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
+import TransactionTable from "@/components/ui/TransactionTable";
 import { formatCurrency } from "@/lib/format";
 import { getTotalByType } from "@/lib/calculations";
 import { Transaction } from "@/lib/storage";
@@ -175,50 +176,15 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Lista de transações recentes */}
-      <div className="bg-card border border-border rounded-2xl p-5 mb-6">
-        <h3 className="text-lg font-semibold mb-1">Movimentações Recentes</h3>
-        <p className="text-sm text-muted mb-4">Últimas transações registradas</p>
-
-        {transactions.length === 0 ? (
-          // Estado vazio: nenhuma transação registrada
-          <div className="text-center py-10">
-            <p className="text-muted mb-3">Nenhuma transação registrada ainda.</p>
-            <button
-              onClick={() => { setEditing(null); setModalOpen(true); }}
-              className="px-4 py-2 text-sm rounded-lg bg-neon text-background font-semibold hover:opacity-80 active:scale-95 transition-all duration-200"
-            >
-              + Registrar primeira transação
-            </button>
-          </div>
-        ) : (
-          // Lista de transações (mais recentes primeiro)
-          <div className="flex flex-col gap-2">
-            {transactions.slice().reverse().map((t) => (
-              <div key={t.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-subtle hover:bg-neon/5 hover:border-neon/20 hover:shadow-[0_0_10px_rgba(93,255,155,0.1)] hover:-translate-y-0.5 border border-transparent transition-all duration-300">
-                {/* Info da transação: ícone, título, data */}
-                <div className="flex items-center gap-3 mb-2 sm:mb-0">
-                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-                    <CategoryIcon category={t.category} />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-sm">{t.title}</p>
-                    <p className="text-xs text-muted">{t.date} &bull; {t.category}</p>
-                  </div>
-                </div>
-
-                {/* Valor e botões de ação */}
-                <div className="flex items-center gap-3">
-                  <span className={`font-bold ${t.type === "income" ? "text-green-400" : "text-red"}`}>
-                    {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
-                  </span>
-                  <button onClick={() => handleEdit(t)} className="text-muted hover:text-neon hover:drop-shadow-[0_0_6px_rgba(93,255,155,0.6)] transition-all duration-300 text-sm" title="Editar">✎</button>
-                  <button onClick={() => handleDelete(t.id)} className="text-muted hover:text-red hover:drop-shadow-[0_0_6px_rgba(255,68,102,0.6)] transition-all duration-300 text-sm" title="Excluir">✖</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+      {/* Tabela de transações com busca e ordenação */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-3">Movimentações</h3>
+        <TransactionTable
+          transactions={transactions}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onAdd={() => { setEditing(null); setModalOpen(true); }}
+        />
       </div>
 
       {/* Componente de meta financeira */}
@@ -258,19 +224,4 @@ export default function Dashboard() {
       <Toast message={toastMessage} visible={toastVisible} onClose={hideToast} />
     </>
   );
-}
-
-// Componente auxiliar: ícone da categoria
-function CategoryIcon({ category }: { category: string }) {
-  // Mapa de categorias para ícones
-  const icons: Record<string, string> = {
-    "Twitch Subs": "/assets/Twitch.svg",
-    "YouTube AdSense": "/assets/Youtube.svg",
-    "Donates": "/assets/Donate.svg",
-    "Setup": "/assets/equipamento.svg",
-    "Software": "/assets/software.svg",
-  };
-
-  // Se não encontrar, usa o ícone genérico "Outros"
-  return <Image src={icons[category] || "/assets/Outros.svg"} alt="" width={20} height={20} />;
 }
