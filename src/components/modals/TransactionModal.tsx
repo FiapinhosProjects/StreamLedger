@@ -28,6 +28,45 @@ const expenseCategories = [
   { value: "Geral", label: "Outros" },
 ];
 
+// ============================================
+// Select — wrapper com seta customizada
+// ============================================
+interface SelectProps {
+  id: string;
+  value: string;
+  onChange: (value: string) => void;
+  children: React.ReactNode;
+  label: string;
+}
+
+function Select({ id, value, onChange, children, label }: SelectProps) {
+  return (
+    <div>
+      <label htmlFor={id} className="block text-xs font-semibold text-muted uppercase tracking-wide mb-1">
+        {label}
+      </label>
+      <div className="relative">
+        <select
+          id={id}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full appearance-none rounded-lg border border-white/10 bg-background pl-3 pr-9 py-2 text-sm text-white outline-none focus:border-neon/50 cursor-pointer"
+        >
+          {children}
+        </select>
+        <svg
+          className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 // Props do modal
 // open: se está aberto
 // onClose: função para fechar
@@ -198,38 +237,28 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
                 <p className="text-red text-xs mt-1">{errors.amount}</p>
               )}
             </div>
-            <div>
-              <label htmlFor="type" className="block text-xs font-semibold text-muted uppercase tracking-wide mb-1">
-                Tipo
-              </label>
-              <select
-                id="type"
-                value={type}
-                onChange={(e) => setType(e.target.value as "income" | "expense")}
-                className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-neon/50"
-              >
-                <option value="income">Receita (+)</option>
-                <option value="expense">Despesa (-)</option>
-              </select>
-            </div>
+            <Select
+              id="type"
+              value={type}
+              onChange={(v) => setType(v as "income" | "expense")}
+              label="Tipo"
+            >
+              <option value="income">Receita (+)</option>
+              <option value="expense">Despesa (-)</option>
+            </Select>
           </div>
 
           {/* Campo: Categoria (muda conforme o tipo) */}
-          <div>
-            <label htmlFor="category" className="block text-xs font-semibold text-muted uppercase tracking-wide mb-1">
-              Categoria
-            </label>
-            <select
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm outline-none focus:border-neon/50"
-            >
-              {categories.map((c) => (
-                <option key={c.value} value={c.value}>{c.label}</option>
-              ))}
-            </select>
-          </div>
+          <Select
+            id="category"
+            value={category}
+            onChange={(v) => setCategory(v)}
+            label="Categoria"
+          >
+            {categories.map((c) => (
+              <option key={c.value} value={c.value}>{c.label}</option>
+            ))}
+          </Select>
 
           {/* Botões: Cancelar e Salvar */}
           <div className="flex justify-end gap-3 mt-2">
