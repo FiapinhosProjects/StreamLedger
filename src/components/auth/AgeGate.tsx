@@ -95,8 +95,8 @@ export default function AgeGate({ children }: AgeGateProps) {
   }, [cpfInput, birthDateInput]);
 
   // Verifica se menor tem vínculo parental ativo
-  const checkMinorHasLink = useCallback((cpf: string): { hasLink: boolean; parentId?: string } => {
-    const links = getParentalLinks();
+  const checkMinorHasLink = useCallback(async (cpf: string): Promise<{ hasLink: boolean; parentId?: string }> => {
+    const links = await getParentalLinks();
     const link = links.find((l) => l.minorCpf === cpf && l.status === "accepted");
     if (link) {
       return { hasLink: true, parentId: link.parentId };
@@ -105,7 +105,7 @@ export default function AgeGate({ children }: AgeGateProps) {
   }, []);
 
   // Login direto para menores com vínculo
-  const loginMinorWithLink = useCallback(() => {
+  const loginMinorWithLink = useCallback(async () => {
     const cleanCpf = cpfInput.value.replace(/\D/g, "");
     const mockData = {
       nivel: "ouro" as const,
@@ -113,7 +113,7 @@ export default function AgeGate({ children }: AgeGateProps) {
       email: "usuario@exemplo.com",
     };
 
-    const loginResult = loginWithGovBr(cleanCpf, mockData, birthDateInput.value);
+    const loginResult = await loginWithGovBr(cleanCpf, mockData, birthDateInput.value);
     if (!loginResult.success) {
       setLoginError(loginResult.error || "Erro ao verificar");
       setStep("form");
@@ -121,7 +121,7 @@ export default function AgeGate({ children }: AgeGateProps) {
   }, [cpfInput.value, birthDateInput.value, loginWithGovBr]);
 
   // Continuar após validar CPF
-  const handleContinue = useCallback(() => {
+  const handleContinue = useCallback(async () => {
     if (!handleValidate()) return;
 
     // Rate limiting - verifica antes de processar
@@ -138,7 +138,7 @@ export default function AgeGate({ children }: AgeGateProps) {
     setRateLimitError(null);
     setIsTransitioning(true);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       const age = calculateAge(birthDateInput.value);
       setDeclaredAge(age);
 
@@ -148,11 +148,11 @@ export default function AgeGate({ children }: AgeGateProps) {
         setIsTransitioning(false);
       } else {
         // Menor: verifica se tem vínculo parental
-        const { hasLink, parentId } = checkMinorHasLink(cleanCpf);
+        const { hasLink } = await checkMinorHasLink(cleanCpf);
 
         if (hasLink) {
           // Menor com vínculo: login automático
-          loginMinorWithLink();
+          await loginMinorWithLink();
         } else {
           // Menor sem vínculo: mostra tela de parental
           setStep("parental");
@@ -172,7 +172,7 @@ export default function AgeGate({ children }: AgeGateProps) {
   }, []);
 
   // Login após verificação Yoti
-  const handleYotiVerified = useCallback((result: YotiResult) => {
+  const handleYotiVerified = useCallback(async (result: YotiResult) => {
     if (!result.verified) {
       setLoginError("Verificação facial não aprovada. A idade estimada não corresponde.");
       setStep("form");
@@ -186,7 +186,7 @@ export default function AgeGate({ children }: AgeGateProps) {
       email: "usuario@exemplo.com",
     };
 
-    const loginResult = loginWithGovBr(cleanCpf, mockData, birthDateInput.value);
+    const loginResult = await loginWithGovBr(cleanCpf, mockData, birthDateInput.value);
     if (!loginResult.success) {
       setLoginError(loginResult.error || "Erro ao verificar");
       setStep("form");

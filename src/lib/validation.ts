@@ -216,6 +216,12 @@ export function validateAndSanitizeTitle(title: string): ValidationResult {
     return { valid: false, errors: ["Título é obrigatório"] };
   }
 
+  // Verifica ameaças na entrada original ANTES de sanitizar
+  const threats = detectThreats(title);
+  if (threats.length > 0) {
+    return { valid: false, errors: ["Título contém caracteres inválidos"] };
+  }
+
   const sanitized = sanitizeForStorage(title);
 
   if (sanitized.length < 2) {
@@ -224,12 +230,6 @@ export function validateAndSanitizeTitle(title: string): ValidationResult {
 
   if (sanitized.length > VALIDATION_RULES.MAX_TITLE_LENGTH) {
     errors.push(`Título deve ter no máximo ${VALIDATION_RULES.MAX_TITLE_LENGTH} caracteres`);
-  }
-
-  // Verifica se contém threats
-  const threats = detectThreats(sanitized);
-  if (threats.length > 0) {
-    errors.push("Título contém caracteres inválidos");
   }
 
   return {
@@ -506,8 +506,11 @@ export function escapeForSql(input: string): string {
 export function isSafeText(input: string): boolean {
   if (!input) return false;
 
+  // Detecta ameaças na entrada original ANTES de sanitizar
+  if (detectThreats(input).length > 0) return false;
+
   const sanitized = sanitizeForStorage(input);
-  return sanitized.length > 0 && detectThreats(sanitized).length === 0;
+  return sanitized.length > 0;
 }
 
 /**

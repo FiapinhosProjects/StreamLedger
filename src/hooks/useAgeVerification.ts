@@ -12,6 +12,7 @@ import {
   clearCurrentUser,
   addAuditEntry,
   getParentalLinks,
+  migrateToSecureStorage,
   type StoredUser,
 } from "@/lib/storage";
 import {
@@ -37,8 +38,8 @@ interface MockGovBrData {
 /**
  * Verifica se menor tem vínculo parental ativo
  */
-function checkMinorHasLink(cpf: string): { hasLink: boolean; parentId?: string } {
-  const links = getParentalLinks();
+async function checkMinorHasLink(cpf: string): Promise<{ hasLink: boolean; parentId?: string }> {
+  const links = await getParentalLinks();
   const link = links.find((l) => l.minorCpf === cpf && l.status === "accepted");
 
   if (link) {
@@ -58,21 +59,36 @@ export function useAgeVerification() {
     needsParentalConsent: false,
   });
 
-  // Para testes: NÃO carrega do localStorage
-  // Sempre começa deslogado para facilitar testes
+  // Inicialização: migra dados legados e carrega usuário salvo
   useEffect(() => {
-    // Comentado para testes - descomente em produção
-    // const user = getCurrentUser();
-    // if (user && user.verified) {
-    //   setState({
-    //     isLoading: false,
-    //     isVerified: true,
-    //     user,
-    //     needsParentalConsent: user.ageGroup !== "adult" && !user.linkedParentId,
-    //   });
-    // } else {
-    setState((prev) => ({ ...prev, isLoading: false }));
-    // }
+    let mounted = true;
+
+    async function init() {
+      // Migra dados do formato antigo (base64) para o novo (AES-GCM)
+      await migrateToSecureStorage();
+
+      if (!mounted) return;
+
+      const user = await getCurrentUser();
+      if (!mounted) return;
+
+      if (user && user.verified) {
+        setState({
+          isLoading: false,
+          isVerified: true,
+          user,
+          needsParentalConsent: user.ageGroup !== "adult" && !user.linkedParentId,
+        });
+      } else {
+        setState((prev) => ({ ...prev, isLoading: false }));
+      }
+    }
+
+    init();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   /**
@@ -80,7 +96,7 @@ export function useAgeVerification() {
    * Em produção, isso seria substituído por OAuth real
    */
   const loginWithGovBr = useCallback(
-    (cpf: string, mockData: MockGovBrData, birthDate: string) => {
+    async (cpf: string, mockData: MockGovBrData, birthDate: string) => {
       // Valida CPF
       if (!validateCPF(cpf)) {
         return { success: false, error: "CPF inválido" };
@@ -91,7 +107,7 @@ export function useAgeVerification() {
       const ageGroup = classifyUser(age);
 
       // Verifica se menor tem vínculo parental ativo
-      const { hasLink, parentId } = checkMinorHasLink(cpf);
+      const { hasLink, parentId } = await checkMinorHasLink(cpf);
 
       // Se é menor mas tem vínculo ativo, libera acesso
       const isAdult = age >= 18;
@@ -111,11 +127,11 @@ export function useAgeVerification() {
         verifiedAt: new Date().toISOString(),
       };
 
-      // Salva no localStorage
-      saveCurrentUser(user);
+      // Salva no localStorage (criptografado AES-GCM)
+      await saveCurrentUser(user);
 
-      // Registra auditoria
-      addAuditEntry({
+      // Registra auditoria (criptografada)
+      await addAuditEntry({
         cpf,
         userType: isAdult ? "adult" : "minor",
         action: isAdult ? "ADULT_LOGIN" : (hasParentalLink ? "MINOR_WITH_LINK" : "MINOR_WITHOUT_LINK"),
@@ -152,11 +168,11 @@ export function useAgeVerification() {
   /**
    * Define vínculo parental manualmente (após responsável criar)
    */
-  const setParentalLink = useCallback((parentId: string) => {
-    const user = getCurrentUser();
+  const setParentalLink = useCallback(async (parentId: string) => {
+    const user = await getCurrentUser();
     if (user) {
       const updated = { ...user, linkedParentId: parentId };
-      saveCurrentUser(updated);
+      await saveCurrentUser(updated);
       setState((prev) => ({
         ...prev,
         user: updated,
@@ -185,7 +201,7 @@ export function useGovBrMock() {
 
   // Simula Gov.br login com dados mockados
   const simulateLogin = useCallback(
-    (level: GovBrLevel, cpf: string, birthDate: string): MockGovBrData => {
+    (level: GovBrLevel): MockGovBrData => {
       const names: Record<GovBrLevel, string> = {
         bronze: "Usuário Bronze",
         prata: "Maria Silva",

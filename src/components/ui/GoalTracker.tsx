@@ -19,18 +19,28 @@ export default function GoalTracker({ transactions }: any) {
   // Controla se mostra o resultado do cálculo
   const [showResult, setShowResult] = useState(false);
 
-  // Quando o componente carrega, busca a meta salva no localStorage
+  // Quando o componente carrega, busca a meta salva no localStorage (criptografado)
   useEffect(() => {
-    const saved = getGoal();
-    if (saved) {
-      setGoalInput(saved);
-      setShowResult(true);
+    let mounted = true;
+
+    async function load() {
+      const saved = await getGoal();
+      if (mounted && saved) {
+        setGoalInput(saved);
+        setShowResult(true);
+      }
     }
+
+    load();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Salva a meta e mostra o resultado
-  const handleCalc = () => {
-    saveGoal(goalInput);
+  const handleCalc = async () => {
+    await saveGoal(goalInput);
     setShowResult(true);
   };
 

@@ -6,23 +6,45 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Transaction, getTransactions, saveTransactions } from "@/lib/storage";
+import {
+  getTransactions,
+  saveTransactions,
+  migrateToSecureStorage,
+  type Transaction,
+} from "@/lib/storage";
 
 // Hook personalizado que gerencia todas as transações do app
 export function useTransactions() {
   // Estado que guarda a lista de transações
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  // Quando o componente carrega, busca as transações salvas no localStorage
+  // Inicialização: migra dados legados e carrega transações
   useEffect(() => {
-    const saved = getTransactions();
-    setTransactions(saved);
+    let mounted = true;
+
+    async function init() {
+      // Migra dados do formato antigo (base64) para o novo (AES-GCM)
+      await migrateToSecureStorage();
+
+      if (!mounted) return;
+
+      const saved = await getTransactions();
+      if (mounted) {
+        setTransactions(saved);
+      }
+    }
+
+    init();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Função interna que atualiza o estado E salva no localStorage
-  function save(updated: Transaction[]) {
+  async function save(updated: Transaction[]) {
     setTransactions(updated);
-    saveTransactions(updated);
+    await saveTransactions(updated);
   }
 
   // Adiciona uma nova transação à lista
@@ -49,7 +71,6 @@ export function useTransactions() {
       }
       return t;
     });
-
     save(updated);
   }
 

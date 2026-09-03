@@ -96,8 +96,8 @@ export default function CadastroParentalPage() {
 
     setIsTransitioning(true);
 
-    setTimeout(() => {
-      const link = createLink({
+    setTimeout(async () => {
+      const link = await createLink({
         minorCpf: data.minorCpf,
         minorName: data.minorName,
         minorEmail: data.minorEmail,
