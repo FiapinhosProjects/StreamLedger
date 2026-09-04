@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "jsdom",
-    setupFilesAfterEnv: ["./src/test/setup.ts"],
+    // setupFiles removido: os testes não usam @testing-library/jest-dom
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
