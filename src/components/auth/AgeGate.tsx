@@ -1,11 +1,3 @@
-// ============================================
-// AgeGate.tsx - Barreira de entrada / Verificação de idade
-// Componente que verifica se usuário tem 18+ antes de acessar
-// Conforme Lei Felca (Lei 15.211/2025)
-// Fluxo: CPF -> Verifica idade -> Yoti (18+) ou Parental (<18)
-// Com rate limiting para prevenir brute force
-// ============================================
-
 "use client";
 
 import { useState, useCallback, useEffect } from "react";

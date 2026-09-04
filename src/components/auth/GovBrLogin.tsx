@@ -1,8 +1,3 @@
-// ============================================
-// GovBrLogin.tsx - Botão e modal de login Gov.br (mock)
-// Simula fluxo de autenticação Gov.br para protótipo
-// ============================================
-
 "use client";
 
 import { useState } from "react";

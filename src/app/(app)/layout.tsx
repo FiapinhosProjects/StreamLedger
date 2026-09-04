@@ -1,8 +1,3 @@
-// ============================================
-// Layout do App (Dashboard, Receitas, Despesas)
-// Estrutura com sidebar à esquerda e conteúdo à direita
-// ============================================
-
 import Sidebar from "@/components/layout/Sidebar";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

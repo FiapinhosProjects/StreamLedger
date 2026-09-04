@@ -1,8 +1,3 @@
-// ============================================
-// DuplicateModal.tsx - Modal de alerta de duplicata
-// Avisa quando o usuário tenta salvar uma transação que já existe
-// ============================================
-
 "use client";
 
 // Props que o modal recebe

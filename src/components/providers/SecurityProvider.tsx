@@ -1,13 +1,7 @@
-// ============================================
-// SecurityProvider.tsx - Provider de Inicialização de Segurança
-// Executa migração e verificações na primeira carga da aplicação
-// Não modifica o funcionamento existente - apenas adiciona camada de segurança
-// ============================================
-
 "use client";
 
 import { useEffect, useState } from "react";
-import { migrateExistingData } from "@/lib/secureStorage";
+import { migrateToSecureStorage } from "@/lib/storage";
 import { isCryptoAvailable } from "@/lib/crypto";
 
 interface SecurityProviderProps {
@@ -37,7 +31,7 @@ export default function SecurityProvider({ children }: SecurityProviderProps) {
       if (cryptoOk) {
         // Migra dados existentes para formato criptografado
         try {
-          await migrateExistingData();
+          await migrateToSecureStorage();
           setSecurityStatus((prev) => ({
             ...prev,
             dataMigrated: true,

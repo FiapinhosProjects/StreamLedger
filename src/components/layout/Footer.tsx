@@ -1,8 +1,3 @@
-// ============================================
-// Footer.tsx - Rodapé do site (páginas de marketing)
-// Mostra logo, links de navegação e equipe
-// ============================================
-
 import Link from "next/link";
 import Image from "next/image";
 

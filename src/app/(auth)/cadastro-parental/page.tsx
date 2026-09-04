@@ -1,9 +1,3 @@
-// ============================================
-// cadastro-parental/page.tsx - Página de cadastro do responsável
-// Responsável cria conta e vincula menor com verificação facial
-// Conforme Lei Felca (Lei 15.211/2025)
-// ============================================
-
 "use client";
 
 import { useState, useCallback } from "react";
@@ -19,7 +13,6 @@ export default function CadastroParentalPage() {
   const router = useRouter();
   const { createParentAccount, createLink, parent } = useParentalLink();
 
-  // Etapas do fluxo
   const [step, setStep] = useState<"login" | "face" | "vinculo" | "sucesso">("login");
 
   // Loading state para transições
@@ -145,7 +138,6 @@ export default function CadastroParentalPage() {
             </div>
           )}
 
-          {/* Etapa 1: Login do responsável */}
           {step === "login" && (
             <>
               <div className="text-center mb-8">
@@ -211,7 +203,6 @@ export default function CadastroParentalPage() {
             </>
           )}
 
-          {/* Etapa 2: Verificação facial */}
           {step === "face" && (
             <div className="flex items-center justify-center">
               <button
@@ -230,7 +221,6 @@ export default function CadastroParentalPage() {
             </div>
           )}
 
-          {/* Etapa 3: Vincular menor */}
           {step === "vinculo" && (
             <>
               <div className="text-center mb-8">
@@ -253,7 +243,6 @@ export default function CadastroParentalPage() {
             </>
           )}
 
-          {/* Etapa 4: Sucesso */}
           {step === "sucesso" && (
             <>
               <div className="text-center mb-8">

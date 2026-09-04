@@ -1,9 +1,3 @@
-// ============================================
-// Chatbot.tsx — Widget de chat flutuante (FAB + janela)
-// Inclui: múltiplas transações, typing indicator, timestamps,
-// retry e renderização de markdown
-// ============================================
-
 "use client";
 
 import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from "react";

@@ -1,8 +1,3 @@
-// ============================================
-// GoalTracker.tsx - Componente de meta financeira
-// O usuário define uma meta e vê o progresso com base no lucro
-// ============================================
-
 "use client";
 
 import { useState, useEffect } from "react";

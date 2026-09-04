@@ -1,9 +1,3 @@
-// ============================================
-// TransactionModal.tsx - Modal para criar/editar transação
-// Formulário com descrição, valor, tipo e categoria
-// Com validação de input robusta
-// ============================================
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -28,9 +22,6 @@ const expenseCategories = [
   { value: "Geral", label: "Outros" },
 ];
 
-// ============================================
-// Select — wrapper com seta customizada
-// ============================================
 interface SelectProps {
   id: string;
   value: string;

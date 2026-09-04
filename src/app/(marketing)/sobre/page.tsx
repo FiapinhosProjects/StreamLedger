@@ -1,8 +1,3 @@
-// ============================================
-// Sobre - Página "Nossa Motivação" e "Nossa Solução"
-// Explica por que o StreamLedger foi criado
-// ============================================
-
 import Image from "next/image";
 import FadeIn from "@/components/ui/FadeIn";
 

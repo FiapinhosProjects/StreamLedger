@@ -1,8 +1,3 @@
-// ============================================
-// useAgeVerification.ts - Hook de verificação de idade
-// Gerencia estado de autenticação e verificação conforme Lei Felca
-// ============================================
-
 "use client";
 
 import { useState, useEffect, useCallback } from "react";

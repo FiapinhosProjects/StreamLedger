@@ -1,8 +1,3 @@
-// ============================================
-// calculations.ts - Funções de cálculo financeiro
-// Soma valores por tipo, categoria, etc.
-// ============================================
-
 import { Transaction } from "./storage";
 
 // Calcula o total de um tipo (receita ou despesa)

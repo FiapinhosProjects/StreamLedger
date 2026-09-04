@@ -1,8 +1,3 @@
-// ============================================
-// useChatbot.ts — Hook de gerenciamento do chatbot
-// Controla mensagens, estado de digitação e fluxo de confirmação
-// ============================================
-
 "use client";
 
 import { useState, useRef, useCallback } from "react";

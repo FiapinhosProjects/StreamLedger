@@ -1,12 +1,3 @@
-// ============================================
-// rateLimit.ts - Sistema de Rate Limiting
-// Protege contra spam, brute force e abuse
-// Implementação híbrida: localStorage + memória em memória
-// ============================================
-
-// ============================================
-// Constantes
-// ============================================
 
 const RATE_LIMIT_STORAGE = "streamLedger_rate_limits";
 
@@ -26,9 +17,6 @@ export const LIMITS = {
   CPF_VALIDATION: { window: WINDOWS.MINUTE, max: 10, blockDuration: WINDOWS.MINUTE },
 } as const;
 
-// ============================================
-// Tipos
-// ============================================
 
 export type RateLimitAction = keyof typeof LIMITS;
 
@@ -45,9 +33,6 @@ interface RateLimitEntry {
   blockedUntil: number;
 }
 
-// ============================================
-// Armazenamento em Memória (servidor)
-// ============================================
 
 // Para Next.js API routes - usa Map em memória
 const serverRateLimits = new Map<string, { count: number; resetTime: number }>();
@@ -113,9 +98,6 @@ export function checkServerRateLimit(
   };
 }
 
-// ============================================
-// Armazenamento em localStorage (client-side)
-// ============================================
 
 interface StoredRateLimits {
   [key: string]: RateLimitEntry;
@@ -285,9 +267,6 @@ export function getRateLimitStatus(): Record<string, RateLimitResult> {
   return status;
 }
 
-// ============================================
-// Headers para API Responses
-// ============================================
 
 /**
  * Gera headers de rate limit para responses HTTP

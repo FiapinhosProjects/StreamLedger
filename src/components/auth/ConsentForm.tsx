@@ -1,9 +1,3 @@
-// ============================================
-// ConsentForm.tsx - Termo de Consentimento Parental
-// Formulário que responsável assina para permitir acesso do menor
-// Conforme Lei Felca (Lei 15.211/2025)
-// ============================================
-
 "use client";
 
 import { useState } from "react";

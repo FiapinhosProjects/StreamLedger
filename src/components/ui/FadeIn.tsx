@@ -1,9 +1,3 @@
-// ============================================
-// FadeIn.tsx - Componente de animação de entrada
-// Faz o conteúdo aparecer suavemente de baixo pra cima
-// quando o elemento fica visível na tela
-// ============================================
-
 "use client";
 
 import { useEffect, useRef, useState } from "react";

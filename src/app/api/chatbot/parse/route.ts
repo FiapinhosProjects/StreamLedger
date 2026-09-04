@@ -1,9 +1,3 @@
-// ============================================
-// route.ts - API Route: Gemini-powered transaction parser
-// Receives natural language → returns structured JSON array
-// Supports multiple transactions in a single message
-// ============================================
-
 import { NextRequest, NextResponse } from "next/server";
 import { checkServerRateLimit, getRateLimitHeaders } from "@/lib/rateLimit";
 

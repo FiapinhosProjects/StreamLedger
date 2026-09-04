@@ -1,8 +1,3 @@
-// ============================================
-// cpfValidation.ts - Validação de CPF e cálculo de idade
-// Algoritmo público para verificação conforme Lei Felca
-// ============================================
-
 import type { AgeGroup, CPFValidationResult } from "./user-types";
 
 /**

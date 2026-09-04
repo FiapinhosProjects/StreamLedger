@@ -1,9 +1,3 @@
-// ============================================
-// storage.ts - Gerenciamento do localStorage com criptografia AES-GCM
-// Protege dados sensíveis (transações, dados pessoais, CPFs) com criptografia
-// Compatível com dados legados (base64) via migração automática
-// ============================================
-
 import {
   encrypt,
   decrypt,
@@ -18,9 +12,6 @@ const GOAL_KEY = "streamLedger_goal";
 // Chave usada para guardar a meta financeira
 const MIGRATION_KEY = "streamLedger_migrated_v2";
 
-// ============================================
-// Tipos
-// ============================================
 
 export interface Transaction {
   id: number;
@@ -85,18 +76,12 @@ export interface StoredAuditEntry {
   parentalLinkId?: string;
 }
 
-// ====================================
-// Constantes de storage
-// ====================================
 
 const USER_KEY = "streamLedger_user";
 const PARENT_KEY = "streamLedger_parent";
 const PARENTAL_LINKS_KEY = "streamLedger_parental_links";
 const AUDIT_KEY = "streamLedger_audit";
 
-// ====================================
-// Leitor universal com suporte a legado
-// ====================================
 
 /**
  * Lê e descriptografa dados do localStorage.
@@ -164,9 +149,6 @@ async function writeSecure<T>(key: string, data: T): Promise<void> {
   }
 }
 
-// ====================================
-// Migração de dados legados
-// ====================================
 
 /**
  * Migra dados do formato antigo (base64 ou plain) para o novo (AES-GCM).
@@ -222,9 +204,6 @@ export async function migrateToSecureStorage(): Promise<void> {
   localStorage.setItem(MIGRATION_KEY, "true");
 }
 
-// ====================================
-// Transações
-// ====================================
 
 export async function getTransactions(): Promise<Transaction[]> {
   return readSecure<Transaction[]>(STORAGE_KEY, []);
@@ -234,9 +213,6 @@ export async function saveTransactions(transactions: Transaction[]): Promise<voi
   await writeSecure(STORAGE_KEY, transactions);
 }
 
-// ====================================
-// Meta Financeira
-// ====================================
 
 export async function getGoal(): Promise<string> {
   if (typeof window === "undefined") return "";
@@ -268,9 +244,6 @@ export async function saveGoal(value: string): Promise<void> {
   await writeSecure(GOAL_KEY, value);
 }
 
-// ====================================
-// Usuário Atual
-// ====================================
 
 export async function getCurrentUser(): Promise<StoredUser | null> {
   return readSecure<StoredUser | null>(USER_KEY, null);
@@ -285,9 +258,6 @@ export function clearCurrentUser(): void {
   localStorage.removeItem(USER_KEY);
 }
 
-// ====================================
-// Responsável Legal
-// ====================================
 
 export async function getParentAccount(): Promise<StoredParent | null> {
   return readSecure<StoredParent | null>(PARENT_KEY, null);
@@ -302,9 +272,6 @@ export function clearParentAccount(): void {
   localStorage.removeItem(PARENT_KEY);
 }
 
-// ====================================
-// Vínculos Parentais
-// ====================================
 
 export async function getParentalLinks(): Promise<StoredParentalLink[]> {
   return readSecure<StoredParentalLink[]>(PARENTAL_LINKS_KEY, []);
@@ -332,9 +299,6 @@ export async function updateParentalLink(
   }
 }
 
-// ====================================
-// Auditoria
-// ====================================
 
 export async function getAuditLog(): Promise<StoredAuditEntry[]> {
   return readSecure<StoredAuditEntry[]>(AUDIT_KEY, []);

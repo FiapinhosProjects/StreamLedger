@@ -1,8 +1,3 @@
-// ============================================
-// InstallPromptProvider — Detecta PWA instalável e exibe modal
-// Mobile only | Primeira visita por sessão
-// ============================================
-
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -85,7 +80,6 @@ export default function InstallPromptProvider({
       window.removeEventListener("beforeinstallprompt", handler);
       clearTimeout(fallbackTimer);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Feedback imediato quando o SW está ativo (app carregou completamente)
@@ -104,7 +98,6 @@ export default function InstallPromptProvider({
 
     sw.addEventListener("controllerchange", handler);
     return () => sw.removeEventListener("controllerchange", handler);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobileDevice]);
 
   // Se a flag de dismissed mudou, não mostra mais
@@ -145,9 +138,6 @@ export default function InstallPromptProvider({
   );
 }
 
-// ============================================
-// InstallModal — UI do banner de instalação
-// ============================================
 
 interface InstallModalProps {
   onInstall: () => void;

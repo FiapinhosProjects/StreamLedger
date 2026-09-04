@@ -1,8 +1,3 @@
-// ============================================
-// user-types.ts - Tipos para autenticação e verificação de idade
-// Conforme plano Lei Felca
-// ============================================
-
 // Classificação do usuário por idade
 export type AgeGroup = "adult" | "minor_16_17" | "minor_under_16";
 

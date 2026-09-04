@@ -1,8 +1,3 @@
-// ============================================
-// Receitas - Página de gerenciamento de receitas
-// Mostra métricas por fonte e gráfico de barras
-// ============================================
-
 "use client";
 
 import { useState, useCallback } from "react";

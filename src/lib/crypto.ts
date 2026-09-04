@@ -1,9 +1,3 @@
-// ============================================
-// crypto.ts - Módulo de Criptografia
-// Protege dados sensíveis no localStorage usando AES-GCM
-// Web Crypto API (nativa do navegador)
-// ============================================
-
 const ENCRYPTION_KEY_STORAGE = "streamLedger_encryption_key";
 const SALT_STORAGE = "streamLedger_salt";
 

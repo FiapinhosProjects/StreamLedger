@@ -1,8 +1,3 @@
-// ============================================
-// RevenueChart.tsx - Gráfico de barras das receitas
-// Mostra quanto veio de cada fonte (Twitch, YouTube, Donates)
-// ============================================
-
 "use client";
 
 import { Bar } from "react-chartjs-2";

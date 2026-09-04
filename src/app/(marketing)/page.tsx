@@ -1,8 +1,3 @@
-// ============================================
-// Home - Página inicial do site (landing page)
-// Apresenta o StreamLedger com texto e imagem
-// ============================================
-
 import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/components/ui/FadeIn";

@@ -1,8 +1,3 @@
-// ============================================
-// DeleteModal.tsx - Modal de confirmação de exclusão
-// Pergunta ao usuário se ele realmente quer excluir
-// ============================================
-
 "use client";
 
 // Props que o modal recebe

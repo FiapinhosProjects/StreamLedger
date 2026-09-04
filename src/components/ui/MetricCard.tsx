@@ -1,8 +1,3 @@
-// ============================================
-// MetricCard.tsx - Card de métrica financeira
-// Exibe um ícone, label e valor (ex: "Faturamento: R$ 1.500")
-// ============================================
-
 import Image from "next/image";
 
 // Props que o MetricCard recebe

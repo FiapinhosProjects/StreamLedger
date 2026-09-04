@@ -1,8 +1,3 @@
-// ============================================
-// Sidebar.tsx - Menu lateral do app (dashboard)
-// Navegação entre Visão Geral, Receitas e Despesas
-// ============================================
-
 "use client";
 
 import Link from "next/link";

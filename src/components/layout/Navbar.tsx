@@ -1,8 +1,3 @@
-// ============================================
-// Navbar.tsx - Barra de navegação do site (marketing)
-// Aparece no topo das páginas públicas (Início, Sobre, etc)
-// ============================================
-
 "use client";
 
 import Link from "next/link";

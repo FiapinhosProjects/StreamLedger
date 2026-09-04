@@ -1,8 +1,3 @@
-// ============================================
-// format.ts - Funções de formatação de moeda
-// Converte números para formato brasileiro (R$)
-// ============================================
-
 import { parseCurrencyValue as validateAndParseCurrency } from "./validation";
 
 // Formata um número para o formato de moeda brasileira
@@ -25,7 +20,7 @@ export function parseCurrencyInput(value: string): number {
 // Exemplo: "150000" → "1.500,00"
 export function maskCurrency(value: string): string {
   // Remove tudo que não é número
-  let digits = value.replace(/\D/g, "");
+  const digits = value.replace(/\D/g, "");
 
   if (!digits) return "";
 

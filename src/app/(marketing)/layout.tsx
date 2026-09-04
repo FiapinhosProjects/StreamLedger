@@ -1,8 +1,3 @@
-// ============================================
-// Layout de Marketing (Início, Sobre, Pesquisa, Newsletter)
-// Estrutura com navbar no topo e footer embaixo
-// ============================================
-
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 

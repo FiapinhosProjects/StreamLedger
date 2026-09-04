@@ -1,8 +1,3 @@
-// ============================================
-// useParentalLink.ts - Hook de vínculo parental
-// Gerencia vínculo entre responsável e menor
-// ============================================
-
 "use client";
 
 import { useState, useEffect, useCallback } from "react";

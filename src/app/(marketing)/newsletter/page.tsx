@@ -1,8 +1,3 @@
-// ============================================
-// Newsletter - Página de cadastro / pré-registro
-// Formulário com validação de nome, email, senha e termos
-// ============================================
-
 "use client";
 
 import { useState } from "react";
@@ -280,9 +275,6 @@ export default function Newsletter() {
   );
 }
 
-// ============================================
-// Componentes auxiliares (ícones e modal)
-// ============================================
 
 // Modal genérico reutilizável
 function Modal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {

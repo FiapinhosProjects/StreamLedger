@@ -1,8 +1,3 @@
-// ============================================
-// Dashboard - Página principal do app
-// Mostra métricas, transações recentes, meta e modais
-// ============================================
-
 "use client";
 
 import { useState, useCallback } from "react";

@@ -1,8 +1,3 @@
-// ============================================
-// Pesquisa - Página sobre o mercado de streaming
-// Mostra dados sobre plataformas e pesquisa de aplicação
-// ============================================
-
 import Image from "next/image";
 import FadeIn from "@/components/ui/FadeIn";
 

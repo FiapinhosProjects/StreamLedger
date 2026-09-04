@@ -1,9 +1,3 @@
-// ============================================
-// YotiVerification.tsx - Verificação de idade via Yoti
-// Usa biometria facial para estimar idade do usuário
-// Para usuários >= 18 anos
-// ============================================
-
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";

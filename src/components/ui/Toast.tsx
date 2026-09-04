@@ -1,8 +1,3 @@
-// ============================================
-// Toast.tsx - Notificação temporária na tela
-// Aparece no canto inferior direito e some após 3 segundos
-// ============================================
-
 "use client";
 
 import { useEffect, useState } from "react";

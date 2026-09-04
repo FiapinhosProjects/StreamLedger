@@ -1,8 +1,3 @@
-// ============================================
-// ServiceWorkerProvider — Registra o Service Worker
-// Detecta updates e notifica o usuário
-// ============================================
-
 "use client";
 
 import { useEffect, useState } from "react";

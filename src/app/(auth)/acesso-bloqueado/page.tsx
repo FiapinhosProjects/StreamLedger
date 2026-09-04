@@ -1,9 +1,3 @@
-// ============================================
-// acesso-bloqueado/page.tsx - Página de acesso bloqueado
-// Exibida quando menor tenta acessar sem vínculo parental
-// Conforme Lei Felca (Lei 15.211/2025)
-// ============================================
-
 "use client";
 
 import Link from "next/link";

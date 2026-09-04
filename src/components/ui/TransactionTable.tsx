@@ -1,8 +1,3 @@
-// ============================================
-// TransactionTable.tsx — Tabela de transações com busca e ordenação
-// Filtra por título | Ordena por data e valor
-// ============================================
-
 "use client";
 
 import { useState, useMemo } from "react";
@@ -14,10 +9,8 @@ type SortKey = "date" | "amount";
 type SortDir = "asc" | "desc";
 type FilterType = "all" | "income" | "expense";
 
-// ============================================
 // Select — wrapper com seta customizada
 // Usa position relative + z-index para garantir dropdown sobre a tabela
-// ============================================
 
 interface SelectProps {
   value: string;
@@ -55,9 +48,6 @@ interface TransactionTableProps {
   onAdd: () => void;
 }
 
-// ============================================
-// Helpers
-// ============================================
 
 function parseDate(dateStr: string): Date {
   // Formato: DD/MM/YYYY
@@ -83,9 +73,6 @@ function CategoryIcon({ category }: { category: string }) {
   );
 }
 
-// ============================================
-// Sub-componente: Linha de transação
-// ============================================
 
 function TransactionRow({
   tx,
@@ -164,9 +151,6 @@ function TransactionRow({
   );
 }
 
-// ============================================
-// Componente principal
-// ============================================
 
 export default function TransactionTable({
   transactions,

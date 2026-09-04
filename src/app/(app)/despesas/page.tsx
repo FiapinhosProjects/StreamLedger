@@ -1,8 +1,3 @@
-// ============================================
-// Despesas - Página de gerenciamento de despesas
-// Mostra métricas por categoria, gráfico e top 5 despesas
-// ============================================
-
 "use client";
 
 import { useState, useCallback } from "react";

@@ -1,8 +1,3 @@
-// ============================================
-// useInputMask.ts - Hook para formatação de inputs com cursor position
-// Evita que o cursor pule para o final ao digitar
-// ============================================
-
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";

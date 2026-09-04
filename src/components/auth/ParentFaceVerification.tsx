@@ -1,9 +1,3 @@
-// ============================================
-// ParentFaceVerification.tsx - Verificação facial do responsável
-// Responsável faz reconhecimento facial para confirmar identidade
-// Conforme Lei Felca - obrigatório para vínculo com menor
-// ============================================
-
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";

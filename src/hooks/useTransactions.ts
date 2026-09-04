@@ -1,8 +1,3 @@
-// ============================================
-// useTransactions.ts - Hook de gerenciamento de transações
-// Controla adicionar, editar e excluir transações
-// ============================================
-
 "use client";
 
 import { useState, useEffect } from "react";

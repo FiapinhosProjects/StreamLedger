@@ -1,8 +1,3 @@
-// ============================================
-// ExpenseChart.tsx - Gráfico de pizza das despesas
-// Mostra a distribuição de gastos por categoria
-// ============================================
-
 "use client";
 
 import { Pie } from "react-chartjs-2";

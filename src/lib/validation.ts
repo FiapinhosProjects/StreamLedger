@@ -1,12 +1,3 @@
-// ============================================
-// validation.ts - Módulo de Validação e Sanitização Robusta
-// Protege contra XSS, injeção, e dados maliciosos
-// Complementa sanitize.ts existente
-// ============================================
-
-// ============================================
-// Constantes de Validação
-// ============================================
 
 export const VALIDATION_RULES = {
   // Limites de tamanho
@@ -27,9 +18,6 @@ export const VALIDATION_RULES = {
   SAFE_TEXT_PATTERN: /^[\w\sÀ-ÿ.,;:!?@#$%&*()\-_+=\[\]{}|\\\/<>"']+$/u,
 } as const;
 
-// ============================================
-// Tipos
-// ============================================
 
 export interface ValidationResult {
   valid: boolean;
@@ -42,9 +30,6 @@ export interface SanitizedInput {
   threats: string[];
 }
 
-// ============================================
-// Sanitização Avançada
-// ============================================
 
 /**
  * Detecta ameaças conhecidas em uma string
@@ -140,9 +125,6 @@ function stripHtml(input: string): string {
     .replace(/&[#\w]+;/g, ""); // Remove entidades HTML
 }
 
-// ============================================
-// Funções Exportadas
-// ============================================
 
 /**
  * Sanitiza entrada de texto para exibição segura
