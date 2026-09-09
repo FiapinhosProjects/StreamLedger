@@ -169,11 +169,11 @@ export default function Newsletter() {
             {/* Lista de regras da senha (verde = ok, cinza = falta) */}
             <ul className="space-y-1 text-xs">
               {passwordRules.map((rule) => (
-                <li key={rule.id} className={`flex items-center gap-2 transition-colors ${rule.test(senha) ? "text-neon" : "text-white/60"}`}>
+                <li key={rule.id} className={`flex items-center gap-2 transition-colors ${rule.test(senha) ? "text-neon" : "text-white/70"}`}>
                   <RuleIcon valid={rule.test(senha)} /> {rule.label}
                 </li>
               ))}
-              <li className={`flex items-center gap-2 transition-colors ${senhaMatch ? "text-neon" : "text-white/60"}`}>
+              <li className={`flex items-center gap-2 transition-colors ${senhaMatch ? "text-neon" : "text-white/70"}`}>
                 <RuleIcon valid={senhaMatch} /> As senhas coincidem
               </li>
             </ul>
@@ -208,7 +208,7 @@ export default function Newsletter() {
 
         {/* Coluna da imagem (só aparece no lg+) */}
         <FadeIn className="hidden lg:flex justify-center" delay={0.3}>
-          <Image src="/assets/hero-dashboard.svg" alt="Dashboard StreamLedger" width={500} height={400} className="w-full max-w-md" />
+          <Image src="/assets/hero-dashboard.svg" alt="Ilustração do painel StreamLedger com gráficos e moedas" width={500} height={400} className="w-full max-w-md" />
         </FadeIn>
       </div>
 
