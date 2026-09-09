@@ -139,13 +139,13 @@ export default function Dashboard() {
         <div className="flex items-center gap-3">
           <Image
             src="/assets/user.svg"
-            alt="User"
+            alt="Avatar do usuário"
             width={45}
             height={45}
             className="rounded-full border border-neon bg-[#2a2a2a] p-1"
           />
           <div>
-            <h2 className="text-lg font-bold">Dashboard Financeiro</h2>
+            <h1 className="text-lg font-bold">Dashboard Financeiro</h1>
             <p className="text-sm text-muted">Bem-vindo de volta, Streamer!</p>
           </div>
         </div>
@@ -173,7 +173,7 @@ export default function Dashboard() {
 
       {/* Tabela de transações com busca e ordenação */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-3">Movimentações</h3>
+        <h2 className="text-lg font-semibold mb-3">Movimentações</h2>
         <TransactionTable
           transactions={transactions}
           onEdit={handleEdit}
