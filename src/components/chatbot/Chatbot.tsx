@@ -403,7 +403,7 @@ export default function Chatbot({ onConfirm, onDelete }: ChatbotProps) {
                 onKeyDown={handleKeyDown}
                 placeholder="Ex: Recebi 80 de sub..."
                 rows={1}
-                className="w-full rounded-xl border border-white/10 bg-background px-3 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/20 transition-colors resize-none focus:ring-0 focus:shadow-none"
+                className="w-full rounded-xl border border-white/10 bg-background px-3 py-2.5 text-sm text-white placeholder:text-white/50 outline-none focus:border-white/20 transition-colors resize-none focus:ring-0 focus:shadow-none"
                 style={{ minHeight: "42px", maxHeight: "120px" }}
               />
               <div className="text-right mt-0.5">
