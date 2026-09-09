@@ -1,3 +1,29 @@
+import Sidebar from "@/components/layout/Sidebar";
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex min-h-screen">
+      {/* Link de pular navegação para acessibilidade */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-black focus:rounded-md"
+      >
+        Pular para o conteúdo principal
+      </a>
+
+      {/* Menu lateral */}
+      <Sidebar />
+
+      {/* Área principal do conteúdo */}
+      <main
+        id="main-content"
+        className="flex-1 lg:ml-64 pt-16 lg:pt-0 overflow-y-auto min-h-screen p-6 lg:p-8"
+      >
+        {children}
+      </main>
+    </div>
+  );
+}
 import type { Metadata, Viewport } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
