@@ -130,7 +130,7 @@ export function calculateExponentialGrowth(values: number[]): ExponentialModel {
   // Com apenas 1 ponto, usa o valor como base sem crescimento definido
   if (points.length < 2) {
     const baseValue = values[0] ?? 0;
-    return { r0: baseValue, k: 0, monthlyGrowthRate: 0, doublingTime: null, rSquared: 1 };
+    return { r0: baseValue, k: 0, monthlyGrowthRate: 0, doublingTime: null, rSquared: 0 };
   }
 
   const n = points.length;

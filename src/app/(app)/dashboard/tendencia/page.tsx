@@ -12,7 +12,6 @@ export default function Tendencia() {
   const { rate } = useExchangeRate();
 
   const revenue = getTotalByType(transactions, "income");
-  const profit = revenue;
 
   return (
     <>
@@ -35,14 +34,14 @@ export default function Tendencia() {
         </div>
         <div className="bg-card border border-neon/20 rounded-2xl p-5">
           <p className="text-xs text-muted mb-1">Ganhos Estimados</p>
-          <p className="text-xl font-bold text-neon">{formatCurrency(profit)}</p>
+          <p className="text-xl font-bold text-neon">{formatCurrency(revenue)}</p>
           {rate && (
-            <p className="text-xs text-muted mt-1">≈ $ {(profit / rate).toFixed(2)} USD</p>
+            <p className="text-xs text-muted mt-1">≈ $ {(revenue / rate).toFixed(2)} USD</p>
           )}
         </div>
         <div className="bg-card border border-neon/20 rounded-2xl p-5">
           <p className="text-xs text-muted mb-1">Meses Registrados</p>
-          <p className="text-xl font-bold text-neon">{transactions.filter(t => t.type === "income").length > 0 ? "—" : "0"}</p>
+          <p className="text-xl font-bold text-neon">{transactions.filter(t => t.type === "income").length === 0 ? "0" : "—"}</p>
         </div>
       </div>
 
