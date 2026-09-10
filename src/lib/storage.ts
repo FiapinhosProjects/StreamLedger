@@ -102,8 +102,13 @@ async function readSecure<T>(key: string, fallback: T): Promise<T> {
     // Formato novo criptografado: { iv, data, version }
     if (parsed && typeof parsed === "object" && "iv" in parsed && "data" in parsed) {
       if (isCryptoAvailable()) {
-        const decrypted = await decrypt(parsed as EncryptedData);
-        return JSON.parse(decrypted) as T;
+        try {
+          const decrypted = await decrypt(parsed as EncryptedData);
+          return JSON.parse(decrypted) as T;
+        } catch {
+          // Dados corrompidos ou incompatíveis — ignora e usa fallback
+          return fallback;
+        }
       }
       return fallback;
     }
@@ -226,8 +231,12 @@ export async function getGoal(): Promise<string> {
     // Formato novo criptografado
     if (parsed && typeof parsed === "object" && "iv" in parsed) {
       if (isCryptoAvailable()) {
-        const decrypted = await decrypt(parsed as EncryptedData);
-        return decrypted.replace(/^"|"$/g, "");
+        try {
+          const decrypted = await decrypt(parsed as EncryptedData);
+          return decrypted.replace(/^"|"$/g, "");
+        } catch {
+          return "";
+        }
       }
       return "";
     }

@@ -121,14 +121,16 @@ export function getMonthlyTotals(transactions: Transaction[], type: string): Mon
 // Exemplo: calculateExponentialGrowth([1000, 1150, 1380, 1600]) →
 //   { r0: ≈985, k: ≈0.16, monthlyGrowthRate: ≈17.4%, doublingTime: ≈4.3, rSquared: ≈0.99 }
 export function calculateExponentialGrowth(values: number[]): ExponentialModel {
-  // Precisa de ao menos 2 pontos, e todos os valores devem ser positivos
+  // Precisa de ao menos 1 ponto, e todos os valores devem ser positivos
   // (logaritmo não é definido para valores <= 0)
   const points = values
     .map((v, t) => ({ t, v }))
     .filter((p) => p.v > 0);
 
+  // Com apenas 1 ponto, usa o valor como base sem crescimento definido
   if (points.length < 2) {
-    return { r0: values[0] ?? 0, k: 0, monthlyGrowthRate: 0, doublingTime: null, rSquared: 0 };
+    const baseValue = values[0] ?? 0;
+    return { r0: baseValue, k: 0, monthlyGrowthRate: 0, doublingTime: null, rSquared: 1 };
   }
 
   const n = points.length;

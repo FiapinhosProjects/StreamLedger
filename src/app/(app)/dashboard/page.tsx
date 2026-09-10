@@ -7,7 +7,6 @@ import TransactionModal from "@/components/modals/TransactionModal";
 import DeleteModal from "@/components/modals/DeleteModal";
 import DuplicateModal from "@/components/modals/DuplicateModal";
 import GoalTracker from "@/components/ui/GoalTracker";
-import ExponentialGrowthChart from "@/components/ui/ExponentialGrowthChart";
 import TopGames from "@/components/ui/TopGames";
 import Toast from "@/components/ui/Toast";
 import Chatbot from "@/components/chatbot/Chatbot";
@@ -181,10 +180,6 @@ export default function Dashboard() {
           onDelete={handleDelete}
           onAdd={() => { setEditing(null); setModalOpen(true); }}
         />
-      </div>
-      {/* Dashboard Matemático: projeção de crescimento com função exponencial */}
-      <div className="mb-6">
-        <ExponentialGrowthChart transactions={transactions} />
       </div>
       {/* Componente de meta financeira */}
       <GoalTracker transactions={transactions} />

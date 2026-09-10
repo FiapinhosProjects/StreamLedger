@@ -8,6 +8,7 @@ import { useState } from "react";
 // Itens do menu lateral
 const navItems = [
   { href: "/dashboard", label: "Visão Geral", icon: "/assets/home.svg" },
+  { href: "/dashboard/tendencia", label: "Tendência", icon: "/assets/grafico-mercado.svg" },
   { href: "/receitas", label: "Receitas", icon: "/assets/ReceitasIcon.svg" },
   { href: "/despesas", label: "Despesas", icon: "/assets/DespesaIcon.svg" },
 ];
