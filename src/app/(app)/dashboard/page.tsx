@@ -183,9 +183,9 @@ export default function Dashboard() {
         />
       </div>
       {/* Dashboard Matemático: projeção de crescimento com função exponencial */}
-      +      <div className="mb-6">
-        +        <ExponentialGrowthChart transactions={transactions} />
-        +      </div>
+      <div className="mb-6">
+        <ExponentialGrowthChart transactions={transactions} />
+      </div>
       {/* Componente de meta financeira */}
       <GoalTracker transactions={transactions} />
 
