@@ -56,30 +56,19 @@ export default function ExponentialGrowthChart({ transactions, monthsToProject =
     const labels = [...historicalLabels, ...futureLabels];
 
     const fittedCurve = labels.map((_, t) => projectExponentialValue(model, t));
-    const realSeries = [...values, ...Array(monthsToProject).fill(null)];
 
     const data = {
         labels,
         datasets: [
             {
-                label: "Real",
-                data: realSeries,
+                label: "Tendência",
+                data: fittedCurve,
                 borderColor: "#5DFF9B",
                 backgroundColor: "rgba(93,255,155,0.1)",
                 pointBackgroundColor: "#5DFF9B",
                 pointBorderColor: "#5DFF9B",
                 tension: 0.4,
                 fill: true,
-                borderWidth: 2,
-            },
-            {
-                label: "Tendência",
-                data: fittedCurve,
-                borderColor: "rgba(93,255,155,0.5)",
-                borderDash: [8, 4],
-                pointRadius: 0,
-                backgroundColor: "transparent",
-                tension: 0.4,
                 borderWidth: 2,
             },
         ],
@@ -106,13 +95,7 @@ export default function ExponentialGrowthChart({ transactions, monthsToProject =
         },
         plugins: {
             legend: {
-                position: "bottom" as const,
-                labels: {
-                    color: "#e0e0e0",
-                    usePointStyle: true,
-                    padding: 20,
-                    font: { size: 12 },
-                },
+                display: false,
             },
             tooltip: {
                 backgroundColor: "rgba(36,36,36,0.95)",
