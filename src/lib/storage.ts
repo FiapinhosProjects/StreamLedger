@@ -89,6 +89,9 @@ const AUDIT_KEY = "streamLedger_audit";
  * 1. { iv, data } — formato novo criptografado (AES-GCM)
  * 2. string base64 — formato antigo legado
  * 3. string JSON — formato plain (meta)
+ *
+ * Em caso de falha na descriptografia (dados corrompidos ou incompatíveis),
+ * limpa os dados e retorna o fallback.
  */
 async function readSecure<T>(key: string, fallback: T): Promise<T> {
   if (typeof window === "undefined") return fallback;
@@ -105,8 +108,11 @@ async function readSecure<T>(key: string, fallback: T): Promise<T> {
         try {
           const decrypted = await decrypt(parsed as EncryptedData);
           return JSON.parse(decrypted) as T;
-        } catch {
-          // Dados corrompidos ou incompatíveis — ignora e usa fallback
+        } catch (decryptError) {
+          // Descriptografia falhou — dados corrompidos ou chave incompatível
+          console.warn(`[storage] Falha ao descriptografar ${key}, limpando dados antigos:`, decryptError);
+          // Limpa os dados corrompidos para não bloquear a aplicação
+          localStorage.removeItem(key);
           return fallback;
         }
       }
@@ -234,7 +240,9 @@ export async function getGoal(): Promise<string> {
         try {
           const decrypted = await decrypt(parsed as EncryptedData);
           return decrypted.replace(/^"|"$/g, "");
-        } catch {
+        } catch (error) {
+          console.warn("[storage] Falha ao descriptografar meta, limpando:", error);
+          localStorage.removeItem(GOAL_KEY);
           return "";
         }
       }

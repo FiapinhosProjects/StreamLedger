@@ -5,6 +5,14 @@ import { checkServerRateLimit, getRateLimitHeaders } from "@/lib/rateLimit";
 // Types
 // ---------------------------------------------------
 
+interface GeminiErrorResponse {
+  error?: {
+    code?: number;
+    message?: string;
+    status?: string;
+  };
+}
+
 export interface GeminiTransaction {
   tipo: "entrada" | "saida";
   descricao: string;
@@ -163,11 +171,11 @@ export async function POST(request: NextRequest) {
   }
 
   // 4. Chamar Gemini
-  const model = process.env.GOOGLE_GEMINI_MODEL || "gemini-3.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
+  const model = process.env.GOOGLE_GEMINI_MODEL || "gemini-2.0-flash";
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 25_000);
+  const timeoutId = setTimeout(() => controller.abort(), 30_000);
 
   let geminiData: { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
 
@@ -186,17 +194,78 @@ export async function POST(request: NextRequest) {
     });
     clearTimeout(timeoutId);
 
+    // Ler resposta crua
+    let rawBody = "";
+    try {
+      rawBody = await res.text();
+    } catch {
+      rawBody = "";
+    }
+
     if (!res.ok) {
+      // Extrair mensagem de erro da API do Gemini
+      let errorDetail = "Erro ao comunicar com a API de IA.";
+      try {
+        const errorData = rawBody ? JSON.parse(rawBody) : {};
+        errorDetail = errorData?.error?.message ?? errorData?.error?.status ?? errorDetail;
+
+        // Mapear códigos HTTP para mensagens amigáveis
+        if (res.status === 400) {
+          errorDetail = `Requisição inválida (400): ${errorDetail}`;
+        } else if (res.status === 401) {
+          errorDetail = "API key inválida ou expirada.";
+        } else if (res.status === 403) {
+          errorDetail = "Sem permissão para usar esta API. Verifique sua chave.";
+        } else if (res.status === 404) {
+          errorDetail = `Modelo '${model}' não encontrado. Verifique o nome do modelo configurado.`;
+        } else if (res.status === 429) {
+          errorDetail = "Limite de requisições atingido. Tente novamente em alguns minutos.";
+        } else if (res.status >= 500) {
+          errorDetail = "Servidor do Google com problemas. Tente novamente em instantes.";
+        }
+      } catch {
+        // JSON parse falhou - usa mensagem genérica
+      }
+
+      console.error("[Gemini API]", {
+        status: res.status,
+        model,
+        error: errorDetail,
+        timestamp: new Date().toISOString(),
+      });
+
       return NextResponse.json<ParseError>(
-        { success: false, error: "Erro ao comunicar com a API de IA." },
+        { success: false, error: errorDetail },
         { status: 502 }
       );
     }
 
-    geminiData = await res.json();
+    // Parsear resposta de sucesso
+    try {
+      geminiData = JSON.parse(rawBody);
+    } catch {
+      console.error("[Gemini API]", {
+        status: res.status,
+        model,
+        error: "Resposta não é JSON válido",
+        rawBody: rawBody.slice(0, 200),
+        timestamp: new Date().toISOString(),
+      });
+      return NextResponse.json<ParseError>(
+        { success: false, error: "Resposta inválida da API de IA." },
+        { status: 502 }
+      );
+    }
   } catch (err) {
     clearTimeout(timeoutId);
     const isAbort = err instanceof Error && err.name === "AbortError";
+
+    console.error("[Gemini API]", {
+      error: isAbort ? "Timeout" : (err instanceof Error ? err.message : String(err)),
+      model,
+      timestamp: new Date().toISOString(),
+    });
+
     return NextResponse.json<ParseError>(
       {
         success: false,

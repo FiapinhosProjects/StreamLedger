@@ -96,16 +96,18 @@ async function getOrCreateKey(): Promise<CryptoKey> {
 
 /**
  * Gera um identificador único para o dispositivo
- * Usa múltiplas fontes para aumentar a entropia
+ * Usa fontes estáveis para evitar mudanças de chave entre sessões
  */
 async function generateDeviceId(): Promise<string> {
+  // Componentes mais estáveis (não mudam com timezone ou ajustes de hora)
   const components = [
     navigator.userAgent,
     navigator.language,
     screen.width,
     screen.height,
     screen.colorDepth,
-    new Date().getTimezoneOffset(),
+    // Canvas fingerprint - único e estável por dispositivo
+    getCanvasFingerprint(),
   ];
 
   const data = components.join("|");
@@ -115,6 +117,37 @@ async function generateDeviceId(): Promise<string> {
   // Converte para hex
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * Gera um fingerprint estável baseado no canvas
+ * Útil como identificador de dispositivo
+ */
+function getCanvasFingerprint(): string {
+  try {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return "no-canvas";
+
+    canvas.width = 200;
+    canvas.height = 50;
+
+    // Desenha padrões complexos
+    ctx.textBaseline = "top";
+    ctx.font = '14px "Arial"';
+    ctx.fillStyle = "#f60";
+    ctx.fillRect(125, 1, 62, 20);
+    ctx.fillStyle = "#069";
+    ctx.fillText("StreamLedger", 2, 15);
+    ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+    ctx.fillText("StreamLedger", 4, 17);
+
+    // Retorna hash dos pixels
+    const dataUrl = canvas.toDataURL();
+    return dataUrl.slice(-50); // Usa só o final para identificar
+  } catch {
+    return "canvas-failed";
+  }
 }
 
 /**
@@ -175,6 +208,11 @@ export async function decrypt(encryptedData: EncryptedData): Promise<string> {
       atob(encryptedData.data).split("").map(c => c.charCodeAt(0))
     );
 
+    // Valida tamanhos
+    if (iv.length !== CRYPTO_CONFIG.ivLength) {
+      throw new Error(`IV length mismatch: expected ${CRYPTO_CONFIG.ivLength}, got ${iv.length}`);
+    }
+
     // Cria nova cópia do ArrayBuffer para garantir tipo correto
     const ivCopy = new Uint8Array(iv).buffer;
     const encryptedBufferCopy = new Uint8Array(encryptedArray).buffer;
@@ -190,7 +228,12 @@ export async function decrypt(encryptedData: EncryptedData): Promise<string> {
     const decoder = new TextDecoder();
     return decoder.decode(decryptedBuffer);
   } catch (error) {
-    console.error("Erro ao descriptografar:", error);
+    // Re-lança erros de descriptografia para que o caller possa tratá-los
+    if (error instanceof Error && error.name === "OperationError") {
+      console.error("Falha na descriptografia: chave ou dados incompatíveis");
+    } else {
+      console.error("Erro ao descriptografar:", error);
+    }
     throw new Error("Falha na descriptografia dos dados");
   }
 }
