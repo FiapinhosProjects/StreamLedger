@@ -171,11 +171,11 @@ export async function POST(request: NextRequest) {
   }
 
   // 4. Chamar Gemini
-  const model = process.env.GOOGLE_GEMINI_MODEL || "gemini-2.0-flash";
+  const model = process.env.GOOGLE_GEMINI_MODEL || "gemini-3.5-flash-lite";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30_000);
+  const timeoutId = setTimeout(() => controller.abort(), 45_000);
 
   let geminiData: { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
 

@@ -143,7 +143,7 @@ export function useChatbot() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: text.trim() }),
-          signal: AbortSignal.timeout(35_000),
+          signal: AbortSignal.timeout(50_000),
         });
 
         if (!res.ok) {
