@@ -89,6 +89,10 @@ export default function YotiVerification({ declaredAge, onVerified, onCancel }: 
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext("2d");
     if (ctx) {
+      // desfaz o espelhamento do preview ao desenhar no canvas,
+      // para a foto salva sair "normal" (não espelhada)
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
       ctx.drawImage(video, 0, 0);
       const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
       setCapturedImage(dataUrl);
@@ -189,7 +193,7 @@ export default function YotiVerification({ declaredAge, onVerified, onCancel }: 
                 autoPlay
                 muted
                 playsInline
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover scale-x-[-1]"
               />
 
               <div className="absolute inset-0 pointer-events-none">
