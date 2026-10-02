@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAgeVerification } from "@/hooks/useAgeVerification";
 import { useInputMask, formatCpfValue, formatDateValue } from "@/hooks/useInputMask";
@@ -26,8 +26,10 @@ export default function AgeGate({ children }: AgeGateProps) {
   }, [isVerified, isLoading, router]);
 
   // Inputs com máscara de cursor position
-  const cpfInput = useInputMask({ formatFn: formatCpfValue });
-  const birthDateInput = useInputMask({ formatFn: formatDateValue });
+  const cpfInputRef = useRef<HTMLInputElement>(null);
+  const birthDateInputRef = useRef<HTMLInputElement>(null);
+  const cpfInput = useInputMask({ formatFn: formatCpfValue, inputRef: cpfInputRef });
+  const birthDateInput = useInputMask({ formatFn: formatDateValue, inputRef: birthDateInputRef });
 
   // Estados locais para o formulário
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -47,11 +49,13 @@ export default function AgeGate({ children }: AgeGateProps) {
   const [declarationChecked, setDeclarationChecked] = useState(false);
 
   // Resetar estados quando volta para o formulário
+  const prevStepRef = useRef(step);
   useEffect(() => {
-    if (step === "form") {
+    if (prevStepRef.current !== "form" && step === "form") {
       setDeclarationChecked(false);
       setIsTransitioning(false);
     }
+    prevStepRef.current = step;
   }, [step]);
 
   // Validação
@@ -355,7 +359,7 @@ export default function AgeGate({ children }: AgeGateProps) {
                     CPF
                   </label>
                   <input
-                    ref={cpfInput.inputRef}
+                    ref={cpfInputRef}
                     type="text"
                     value={cpfInput.value}
                     onChange={cpfInput.handleChange}
@@ -375,7 +379,7 @@ export default function AgeGate({ children }: AgeGateProps) {
                     Data de Nascimento
                   </label>
                   <input
-                    ref={birthDateInput.inputRef}
+                    ref={birthDateInputRef}
                     type="text"
                     value={birthDateInput.value}
                     onChange={birthDateInput.handleChange}

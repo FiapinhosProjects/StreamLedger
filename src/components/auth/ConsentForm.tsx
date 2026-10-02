@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useInputMask, formatCpfValue, formatDateValue } from "@/hooks/useInputMask";
 import { validateCPF, calculateAge, classifyUser } from "@/lib/cpfValidation";
 import type { AgeGroup } from "@/lib/user-types";
@@ -27,8 +27,10 @@ export default function ConsentForm({ onSubmit, onCancel, onBack }: ConsentFormP
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Inputs com máscara de cursor position
-  const cpfInput = useInputMask({ formatFn: formatCpfValue });
-  const dateInput = useInputMask({ formatFn: formatDateValue });
+  const cpfInputRef = useRef<HTMLInputElement>(null);
+  const dateInputRef = useRef<HTMLInputElement>(null);
+  const cpfInput = useInputMask({ formatFn: formatCpfValue, inputRef: cpfInputRef });
+  const dateInput = useInputMask({ formatFn: formatDateValue, inputRef: dateInputRef });
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -122,7 +124,7 @@ export default function ConsentForm({ onSubmit, onCancel, onBack }: ConsentFormP
               CPF do Menor
             </label>
             <input
-              ref={cpfInput.inputRef}
+              ref={cpfInputRef}
               type="text"
               value={cpfInput.value}
               onChange={cpfInput.handleChange}
@@ -154,7 +156,7 @@ export default function ConsentForm({ onSubmit, onCancel, onBack }: ConsentFormP
               Data de Nascimento do Menor
             </label>
             <input
-              ref={dateInput.inputRef}
+              ref={dateInputRef}
               type="text"
               value={dateInput.value}
               onChange={dateInput.handleChange}

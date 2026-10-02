@@ -1,18 +1,20 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 
 interface UseInputMaskOptions {
   formatFn: (value: string, cursorPos: number) => { value: string; cursorPos: number };
+  inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 /**
  * Hook reutilizável para formatação de inputs com controle de cursor
  */
-export function useInputMask({ formatFn }: UseInputMaskOptions) {
+export function useInputMask({ formatFn, inputRef }: UseInputMaskOptions) {
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const internalRef = useRef<HTMLInputElement>(null);
+  const ref = inputRef ?? internalRef;
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,12 +29,13 @@ export function useInputMask({ formatFn }: UseInputMaskOptions) {
 
       // Restaura cursor após re-render
       requestAnimationFrame(() => {
-        if (inputRef.current) {
+        if (ref.current) {
           const finalPos = Math.min(newCursorPos, formattedValue.length);
-          inputRef.current.setSelectionRange(finalPos, finalPos);
+          ref.current.setSelectionRange(finalPos, finalPos);
         }
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [formatFn]
   );
 
@@ -46,7 +49,7 @@ export function useInputMask({ formatFn }: UseInputMaskOptions) {
     setValue,
     error,
     setError,
-    inputRef,
+    inputRef: ref,
     handleChange,
     reset,
   };

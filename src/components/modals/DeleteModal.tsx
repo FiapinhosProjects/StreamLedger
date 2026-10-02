@@ -1,10 +1,16 @@
 "use client";
 
+interface DeleteModalProps {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
 // Props que o modal recebe
 // open: se o modal está aberto
 // onClose: função para fechar o modal
 // onConfirm: função chamada quando o usuário confirma a exclusão
-export default function DeleteModal({ open, onClose, onConfirm }: any) {
+export default function DeleteModal({ open, onClose, onConfirm }: DeleteModalProps) {
   // Se não está aberto, não renderiza nada
   if (!open) return null;
 

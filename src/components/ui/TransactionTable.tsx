@@ -9,6 +9,31 @@ type SortKey = "date" | "amount";
 type SortDir = "asc" | "desc";
 type FilterType = "all" | "income" | "expense";
 
+interface SortIconProps {
+  col: SortKey;
+  sortKey: SortKey;
+  sortDir: SortDir;
+}
+
+function SortIcon({ col, sortKey, sortDir }: SortIconProps) {
+  if (sortKey !== col)
+    return (
+      <svg className="w-3 h-3 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+          d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" />
+      </svg>
+    );
+  return sortDir === "desc" ? (
+    <svg className="w-3 h-3 text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+    </svg>
+  ) : (
+    <svg className="w-3 h-3 text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+    </svg>
+  );
+}
+
 // Select — wrapper com seta customizada
 // Usa position relative + z-index para garantir dropdown sobre a tabela
 
@@ -192,25 +217,6 @@ export default function TransactionTable({
     }
   };
 
-  const SortIcon = ({ col }: { col: SortKey }) => {
-    if (sortKey !== col)
-      return (
-        <svg className="w-3 h-3 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-            d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" />
-        </svg>
-      );
-    return sortDir === "desc" ? (
-      <svg className="w-3 h-3 text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-      </svg>
-    ) : (
-      <svg className="w-3 h-3 text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-      </svg>
-    );
-  };
-
   const hasTransactions = transactions.length > 0;
 
   return (
@@ -325,7 +331,7 @@ export default function TransactionTable({
                   >
                     <span className="inline-flex items-center gap-1.5">
                       Data
-                      <SortIcon col="date" />
+                      <SortIcon col="date" sortKey={sortKey} sortDir={sortDir} />
                     </span>
                   </th>
                   <th
@@ -334,7 +340,7 @@ export default function TransactionTable({
                   >
                     <span className="inline-flex items-center gap-1.5">
                       Valor
-                      <SortIcon col="amount" />
+                      <SortIcon col="amount" sortKey={sortKey} sortDir={sortDir} />
                     </span>
                   </th>
                   <th className="w-16" />

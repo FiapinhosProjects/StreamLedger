@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useParentalLink } from "@/hooks/useParentalLink";
 import { useInputMask, formatCpfValue } from "@/hooks/useInputMask";
 import ConsentForm, { type ConsentData } from "@/components/auth/ConsentForm";
@@ -10,7 +9,6 @@ import ParentFaceVerification, { type FaceVerificationResult } from "@/component
 import { validateCPF } from "@/lib/cpfValidation";
 
 export default function CadastroParentalPage() {
-  const router = useRouter();
   const { createParentAccount, createLink, parent } = useParentalLink();
 
   const [step, setStep] = useState<"login" | "face" | "vinculo" | "sucesso">("login");
@@ -19,8 +17,8 @@ export default function CadastroParentalPage() {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Dados do responsável
-  const cpfInput = useInputMask({ formatFn: formatCpfValue });
-  const [faceResult, setFaceResult] = useState<FaceVerificationResult | null>(null);
+  const cpfInputRef = useRef<HTMLInputElement>(null);
+  const cpfInput = useInputMask({ formatFn: formatCpfValue, inputRef: cpfInputRef });
 
   // Dados do vínculo criado
   const [linkedMinor, setLinkedMinor] = useState<{ name: string; email: string } | null>(null);
@@ -58,7 +56,6 @@ export default function CadastroParentalPage() {
       return;
     }
 
-    setFaceResult(result);
     setIsTransitioning(true);
 
     // Simula delay antes de ir para vínculo
@@ -159,7 +156,7 @@ export default function CadastroParentalPage() {
                       Seu CPF
                     </label>
                     <input
-                      ref={cpfInput.inputRef}
+                      ref={cpfInputRef}
                       type="text"
                       value={cpfInput.value}
                       onChange={cpfInput.handleChange}

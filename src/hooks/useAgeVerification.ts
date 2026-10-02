@@ -15,7 +15,7 @@ import {
   calculateAge,
   classifyUser,
 } from "@/lib/cpfValidation";
-import type { GovBrLevel, AgeGroup } from "@/lib/user-types";
+import type { GovBrLevel } from "@/lib/user-types";
 
 interface AgeVerificationState {
   isLoading: boolean;

@@ -116,7 +116,7 @@ export default function YotiVerification({ declaredAge, onVerified, onCancel }: 
       setResult(yotiResult);
       setStep("result");
     }, 2000);
-  }, [declaredAge, stopCamera]);
+  }, [stopCamera]);
 
   // Tentar novamente
   const retry = useCallback(() => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 interface InstallPromptProviderProps {
   children: React.ReactNode;
@@ -41,45 +41,56 @@ export default function InstallPromptProvider({
     useState<BeforeInstallPromptEvent | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState(false);
-  const [ready, setReady] = useState(false);
+  const initializedRef = useRef(false);
+  const showModalForHandler = useRef(false);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    showModalForHandler.current = showModal;
+  }, [showModal]);
 
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
     const mobile = isMobile();
     const promptable = canPromptInstall();
 
-    setIsMobileDevice(mobile);
-
-    if (!mobile || !promptable) return;
-
-    // Se já foi dispensado nesta sessão, não mostrar
-    if (sessionStorage.getItem(SESSION_KEY) === "true") return;
-
-    // Escuta o evento nativo do Chrome/Edge
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShowModal(true);
-    };
-    window.addEventListener("beforeinstallprompt", handler);
-
-    // Fallback: se depois de 3s o beforeinstallprompt não disparou,
-    // mas estamos em mobile e SW já está registrado, mostra mesmo assim.
-    // O beforeinstallprompt não dispara no Safari nem em dev localhost.
-    const swReady = navigator.serviceWorker?.controller?.state !== "installing";
-
-    const fallbackTimer = setTimeout(() => {
-      // Mostra se ainda não mostrou (evento pode não ter disparado em dev)
-      if (!showModal && !sessionStorage.getItem(SESSION_KEY)) {
-        setShowModal(true);
+    // Batch update using requestAnimationFrame
+    requestAnimationFrame(() => {
+      if (!mobile || !promptable) {
+        setIsMobileDevice(mobile);
+        return;
       }
-    }, 3000);
 
-    setReady(true);
+      setIsMobileDevice(true);
 
-    return () => {
-      window.removeEventListener("beforeinstallprompt", handler);
-      clearTimeout(fallbackTimer);
-    };
+      // Se já foi dispensado nesta sessão, não mostrar
+      if (sessionStorage.getItem(SESSION_KEY) === "true") return;
+
+      // Escuta o evento nativo do Chrome/Edge
+      const handler = (e: Event) => {
+        e.preventDefault();
+        setDeferredPrompt(e as BeforeInstallPromptEvent);
+        setShowModal(true);
+      };
+      window.addEventListener("beforeinstallprompt", handler);
+
+      // Fallback: se depois de 3s o beforeinstallprompt não disparou,
+      // mas estamos em mobile e SW já está registrado, mostra mesmo assim.
+      // O beforeinstallprompt não dispara no Safari nem em dev localhost.
+      const fallbackTimer = setTimeout(() => {
+        // Mostra se ainda não mostrou (evento pode não ter disparado em dev)
+        if (!sessionStorage.getItem(SESSION_KEY)) {
+          setShowModal(true);
+        }
+      }, 3000);
+
+      return () => {
+        window.removeEventListener("beforeinstallprompt", handler);
+        clearTimeout(fallbackTimer);
+      };
+    });
   }, []);
 
   // Feedback imediato quando o SW está ativo (app carregou completamente)
@@ -91,14 +102,14 @@ export default function InstallPromptProvider({
 
     const handler = () => {
       // SW activated — se ainda não mostramos nada, mostra agora
-      if (!showModal && !sessionStorage.getItem(SESSION_KEY)) {
+      if (!showModalForHandler.current && !sessionStorage.getItem(SESSION_KEY)) {
         setShowModal(true);
       }
     };
 
     sw.addEventListener("controllerchange", handler);
     return () => sw.removeEventListener("controllerchange", handler);
-  }, [isMobileDevice]);
+  }, [isMobileDevice]); // Intentionally not including showModal to avoid loops
 
   // Se a flag de dismissed mudou, não mostra mais
   useEffect(() => {
@@ -231,6 +242,7 @@ function InstallModal({ onInstall, onDismiss, hasNativePrompt }: InstallModalPro
               overflow: "hidden",
             }}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/favicon.png"
               alt=""

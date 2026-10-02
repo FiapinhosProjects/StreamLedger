@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import ExponentialGrowthChart from "@/components/ui/ExponentialGrowthChart";
 import { useTransactions } from "@/hooks/useTransactions";
 import { getTotalByType } from "@/lib/calculations";

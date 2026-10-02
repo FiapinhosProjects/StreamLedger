@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // Props (propriedades) que o Toast recebe
 interface ToastProps {
@@ -13,10 +13,11 @@ interface ToastProps {
 export default function Toast({ message, visible, onClose, variant = "success" }: ToastProps) {
   // Controla a animação de entrada/saída
   const [show, setShow] = useState(false);
+  const prevVisibleRef = useRef(visible);
 
   // Quando o toast fica visível, inicia o timer para fechar
   useEffect(() => {
-    if (visible) {
+    if (prevVisibleRef.current !== visible && visible) {
       // Mostra o toast com animação
       setShow(true);
 
@@ -30,6 +31,7 @@ export default function Toast({ message, visible, onClose, variant = "success" }
       // Limpa o timer se o componente desmontar
       return () => clearTimeout(timer);
     }
+    prevVisibleRef.current = visible;
   }, [visible, onClose]);
 
   // Se não está visível e não está animando, não renderiza nada

@@ -1,13 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Transaction, getGoal, saveGoal } from "@/lib/storage";
+import { getGoal, saveGoal, type Transaction } from "@/lib/storage";
 import { getTotalByType } from "@/lib/calculations";
 import { formatCurrency, maskCurrency, parseCurrencyInput } from "@/lib/format";
 
+interface GoalTrackerProps {
+  transactions: Transaction[];
+}
+
 // Props do componente
 // transactions: lista de transações para calcular o saldo
-export default function GoalTracker({ transactions }: any) {
+export default function GoalTracker({ transactions }: GoalTrackerProps) {
   // Valor digitado no input da meta
   const [goalInput, setGoalInput] = useState("");
 

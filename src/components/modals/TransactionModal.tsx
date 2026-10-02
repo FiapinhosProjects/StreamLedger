@@ -7,6 +7,7 @@ import {
   validateAmount,
   parseCurrencyValue,
 } from "@/lib/validation";
+import { type Transaction } from "@/lib/storage";
 
 // Categorias de receita (quando tipo = "income")
 const incomeCategories = [
@@ -28,6 +29,13 @@ interface SelectProps {
   onChange: (value: string) => void;
   children: React.ReactNode;
   label: string;
+}
+
+interface TransactionModalProps {
+  open: boolean;
+  onClose: () => void;
+  onSave: (data: { title: string; amount: number; type: "income" | "expense"; category: string; date: string }) => void;
+  editingTransaction: Transaction | null;
 }
 
 function Select({ id, value, onChange, children, label }: SelectProps) {
@@ -63,7 +71,7 @@ function Select({ id, value, onChange, children, label }: SelectProps) {
 // onClose: função para fechar
 // onSave: função chamada ao salvar (recebe os dados)
 // editingTransaction: transação sendo editada (null se for nova)
-export default function TransactionModal({ open, onClose, onSave, editingTransaction }: any) {
+export default function TransactionModal({ open, onClose, onSave, editingTransaction }: TransactionModalProps) {
   // Estados do formulário
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -77,32 +85,44 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
   // Seleciona as categorias baseado no tipo escolhido
   const categories = type === "expense" ? expenseCategories : incomeCategories;
 
-  // Quando abre o modal, preenche os campos (edição) ou limpa (novo)
+  // Inicialização controlada para edição/novo
+  const initializedRef = useRef(false);
+
   useEffect(() => {
-    if (editingTransaction) {
-      // Modo edição: preenche com os dados existentes
-      setTitle(editingTransaction.title);
-      setAmount(editingTransaction.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 }));
-      setType(editingTransaction.type);
-      setCategory(editingTransaction.category);
-    } else {
-      // Modo novo: limpa tudo
-      setTitle("");
-      setAmount("");
-      setType("income");
-      setCategory("Twitch Subs");
+    if (!initializedRef.current || !open) {
+      initializedRef.current = true;
+
+      // Use setTimeout to avoid synchronous setState cascade
+      setTimeout(() => {
+        if (editingTransaction) {
+          // Modo edição: preenche com os dados existentes
+          setTitle(editingTransaction.title);
+          setAmount(editingTransaction.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 }));
+          setType(editingTransaction.type);
+          setCategory(editingTransaction.category);
+        } else {
+          // Modo novo: limpa tudo
+          setTitle("");
+          setAmount("");
+          setType("income");
+          setCategory("Twitch Subs");
+        }
+      }, 0);
     }
-  }, [editingTransaction, open]);
+  }, [open, editingTransaction]);
 
   // Quando o tipo muda, reseta a categoria se ela não existe no novo tipo
   useEffect(() => {
     const cats = type === "expense" ? expenseCategories : incomeCategories;
     const categoryExists = cats.some((c) => c.value === category);
 
+    // Use setTimeout to avoid synchronous setState cascade
     if (!categoryExists) {
-      setCategory(cats[0].value);
+      setTimeout(() => {
+        setCategory(cats[0].value);
+      }, 0);
     }
-  }, [type]);
+  }, [type, category, categories]);
 
   // Controla abrir/fechar o dialog nativo do HTML
   useEffect(() => {
@@ -151,6 +171,7 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
       amount: numericAmount,
       type,
       category,
+      date: new Date().toLocaleDateString("pt-BR"),
     });
 
     onClose();

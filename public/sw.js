@@ -3,7 +3,7 @@
 // Cache-first para assets, network-first para páginas
 // ============================================
 
-const CACHE_NAME = "streamledger-v1";
+const CACHE_NAME = "streamledger-v1"; // eslint-disable-line @typescript-eslint/no-unused-vars
 const STATIC_CACHE = "streamledger-static-v1";
 const DYNAMIC_CACHE = "streamledger-dynamic-v1";
 

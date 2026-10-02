@@ -16,11 +16,9 @@ import {
 import {
   validateCPF,
   calculateAge,
-  classifyUser,
   generateLinkCode,
   generateExpirationDate,
 } from "@/lib/cpfValidation";
-import type { AgeGroup } from "@/lib/user-types";
 
 interface ParentalState {
   parent: StoredParent | null;
@@ -118,7 +116,6 @@ export function useParentalLink() {
 
       // Calcula idade do menor
       const age = calculateAge(params.minorBirthDate);
-      const ageGroup = classifyUser(age);
 
       // Cria vínculo como accepted (responsável confirmou diretamente)
       const link: StoredParentalLink = {

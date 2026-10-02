@@ -1,10 +1,16 @@
 "use client";
 
+interface DuplicateModalProps {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
 // Props que o modal recebe
 // open: se o modal está aberto
 // onClose: função para fechar (cancelar)
 // onConfirm: função para salvar mesmo assim
-export default function DuplicateModal({ open, onClose, onConfirm }: any) {
+export default function DuplicateModal({ open, onClose, onConfirm }: DuplicateModalProps) {
   // Se não está aberto, não renderiza nada
   if (!open) return null;
 

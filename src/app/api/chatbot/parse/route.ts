@@ -5,6 +5,7 @@ import { checkServerRateLimit, getRateLimitHeaders } from "@/lib/rateLimit";
 // Types
 // ---------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface GeminiErrorResponse {
   error?: {
     code?: number;
