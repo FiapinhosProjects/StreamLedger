@@ -93,8 +93,10 @@ function Nav({ pathname, onNavigate }: { pathname: string; onNavigate?: () => vo
         );
       })}
 
-      {/* Botão "Sair do App" no final do menu */}
-      <div className="mt-auto pb-8">
+      {/* Botão "Sair do App" no final do menu.
+          pb-24 (96px) deixa espaço para o FAB de acessibilidade
+          (bottom-6 left-6 + 56px do botão) não sobrepor este link. */}
+      <div className="mt-auto pb-24">
         <Link
           href="/"
           onClick={onNavigate}
