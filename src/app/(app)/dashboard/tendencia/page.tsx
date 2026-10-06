@@ -2,7 +2,7 @@
 
 import ExponentialGrowthChart from "@/components/ui/ExponentialGrowthChart";
 import { useTransactions } from "@/hooks/useTransactions";
-import { getTotalByType } from "@/lib/calculations";
+import { getTotalByType, getMonthlyTotals } from "@/lib/calculations";
 import { formatCurrency } from "@/lib/format";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
@@ -11,6 +11,7 @@ export default function Tendencia() {
   const { rate } = useExchangeRate();
 
   const revenue = getTotalByType(transactions, "income");
+  const incomeMonths = getMonthlyTotals(transactions, "income").length;
 
   return (
     <>
@@ -40,7 +41,7 @@ export default function Tendencia() {
         </div>
         <div className="bg-card border border-neon/20 rounded-2xl p-5">
           <p className="text-xs text-muted mb-1">Meses Registrados</p>
-          <p className="text-xl font-bold text-neon">{transactions.filter(t => t.type === "income").length === 0 ? "0" : "—"}</p>
+          <p className="text-xl font-bold text-neon">{incomeMonths}</p>
         </div>
       </div>
 

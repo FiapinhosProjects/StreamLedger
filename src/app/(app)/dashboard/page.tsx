@@ -12,6 +12,7 @@ import Toast from "@/components/ui/Toast";
 import Chatbot from "@/components/chatbot/Chatbot";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { type StorageTransaction } from "@/hooks/useChatbot";
 import TransactionTable from "@/components/ui/TransactionTable";
 import { formatCurrency } from "@/lib/format";
 import { getTotalByType } from "@/lib/calculations";
@@ -60,7 +61,7 @@ export default function Dashboard() {
       // Modo edição: atualiza a transação existente
       updateTransaction(editing.id, data);
       setEditing(null);
-      setToastMessage("Transação adicionada com sucesso!");
+      setToastMessage("Transação editada com sucesso!");
       setToastVisible(true);
     } else {
       // Modo novo: verifica duplicata antes de salvar
@@ -77,7 +78,7 @@ export default function Dashboard() {
 
   // Callback disparado quando o chatbot confirma uma transação
   const handleChatbotConfirm = useCallback(
-    (data: { title: string; amount: number; type: "income" | "expense"; category: string }) => {
+    (data: StorageTransaction) => {
       const saved = addTransaction(data);
       setToastMessage("Transação salva via assistente! ✅");
       setToastVisible(true);
@@ -88,7 +89,7 @@ export default function Dashboard() {
 
   // Callback disparado quando o chatbot exclui uma transação
   const handleChatbotDelete = useCallback(
-    (data: { title: string; amount: number; type: "income" | "expense"; category: string; id?: number }) => {
+    (data: StorageTransaction & { id?: number }) => {
       if (data.id != null) {
         deleteTransaction(data.id);
         setToastMessage("Transação excluída! 🗑️");

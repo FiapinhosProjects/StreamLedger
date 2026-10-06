@@ -26,6 +26,7 @@ export default function Receitas() {
 
   // Controle do toast
   const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const hideToast = useCallback(() => setToastVisible(false), []);
 
   // Calcula totais por fonte de receita
@@ -45,6 +46,7 @@ export default function Receitas() {
     if (editing) {
       updateTransaction(editing.id, data);
       setEditing(null);
+      setToastMessage("Transação editada com sucesso!");
       setToastVisible(true);
     } else {
       if (checkDuplicate(data)) {
@@ -53,6 +55,7 @@ export default function Receitas() {
         return;
       }
       addTransaction(data);
+      setToastMessage("Transação adicionada com sucesso!");
       setToastVisible(true);
     }
   };
@@ -62,6 +65,7 @@ export default function Receitas() {
     if (pendingData) {
       addTransaction(pendingData);
       setPendingData(null);
+      setToastMessage("Transação adicionada com sucesso!");
       setToastVisible(true);
     }
     setDuplicateModalOpen(false);
@@ -118,7 +122,7 @@ export default function Receitas() {
       />
 
       {/* Toast de notificação */}
-      <Toast message="Transação adicionada com sucesso!" visible={toastVisible} onClose={hideToast} />
+      <Toast message={toastMessage} visible={toastVisible} onClose={hideToast} />
     </>
   );
 }
