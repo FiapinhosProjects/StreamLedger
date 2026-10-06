@@ -139,7 +139,7 @@ function TransactionRow({
       <td className="py-3 px-2 text-right">
         <span
           className={`font-semibold text-sm tabular-nums ${
-            tx.type === "income" ? "text-green-400" : "text-red"
+            tx.type === "income" ? "text-neon" : "text-red"
           }`}
         >
           {tx.type === "income" ? "+" : "-"}

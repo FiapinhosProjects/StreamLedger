@@ -91,10 +91,10 @@ function TransactionCard({
 
   if (confirmed) {
     return (
-      <div className="mb-2 rounded-xl border border-green-400/20 bg-green-400/5 p-3 text-xs">
+      <div className="mb-2 rounded-xl border border-neon/20 bg-neon/5 p-3 text-xs">
         <div className="flex items-start justify-between gap-2">
-          <span className="text-green-400/80">
-            ✓ <span className="font-medium text-green-400">{storage.title}</span> —{" "}
+          <span className="text-neon/80">
+            ✓ <span className="font-medium text-neon">{storage.title}</span> —{" "}
             {storage.amount.toLocaleString("pt-BR", {
               style: "currency",
               currency: "BRL",
@@ -125,7 +125,7 @@ function TransactionCard({
         <span
           className={`text-xs font-bold px-2 py-0.5 rounded-full border ${
             isIncome
-              ? "text-green-400 border-green-400/30 bg-green-400/10"
+              ? "text-neon border-neon/30 bg-neon/10"
               : "text-red border-red/30 bg-red/10"
           }`}
         >
@@ -147,7 +147,7 @@ function TransactionCard({
         </div>
         <div className="flex items-start gap-2">
           <span className="text-white/40 w-16 flex-shrink-0">Tipo:</span>
-          <span className={isIncome ? "text-green-400" : "text-red"}>{tipoLabel}</span>
+          <span className={isIncome ? "text-neon" : "text-red"}>{tipoLabel}</span>
         </div>
         <div className="flex items-start gap-2">
           <span className="text-white/40 w-16 flex-shrink-0">Categoria:</span>
