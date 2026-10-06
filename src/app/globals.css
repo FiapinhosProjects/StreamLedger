@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme inline {
+@theme {
   /* Breakpoints para responsividade */
   --breakpoint-sm: 40rem;   /* 640px  */
   --breakpoint-md: 48rem;   /* 768px  */
@@ -72,3 +72,42 @@ input:focus-visible {
 .animate-delay-2 { animation-delay: 0.2s; }
 .animate-delay-3 { animation-delay: 0.3s; }
 .animate-delay-4 { animation-delay: 0.4s; }
+
+/* ============================================================
+   Acessibilidade: variantes de tema + escala de fonte
+   ============================================================ */
+
+/* Escala de fonte aplicada no <html> -- propaga via rem para todo o app.
+   A variável é setada por AccessibilityProvider e pelo script anti-FOUC
+   no <head> do layout raiz. */
+html {
+  font-size: calc(16px * var(--sl-app-font-scale, 1));
+}
+
+/* Alto contraste (baixa visão / ambientes muito iluminados):
+   branco puro em preto puro, ratio WCAG 21:1 (máximo). */
+:root[data-theme="high-contrast"] {
+  --color-neon: #FFFFFF;
+  --color-neon-hover: #E0E0E0;
+  --color-neon-dim: rgba(255, 255, 255, 0.10);
+  --color-border: rgba(255, 255, 255, 0.45);
+  --color-foreground: #FFFFFF;
+  --color-background: #000000;
+  --color-card: #0A0A0A;
+  --color-header: #050505;
+  --color-muted: #E0E0E0;
+  --color-red: #FF6B6B;
+  --color-yellow: #FFEB3B;
+}
+
+/* Focus ring mais grosso no tema alto contraste (3px vs 2px padrão). */
+:root[data-theme="high-contrast"] a:focus-visible,
+:root[data-theme="high-contrast"] button:focus-visible,
+:root[data-theme="high-contrast"] [tabindex]:focus-visible {
+  outline-width: 3px;
+}
+
+/* Bonus: respeita preferência do SO por menos movimento. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up { animation: none; opacity: 1; }
+}
