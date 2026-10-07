@@ -26,6 +26,7 @@ export default function Despesas() {
 
   // Controle do toast
   const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const hideToast = useCallback(() => setToastVisible(false), []);
 
   // Calcula totais por categoria de despesa
@@ -51,6 +52,7 @@ export default function Despesas() {
     if (editing) {
       updateTransaction(editing.id, data);
       setEditing(null);
+      setToastMessage("Transação editada com sucesso!");
       setToastVisible(true);
     } else {
       if (checkDuplicate(data)) {
@@ -59,6 +61,7 @@ export default function Despesas() {
         return;
       }
       addTransaction(data);
+      setToastMessage("Transação adicionada com sucesso!");
       setToastVisible(true);
     }
   };
@@ -68,6 +71,7 @@ export default function Despesas() {
     if (pendingData) {
       addTransaction(pendingData);
       setPendingData(null);
+      setToastMessage("Transação adicionada com sucesso!");
       setToastVisible(true);
     }
     setDuplicateModalOpen(false);
@@ -151,7 +155,7 @@ export default function Despesas() {
       />
 
       {/* Toast de notificação */}
-      <Toast message="Transação adicionada com sucesso!" visible={toastVisible} onClose={hideToast} />
+      <Toast message={toastMessage} visible={toastVisible} onClose={hideToast} />
     </>
   );
 }

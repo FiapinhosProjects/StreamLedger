@@ -72,7 +72,7 @@ describe("accessibility-storage", () => {
     });
 
     it("sobrescreve valor anterior", () => {
-      saveA11y({ version: 1, theme: "neon", fontScale: "xs" });
+      saveA11y({ theme: "neon", fontScale: "xs" });
       saveA11y(validPrefs);
       expect(loadA11y()).toEqual(validPrefs);
     });

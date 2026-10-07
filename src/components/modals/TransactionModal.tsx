@@ -71,12 +71,20 @@ function Select({ id, value, onChange, children, label }: SelectProps) {
 // onClose: função para fechar
 // onSave: função chamada ao salvar (recebe os dados)
 // editingTransaction: transação sendo editada (null se for nova)
+//
+// Inicialização: os states derivam de `editingTransaction` no primeiro render.
+// O componente é remontado (via `key` na <dialog>) sempre que a transação muda,
+// então o useState initializer sempre lê o valor correto sem precisar de useEffect.
 export default function TransactionModal({ open, onClose, onSave, editingTransaction }: TransactionModalProps) {
-  // Estados do formulário
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
-  const [type, setType] = useState<"income" | "expense">("income");
-  const [category, setCategory] = useState("Twitch Subs");
+  // Estados do formulário — inicializados a partir de editingTransaction
+  const [title, setTitle] = useState(() => editingTransaction?.title ?? "");
+  const [amount, setAmount] = useState(() =>
+    editingTransaction
+      ? editingTransaction.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })
+      : ""
+  );
+  const [type, setType] = useState<"income" | "expense">(() => editingTransaction?.type ?? "income");
+  const [category, setCategory] = useState(() => editingTransaction?.category ?? "Twitch Subs");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Referência ao elemento <dialog> do HTML
@@ -85,44 +93,16 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
   // Seleciona as categorias baseado no tipo escolhido
   const categories = type === "expense" ? expenseCategories : incomeCategories;
 
-  // Inicialização controlada para edição/novo
-  const initializedRef = useRef(false);
+  // Se a categoria atual não existe nas categorias do tipo selecionado,
+  // usa a primeira categoria válida. Cálculo derivado durante o render.
+  const effectiveCategory = categories.some((c) => c.value === category)
+    ? category
+    : categories[0].value;
 
-  useEffect(() => {
-    if (!initializedRef.current || !open) {
-      initializedRef.current = true;
-
-      // Use setTimeout to avoid synchronous setState cascade
-      setTimeout(() => {
-        if (editingTransaction) {
-          // Modo edição: preenche com os dados existentes
-          setTitle(editingTransaction.title);
-          setAmount(editingTransaction.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 }));
-          setType(editingTransaction.type);
-          setCategory(editingTransaction.category);
-        } else {
-          // Modo novo: limpa tudo
-          setTitle("");
-          setAmount("");
-          setType("income");
-          setCategory("Twitch Subs");
-        }
-      }, 0);
-    }
-  }, [open, editingTransaction]);
-
-  // Quando o tipo muda, reseta a categoria se ela não existe no novo tipo
-  useEffect(() => {
-    const cats = type === "expense" ? expenseCategories : incomeCategories;
-    const categoryExists = cats.some((c) => c.value === category);
-
-    // Use setTimeout to avoid synchronous setState cascade
-    if (!categoryExists) {
-      setTimeout(() => {
-        setCategory(cats[0].value);
-      }, 0);
-    }
-  }, [type, category, categories]);
+  // Chave que força a remontagem do <dialog> quando a transação muda
+  // (ou "new" quando for uma criação) — garante que os states sempre
+  // reflitam a transação certa sem precisar de sincronização manual.
+  const dialogKey = editingTransaction ? `edit-${editingTransaction.id}` : "new";
 
   // Controla abrir/fechar o dialog nativo do HTML
   useEffect(() => {
@@ -170,7 +150,7 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
       title: title.trim(),
       amount: numericAmount,
       type,
-      category,
+      category: effectiveCategory,
       date: new Date().toLocaleDateString("pt-BR"),
     });
 
@@ -182,6 +162,7 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
 
   return (
     <dialog
+      key={dialogKey}
       ref={dialogRef}
       onClose={onClose}
       className="fixed inset-0 z-50 m-auto w-full max-w-md rounded-2xl border border-neon/30 bg-card p-0 text-white backdrop:bg-black/60"
@@ -263,7 +244,7 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
           {/* Campo: Categoria (muda conforme o tipo) */}
           <Select
             id="category"
-            value={category}
+            value={effectiveCategory}
             onChange={(v) => setCategory(v)}
             label="Categoria"
           >
