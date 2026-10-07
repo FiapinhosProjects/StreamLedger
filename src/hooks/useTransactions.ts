@@ -7,13 +7,14 @@ import {
   migrateToSecureStorage,
   type Transaction,
 } from "@/lib/storage";
+import { normalizeTransactions } from "@/lib/calculations";
 
 // Hook personalizado que gerencia todas as transações do app
 export function useTransactions() {
   // Estado que guarda a lista de transações
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  // Inicialização: migra dados legados e carrega transações
+  // Inicialização: migra dados legados, normaliza categorias e carrega transações
   useEffect(() => {
     let mounted = true;
 
@@ -24,8 +25,18 @@ export function useTransactions() {
       if (!mounted) return;
 
       const saved = await getTransactions();
+
+      // Normaliza categorias inválidas (ex: receita com "Geral").
+      // Sem isso, transações legadas ficam invisíveis nos cards de
+      // receita/despesa porque getTotalByCategory só conta as 3 válidas.
+      const { normalized, changed } = normalizeTransactions(saved);
+
+      if (changed) {
+        await saveTransactions(normalized);
+      }
+
       if (mounted) {
-        setTransactions(saved);
+        setTransactions(normalized);
       }
     }
 
