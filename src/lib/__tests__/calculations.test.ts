@@ -7,6 +7,12 @@ import {
   getMonthlyTotals,
   calculateExponentialGrowth,
   projectExponentialValue,
+  isValidCategory,
+  fallbackCategory,
+  normalizeTransaction,
+  normalizeTransactions,
+  INCOME_CATEGORIES,
+  EXPENSE_CATEGORIES,
 } from "../calculations";
 import type { Transaction } from "../storage";
 
@@ -200,6 +206,115 @@ describe("calculations", () => {
       expect(projectExponentialValue(model, 0)).toBeCloseTo(1000, 6);
       expect(projectExponentialValue(model, 1)).toBeCloseTo(1100, 6);
       expect(projectExponentialValue(model, 2)).toBeCloseTo(1210, 6);
+    });
+  });
+
+  describe("isValidCategory", () => {
+    it("aceita categorias válidas de receita", () => {
+      for (const cat of INCOME_CATEGORIES) {
+        expect(isValidCategory("income", cat)).toBe(true);
+      }
+    });
+
+    it("aceita categorias válidas de despesa", () => {
+      for (const cat of EXPENSE_CATEGORIES) {
+        expect(isValidCategory("expense", cat)).toBe(true);
+      }
+    });
+
+    it("rejeita categoria de receita em transação de despesa", () => {
+      expect(isValidCategory("expense", "Twitch Subs")).toBe(false);
+      expect(isValidCategory("expense", "YouTube AdSense")).toBe(false);
+      expect(isValidCategory("expense", "Donates")).toBe(false);
+    });
+
+    it("rejeita categoria de despesa em transação de receita", () => {
+      // Bug original: "Geral" como receita caía no storage mas sumia dos cards
+      expect(isValidCategory("income", "Geral")).toBe(false);
+      expect(isValidCategory("income", "Setup")).toBe(false);
+      expect(isValidCategory("income", "Software")).toBe(false);
+    });
+
+    it("rejeita categoria desconhecida", () => {
+      expect(isValidCategory("income", "AdSense")).toBe(false);
+      expect(isValidCategory("income", "YOUTUBE")).toBe(false);
+      expect(isValidCategory("expense", "Hardware")).toBe(false);
+    });
+  });
+
+  describe("fallbackCategory", () => {
+    it("retorna Donates para receita", () => {
+      expect(fallbackCategory("income")).toBe("Donates");
+    });
+
+    it("retorna Geral para despesa", () => {
+      expect(fallbackCategory("expense")).toBe("Geral");
+    });
+  });
+
+  describe("normalizeTransaction", () => {
+    it("retorna o mesmo objeto se a categoria é válida para o tipo", () => {
+      const tx: Transaction = {
+        id: 1,
+        title: "Sub",
+        amount: 80,
+        type: "income",
+        category: "Twitch Subs",
+        date: "01/01/2026",
+      };
+      expect(normalizeTransaction(tx)).toBe(tx);
+    });
+
+    it("remapeia Geral em receita para Donates", () => {
+      const tx: Transaction = {
+        id: 1,
+        title: "Receita legada",
+        amount: 50,
+        type: "income",
+        category: "Geral",
+        date: "01/01/2026",
+      };
+      const fixed = normalizeTransaction(tx);
+      expect(fixed.category).toBe("Donates");
+      expect(fixed.type).toBe("income");
+    });
+
+    it("remapeia Twitch Subs em despesa para Geral", () => {
+      const tx: Transaction = {
+        id: 1,
+        title: "Despesa legada",
+        amount: 50,
+        type: "expense",
+        category: "Twitch Subs",
+        date: "01/01/2026",
+      };
+      const fixed = normalizeTransaction(tx);
+      expect(fixed.category).toBe("Geral");
+      expect(fixed.type).toBe("expense");
+    });
+  });
+
+  describe("normalizeTransactions", () => {
+    it("retorna changed=false quando todas as categorias são válidas", () => {
+      const rows: Transaction[] = [
+        { id: 1, title: "A", amount: 1, type: "income", category: "Twitch Subs", date: "01/01/2026" },
+        { id: 2, title: "B", amount: 1, type: "expense", category: "Geral", date: "01/01/2026" },
+      ];
+      const result = normalizeTransactions(rows);
+      expect(result.changed).toBe(false);
+      // map() sempre cria array novo, mas cada item é o MESMO objeto se era válido
+      expect(result.normalized).toHaveLength(rows.length);
+      expect(result.normalized[0]).toBe(rows[0]);
+      expect(result.normalized[1]).toBe(rows[1]);
+    });
+
+    it("retorna changed=true e remapeia quando há categoria inválida", () => {
+      const rows: Transaction[] = [
+        { id: 1, title: "A", amount: 1, type: "income", category: "Geral", date: "01/01/2026" },
+      ];
+      const result = normalizeTransactions(rows);
+      expect(result.changed).toBe(true);
+      expect(result.normalized[0].category).toBe("Donates");
     });
   });
 });

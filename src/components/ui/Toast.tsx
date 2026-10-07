@@ -42,6 +42,8 @@ export default function Toast({ message, visible, onClose, variant = "success" }
 
   return (
     <div
+      role={isError ? "alert" : "status"}
+      aria-live={isError ? "assertive" : "polite"}
       className={`fixed bottom-6 right-6 z-[100] flex items-center gap-2 rounded-xl border bg-card px-4 py-3 transition-all duration-300 ${
         isError
           ? "border-red/30 shadow-[0_0_20px_rgba(255,68,102,0.15)]"

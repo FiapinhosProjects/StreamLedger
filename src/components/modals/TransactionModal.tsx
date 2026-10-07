@@ -8,13 +8,17 @@ import {
   parseCurrencyValue,
 } from "@/lib/validation";
 import { type Transaction } from "@/lib/storage";
+import {
+  INCOME_CATEGORIES,
+  isValidCategory,
+  fallbackCategory,
+} from "@/lib/calculations";
 
 // Categorias de receita (quando tipo = "income")
-const incomeCategories = [
-  { value: "Twitch Subs", label: "Twitch Subs" },
-  { value: "YouTube AdSense", label: "YouTube AdSense" },
-  { value: "Donates", label: "Donates" },
-];
+const incomeCategories = INCOME_CATEGORIES.map((value) => ({
+  value,
+  label: value,
+}));
 
 // Categorias de despesa (quando tipo = "expense")
 const expenseCategories = [
@@ -84,9 +88,16 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
       : ""
   );
   const [type, setType] = useState<"income" | "expense">(() => editingTransaction?.type ?? "income");
-  const [category, setCategory] = useState(() => editingTransaction?.category ?? "Twitch Subs");
+  const [category, setCategory] = useState(() => {
+    // Se a transação sendo editada tem categoria inválida para o tipo,
+    // começa com a categoria válida do tipo (evita state stale).
+    if (!editingTransaction) return "Twitch Subs";
+    if (!isValidCategory(editingTransaction.type, editingTransaction.category)) {
+      return fallbackCategory(editingTransaction.type);
+    }
+    return editingTransaction.category;
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
-
   // Referência ao elemento <dialog> do HTML
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -233,7 +244,20 @@ export default function TransactionModal({ open, onClose, onSave, editingTransac
             <Select
               id="type"
               value={type}
-              onChange={(v) => setType(v as "income" | "expense")}
+              onChange={(v) => {
+                const newType = v as "income" | "expense";
+                setType(newType);
+                // Ao trocar de tipo, se a categoria atual não é válida
+                // para o novo tipo (ex.: estava em "Geral" como despesa
+                // e virou receita), reseta pra primeira categoria válida
+                // do novo tipo. Sem isso, o state fica stale e o
+                // effectiveCategory só corrige na exibição — o useState
+                // mantém o valor inválido.
+                const newCategories = newType === "expense" ? expenseCategories : incomeCategories;
+                if (!newCategories.some((c) => c.value === category)) {
+                  setCategory(newCategories[0].value);
+                }
+              }}
               label="Tipo"
             >
               <option value="income">Receita (+)</option>

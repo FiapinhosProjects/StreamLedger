@@ -18,7 +18,16 @@ export interface GeminiTransaction {
   tipo: "entrada" | "saida";
   descricao: string;
   valor: number;
-  categoria: "Doação" | "Sub" | "Patrocínio" | "Equipamento" | "Software" | "Outros";
+  // Categorias válidas — alinhadas com o storage do app.
+  // NÃO invente outras (ex.: "YouTube" ou "Adsense"); o storage
+  // só aceita estas 6 e qualquer outra vira fallback.
+  categoria:
+    | "Twitch Subs"
+    | "YouTube AdSense"
+    | "Donates"
+    | "Setup"
+    | "Software"
+    | "Geral";
   data: string; // YYYY-MM-DD
 }
 
@@ -50,7 +59,7 @@ Responda EXCLUSIVAMENTE com um JSON válido (sem markdown, sem comentários) no 
       "tipo": "entrada" | "saida",
       "descricao": "string curta",
       "valor": número decimal positivo,
-      "categoria": "Doação" | "Sub" | "Patrocínio" | "Equipamento" | "Software" | "Outros",
+      "categoria": "Twitch Subs" | "YouTube AdSense" | "Donates" | "Setup" | "Software" | "Geral",
       "data": "YYYY-MM-DD"
     }
   ]
@@ -59,7 +68,16 @@ Responda EXCLUSIVAMENTE com um JSON válido (sem markdown, sem comentários) no 
 Regras:
 - tipo: "entrada" para receitas, "saida" para despesas
 - valor: número positivo, sem símbolos de moeda
-- categoria: "Doação" (doações de viewers), "Sub" (assinaturas), "Patrocínio" (parcerias), "Equipamento" (hardware), "Software" (assinaturas/apps), "Outros" (o resto)
+- categoria (escolha baseado na PLATAFORME / TIPO do ganho ou gasto):
+  * RECEITAS:
+    - "Twitch Subs": qualquer assinatura/sub da Twitch, bits, subs gifted
+    - "YouTube AdSense": receita do YouTube (AdSense, monetização, super chat em vídeos antigos)
+    - "Donates": doações avulsas, super chat ao vivo, patrocínios, Patreon, membros, merch
+  * DESPESAS:
+    - "Setup": hardware (microfone, headset, câmera, webcam, PC, monitor, teclado, mouse, mesa, cadeira, iluminação)
+    - "Software": apps, assinaturas digitais (VPN, OBS, StreamLabs, editores, Adobe, licença de jogo)
+    - "Geral": despesas que não se encaixam nas anteriores (internet, energia, frete)
+  IMPORTANTE: você DEVE usar exatamente um destes 6 nomes. Nada de "Doação", "Sub", "Outros", "Equipamento" — o storage rejeita.
 - data: ISO (YYYY-MM-DD). Padrão: data de hoje (${TODAY})
 - descricao: máx 100 caracteres
 - Se a mensagem não contém transações, retorne: {"transactions": []}
@@ -67,19 +85,21 @@ Regras:
 
 EXEMPLOS:
 Entrada única:
-"Recebi 80 de sub" → {"transactions":[{"tipo":"entrada","descricao":"Subs Twitch","valor":80.00,"categoria":"Sub","data":"${TODAY}"}]}
+"Recebi 80 de sub" → {"transactions":[{"tipo":"entrada","descricao":"Subs Twitch","valor":80.00,"categoria":"Twitch Subs","data":"${TODAY}"}]}
+
+"Recebi 100 do YouTube AdSense" → {"transactions":[{"tipo":"entrada","descricao":"YouTube AdSense","valor":100.00,"categoria":"YouTube AdSense","data":"${TODAY}"}]}
 
 Múltiplas transações:
 "Comprei um microfone de 300 e recebi um sub de 80"
 → {"transactions":[
-  {"tipo":"saida","descricao":"Microfone","valor":300.00,"categoria":"Equipamento","data":"${TODAY}"},
-  {"tipo":"entrada","descricao":"Subs Twitch","valor":80.00,"categoria":"Sub","data":"${TODAY}"}
+  {"tipo":"saida","descricao":"Microfone","valor":300.00,"categoria":"Setup","data":"${TODAY}"},
+  {"tipo":"entrada","descricao":"Subs Twitch","valor":80.00,"categoria":"Twitch Subs","data":"${TODAY}"}
 ]}
 
 "Recebi 50 de doação, gastei 200 no headset e pago 30 de VPN todo mês"
 → {"transactions":[
-  {"tipo":"entrada","descricao":"Doação viewer","valor":50.00,"categoria":"Doação","data":"${TODAY}"},
-  {"tipo":"saida","descricao":"Headset","valor":200.00,"categoria":"Equipamento","data":"${TODAY}"},
+  {"tipo":"entrada","descricao":"Doação viewer","valor":50.00,"categoria":"Donates","data":"${TODAY}"},
+  {"tipo":"saida","descricao":"Headset","valor":200.00,"categoria":"Setup","data":"${TODAY}"},
   {"tipo":"saida","descricao":"VPN mensal","valor":30.00,"categoria":"Software","data":"${TODAY}"}
 ]}
 
@@ -100,6 +120,14 @@ function buildGeminiPrompt(userMessage: string): string {
 function isValidTransaction(obj: unknown): obj is GeminiTransaction {
   if (!obj || typeof obj !== "object") return false;
   const o = obj as Record<string, unknown>;
+  const validCategories: ReadonlyArray<unknown> = [
+    "Twitch Subs",
+    "YouTube AdSense",
+    "Donates",
+    "Setup",
+    "Software",
+    "Geral",
+  ];
   return (
     (o.tipo === "entrada" || o.tipo === "saida") &&
     typeof o.descricao === "string" &&
@@ -107,6 +135,7 @@ function isValidTransaction(obj: unknown): obj is GeminiTransaction {
     Number.isFinite(o.valor) &&
     o.valor > 0 &&
     typeof o.categoria === "string" &&
+    validCategories.includes(o.categoria) &&
     typeof o.data === "string"
   );
 }

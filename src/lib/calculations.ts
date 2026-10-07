@@ -55,6 +55,52 @@ export function isDuplicate(transactions: Transaction[], data: Omit<Transaction,
 }
 
 // ============================================================
+// CATEGORIAS VÁLIDAS POR TIPO
+// ============================================================
+// Mantemos a fonte da verdade das listas aqui para evitar drift
+// entre TransactionModal e getTotalByCategory nas páginas de
+// receitas/despesas.
+
+export const INCOME_CATEGORIES = ["Twitch Subs", "YouTube AdSense", "Donates"] as const;
+export const EXPENSE_CATEGORIES = ["Setup", "Software", "Geral"] as const;
+
+// Verifica se `category` é válida para o `type` dado.
+// Receita: precisa estar em INCOME_CATEGORIES. Despesa: em EXPENSE_CATEGORIES.
+export function isValidCategory(type: "income" | "expense", category: string): boolean {
+  if (type === "income") return INCOME_CATEGORIES.includes(category as (typeof INCOME_CATEGORIES)[number]);
+  return EXPENSE_CATEGORIES.includes(category as (typeof EXPENSE_CATEGORIES)[number]);
+}
+
+// Devolve a categoria "fallback" padrão para o tipo.
+// Receita → "Donates" (catch-all mais natural). Despesa → "Geral".
+export function fallbackCategory(type: "income" | "expense"): string {
+  return type === "income" ? "Donates" : "Geral";
+}
+
+// Migra uma transação: se a categoria é inválida para o tipo,
+// troca pelo fallback. Retorna a transação normalizada (pode ser
+// o mesmo objeto se já estava OK).
+export function normalizeTransaction(tx: Transaction): Transaction {
+  if (isValidCategory(tx.type, tx.category)) return tx;
+  return { ...tx, category: fallbackCategory(tx.type) };
+}
+
+// Migra uma lista inteira. Retorna { normalized, changed } onde
+// `changed` é true se algo foi remapeado (útil pra persistir).
+export function normalizeTransactions(rows: Transaction[]): {
+  normalized: Transaction[];
+  changed: boolean;
+} {
+  let changed = false;
+  const normalized = rows.map((tx) => {
+    const next = normalizeTransaction(tx);
+    if (next !== tx) changed = true;
+    return next;
+  });
+  return { normalized, changed };
+}
+
+// ============================================================
 // DASHBOARD MATEMÁTICO — Modelagem de crescimento exponencial
 // ============================================================
 //
