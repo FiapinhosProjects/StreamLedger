@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import Image from "next/image";
 import { formatCurrency } from "@/lib/format";
 import { Transaction } from "@/lib/storage";
+import ExportModal from "@/components/modals/ExportModal";
+import Toast from "@/components/ui/Toast";
 
 type SortKey = "date" | "amount";
 type SortDir = "asc" | "desc";
@@ -187,6 +189,19 @@ export default function TransactionTable({
   const [sortKey, setSortKey] = useState<SortKey>("date");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [filterType, setFilterType] = useState<FilterType>("all");
+  const [exportOpen, setExportOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastVariant, setToastVariant] = useState<"success" | "error">("success");
+  const exportTriggerRef = useRef<HTMLButtonElement>(null);
+
+  const showToast = useCallback((message: string, variant: "success" | "error") => {
+    setToastMessage(message);
+    setToastVariant(variant);
+    setToastVisible(true);
+  }, []);
+
+  const hideToast = useCallback(() => setToastVisible(false), []);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -254,7 +269,7 @@ export default function TransactionTable({
             )}
           </div>
 
-          {/* Controles: filtro tipo + ordenação */}
+          {/* Controles: filtro tipo + ordenação + export */}
           {/* Mobile: ocupa linha inteira com margem esquerda; Desktop: inline */}
           <div className="flex items-center gap-2 pl-0 sm:pl-0 mt-1 sm:mt-0">
             {/* Filtro por tipo */}
@@ -282,6 +297,24 @@ export default function TransactionTable({
                 <option value="amount-asc">Menor valor</option>
               </Select>
             </div>
+
+            {/* Botão Exportar */}
+            <button
+              ref={exportTriggerRef}
+              type="button"
+              onClick={() => setExportOpen(true)}
+              disabled={filtered.length === 0}
+              aria-haspopup="dialog"
+              aria-expanded={exportOpen}
+              title="Exportar transações"
+              className="ml-1 flex items-center gap-1.5 rounded-full border border-neon/20 px-4 py-2 text-xs font-semibold text-white/80 hover:bg-neon/10 hover:shadow-[0_0_12px_rgba(93,255,155,0.4)] hover:-translate-y-0.5 hover:border-neon/50 active:scale-95 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Exportar
+            </button>
           </div>
         </div>
 
@@ -370,6 +403,25 @@ export default function TransactionTable({
           </div>
         )
       }
+
+      {/* Modal de exportação + toast de feedback */}
+      <ExportModal
+        open={exportOpen}
+        onClose={() => {
+          setExportOpen(false);
+          // Restaura foco no botão de disparo
+          exportTriggerRef.current?.focus();
+        }}
+        rows={filtered}
+        onSuccess={(msg) => showToast(msg, "success")}
+        onError={(msg) => showToast(msg, "error")}
+      />
+      <Toast
+        message={toastMessage}
+        visible={toastVisible}
+        onClose={hideToast}
+        variant={toastVariant}
+      />
     </div>
   );
 }
