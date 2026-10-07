@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import { isValidCategory, fallbackCategory } from "@/lib/calculations";
 
 // ---------------------------------------------------
 // Types
@@ -40,15 +41,95 @@ export interface ChatMessage {
 // ---------------------------------------------------
 // Mapping de categorias do chatbot → storage
 // ---------------------------------------------------
+// A IA pode devolver qualquer uma destas variantes (case-insensitive
+// no lookup). Cada entrada mapeia pra uma categoria válida do storage.
+//
+// Storage válido:
+//   income:  "Twitch Subs" | "YouTube AdSense" | "Donates"
+//   expense: "Setup" | "Software" | "Geral"
+//
+// O `tipo` da transação também importa: se a IA devolver "Sub" mas
+// tipo="saida", o resultado é inconsistente — a gente respeita o
+// `tipo` como verdade e usa fallbackCategory para escolher a melhor
+// categoria default daquele tipo (Donates pra entrada; Geral pra saida).
 
 const CATEGORY_MAP: Record<string, string> = {
-  Doação: "Donates",
+  // Receitas — Twitch
   Sub: "Twitch Subs",
+  Subs: "Twitch Subs",
+  "Sub Twitch": "Twitch Subs",
+  "Twitch Subs": "Twitch Subs",
+  Inscrição: "Twitch Subs",
+  Inscrições: "Twitch Subs",
+
+  // Receitas — YouTube AdSense
+  "YouTube AdSense": "YouTube AdSense",
+  AdSense: "YouTube AdSense",
+  YouTube: "YouTube AdSense",
+  "YouTube Adsense": "YouTube AdSense",
+  Youtube: "YouTube AdSense",
+  YT: "YouTube AdSense",
+  Monetização: "YouTube AdSense",
+  Monetizacao: "YouTube AdSense",
+
+  // Receitas — Doações (Donates)
+  Doação: "Donates",
+  "Doações": "Donates",
+  Doacao: "Donates",
+  Doacoes: "Donates",
+  Donate: "Donates",
+  Donates: "Donates",
+  Bits: "Donates",
+  "Super Chat": "Donates",
+  SuperChat: "Donates",
   Patrocínio: "Donates",
+  Patrocinio: "Donates",
+  Patreon: "Donates",
+  Membros: "Donates",
+  Membership: "Donates",
+  Merch: "Donates",
+  Merchandising: "Donates",
+
+  // Despesas — Setup (hardware)
   Equipamento: "Setup",
+  Hardware: "Setup",
+  Setup: "Setup",
+  Microfone: "Setup",
+  Headset: "Setup",
+  Câmera: "Setup",
+  Camera: "Setup",
+  Webcam: "Setup",
+  PC: "Setup",
+  Computador: "Setup",
+  Monitor: "Setup",
+  Teclado: "Setup",
+
+  // Despesas — Software
   Software: "Software",
+  App: "Software",
+  Assinatura: "Software",
+  VPN: "Software",
+  Licença: "Software",
+  Licenca: "Software",
+
+  // Despesas — catch-all
   Outros: "Geral",
+  "Outro": "Geral",
+  Geral: "Geral",
 };
+
+// Lookup case-insensitive: tenta match exato primeiro, depois
+// case-insensitive. Se nada bater, retorna undefined.
+function mapCategory(raw: string | undefined | null): string | undefined {
+  if (!raw) return undefined;
+  const trimmed = String(raw).trim();
+  if (CATEGORY_MAP[trimmed]) return CATEGORY_MAP[trimmed];
+  const lower = trimmed.toLowerCase();
+  for (const [key, value] of Object.entries(CATEGORY_MAP)) {
+    if (key.toLowerCase() === lower) return value;
+  }
+  return undefined;
+}
 
 // ---------------------------------------------------
 // Helpers
@@ -58,7 +139,8 @@ function uid(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
-function parseTransaction(
+// Exportado apenas para testes (não usado fora de tests/).
+export function parseTransaction(
   parsed: ParsedTransaction
 ): StorageTransaction | null {
   const tipoStorage =
@@ -69,7 +151,17 @@ function parseTransaction(
     .replace(/"/g, "'")
     .trim();
   const safeAmount = Number(parsed.valor);
-  const safeCategory = CATEGORY_MAP[String(parsed.categoria)] ?? "Geral";
+
+  // 1) Tenta mapear o que a IA devolveu para uma categoria válida
+  const mapped = mapCategory(parsed.categoria);
+  // 2) Se o mapeamento deu uma categoria inválida para o tipo
+  //    (ex: IA devolveu "Outros" mas tipo é "entrada"), cai no
+  //    fallback correto PRO TIPO.
+  // 3) Se o mapeamento não bateu em nada, usa fallbackCategory.
+  const safeCategory =
+    mapped && isValidCategory(tipoStorage, mapped)
+      ? mapped
+      : fallbackCategory(tipoStorage);
 
   if (
     !["entrada", "saida"].includes(parsed.tipo) ||
